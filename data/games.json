@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "Commandos Behind Enemy Lines",
+        "url": "https://www.example.com",
+        "cover": "https://www.allkeyshop.com/blog/wp-content/uploads/buy-commandos-behind-enemy-lines-cd-key-pc-download-img1.jpg",
+        "platform": "PC",
+        "bestPrice": 5.03,
+        "dateCreated": "2022-03-14T16:55:10.267Z",
+        "dateUpdated": "2022-03-14T16:55:10.267Z"
+    },
+    {
+        "id": 2,
+        "name": "test2",
+        "url": "https://www.example.com",
+        "cover": "https://dummyimage.com/256x256/636363/fff&text=Game+cover",
+        "platform": "PC",
+        "bestPrice": 5.03,
+        "dateCreated": "2022-03-14T16:59:30.661Z",
+        "dateUpdated": "2022-03-14T16:59:30.661Z"
+    },
+    {
+        "name": "test3",
+        "url": "https://www.example.com",
+        "cover": "https://dummyimage.com/256x256/636363/fff&text=Game+cover",
+        "platform": "PC",
+        "bestPrice": 5.03,
+        "id": 3,
+        "dateCreated": "2022-03-14T17:02:39.157Z",
+        "dateUpdated": "2022-03-14T17:02:39.157Z"
+    }
+]
