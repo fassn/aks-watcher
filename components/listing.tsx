@@ -8,10 +8,10 @@ type ListingProps = {
 
 export const Listing: NextPage<{ games: Game[] }> = ({ games }: ListingProps) => {
     return (
-        <div>
+        <>
             {games.map((game: Game) => (
                 <GameCard key={game.id} game={game} />
             ))}
-        </div>
+        </>
     )
 }
