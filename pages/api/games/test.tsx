@@ -8,13 +8,15 @@ export default function handler(
 ) {
     const date = new Date().toISOString()
     const game: Game = {
-        id: 1,
-        name: 'Starcraft 2 Legacy of the Void',
-        url: 'https://www.allkeyshop.com/blog/buy-starcraft-2-legacy-of-the-void-cd-key-compare-prices/',
-        dateCreated: date,
-        dateUpdated: date
+        "id": 1,
+        "name": "Commandos Behind Enemy Lines",
+        "url": "https://www.example.com",
+        "cover": "https://www.allkeyshop.com/blog/wp-content/uploads/buy-commandos-behind-enemy-lines-cd-key-pc-download-img1.jpg",
+        "platform": "PC",
+        "bestPrice": 5.03,
+        "dateCreated": "2022-03-14T16:55:10.267Z",
+        "dateUpdated": "2022-03-14T16:55:10.267Z"
     }
 
-    const newName = gamesRepo.getNameFromUrl(game.url)
-    res.status(200).json({newName})
+    res.status(200).json({game})
 }
