@@ -24,15 +24,6 @@ const Home: NextPage = ({ games }: InferGetStaticPropsType<typeof getStaticProps
                     </div>
                 }
             </div>
-            {/* <div>
-                {
-                    games.map((game: Game) => {
-                        return (
-                            <div key={game.id}>{game.name}</div>
-                        )
-                    })
-                }
-            </div> */}
         </>
     );
 };
