@@ -1,4 +1,3 @@
-import { NextPage } from "next"
 import { Game } from "../pages/api/helpers/game"
 import { GameCard } from "./gameCard"
 
@@ -6,7 +5,7 @@ type ListingProps = {
     games: Game[]
 }
 
-export const Listing: NextPage<{ games: Game[] }> = ({ games }: ListingProps) => {
+export const Listing = ({ games }: ListingProps) => {
     return (
         <>
             {games.map((game: Game) => (

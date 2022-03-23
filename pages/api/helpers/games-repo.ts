@@ -21,7 +21,7 @@ function getNameFromUrl(url: string): string {
     return splittedUrl.slice(1, splittedUrl.length - 4).join(' ').toUpperCase()
 }
 
-function create(game: Game) {
+function create(game: any) {
     // generate new game id
     game.id = games.length ? Math.max(...games.map((game: Game) => game.id)) + 1 : 1;
 
