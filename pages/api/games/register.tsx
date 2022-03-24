@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { gamesRepo } from '../helpers/games-repo'
 import * as cheerio from "cheerio"
 
-export default function handler(
+export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
@@ -17,7 +17,7 @@ export default function handler(
 
     if (url) {
         try {
-            fetchData(url)
+            await fetch(url).then(res => res.text())
             .then(data => {
                 const content = getContent(url, data)
                 gamesRepo.create(content)
@@ -30,10 +30,6 @@ export default function handler(
             res.status(500).send({ error: 'Failed to fetch data.' })
         }
     }
-}
-
-const fetchData = async (url: string) => {
-    return await fetch(url).then(res => res.text())
 }
 
 const getContent = (url: string, data: string) => {
