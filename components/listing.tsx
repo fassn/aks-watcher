@@ -9,7 +9,7 @@ export const Listing = ({ games }: ListingProps) => {
     return (
         <>
             {games.map((game: Game) => (
-                <GameCard key={game.id} game={game} />
+                <GameCard key={game.id} gameData={game} />
             ))}
         </>
     )

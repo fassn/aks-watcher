@@ -16,7 +16,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
             <Header />
 
-            <main className="pt-8 pb-32 bg-cream">
+            <main className="pt-20 pb-32 bg-cream">
                 {children}
             </main>
 

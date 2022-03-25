@@ -3,7 +3,7 @@ import { URL } from 'url';
 import data from '../../../data/games.json'
 import { Game } from './game';
 
-const games: Game[] = data
+let games: Game[] = data
 
 export const gamesRepo = {
     getAll: () => games,
@@ -46,7 +46,11 @@ function update(id: number, params: any) {
     game.dateUpdated = new Date().toISOString()
 
     // update and save
-    game = {...game, ...params}
+    const updatedGame: Game = {...game, ...params}
+    games = games.map((game: Game) => {
+        if (game.id === updatedGame.id) game = {...updatedGame}
+        return game
+    })
     saveData();
 }
 

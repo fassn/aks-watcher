@@ -11,14 +11,13 @@ export const GameForm = () => {
         event.preventDefault()
 
         const target = event.target as typeof event.target & FormData
-        const JSONdata = JSON.stringify({url: target.aksLink.value})
-        const endpoint = '/api/games/register'
+        const endpoint = '/api/games/store'
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSONdata,
+            body: JSON.stringify({url: target.aksLink.value}),
         }
         await fetch(endpoint, options)
 
