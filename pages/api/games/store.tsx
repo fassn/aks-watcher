@@ -18,14 +18,14 @@ export default async function handler(
     if (url) {
         try {
             await fetch(url).then(res => res.text())
-            .then(data => {
-                const content = getContent(url, data)
-                gamesRepo.create(content)
-                res.status(200).send({ msg: 'Game has been created successfully.' })
-            })
-            .catch(() => {
-                res.status(500).send({ error: 'There was an issue while creating the game.' })
-            })
+                .then(data => {
+                    const content = getContent(url, data)
+                    gamesRepo.create(content)
+                    res.status(200).send({ msg: 'Game has been created successfully.' })
+                })
+                .catch(() => {
+                    res.status(500).send({ error: 'There was an issue while creating the game.' })
+                })
         } catch (err) {
             res.status(500).send({ error: 'Failed to fetch data.' })
         }

@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export const Header = () => {
     return (
-        <header className="flex w-full fixed top-0 z-50 h-12 items-center bg-deep-blue pl-8 pr-4 z-">
+        <header className="flex w-full fixed top-0 z-50 h-12 items-center bg-deep-blue pl-8 pr-4">
             <h1 className="flex-none text-light-grey justify-center uppercase font-josephin font-bold">
                 <Link href='/'>
                     <a>AKS Price Tracker</a>
