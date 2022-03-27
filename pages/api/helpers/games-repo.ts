@@ -57,7 +57,7 @@ function update(id: number, params: any) {
 // prefixed with underscore '_' because 'delete' is a reserved word in javascript
 function _delete(id: number) {
     // filter out deleted game and save
-    games.filter((game: Game) => game.id !== id);
+    games = games.filter((game: Game) => game.id !== id);
     saveData();
 }
 

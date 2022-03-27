@@ -39,7 +39,7 @@ export const GameForm = () => {
                         Paste an AllKeyShop link:<br />
                         <i className="text-xs break-words">https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/</i>
                     </div>
-                    <div className="">
+                    <div>
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="aksLink">AllKeyShop Link:</label>
                         <input
                             className="shadow appearance-none border border-deep-blue rounded w-full py-2 px-3 text-deep-blue mb-3 leading-tight focus:outline-none focus:shadow-outline"
