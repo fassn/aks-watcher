@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { GameForm } from '../components/gameForm'
+import { GameForm } from '../components/game-form'
 
 const AddGame: NextPage = () => {
     return (

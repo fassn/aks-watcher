@@ -7,7 +7,7 @@ export default async function handler(
     res: NextApiResponse<any>
 ) {
     if (req.method !== 'PATCH') {
-        res.status(405).send('Request needs to be PATCH.')
+        res.status(405).send('Request must be PATCH.')
     }
 
     const gameId = parseInt((req.query['gameId']) as string)

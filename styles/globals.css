@@ -16,3 +16,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+dialog::backdrop {
+  backdrop-filter: blur(5px);
+}

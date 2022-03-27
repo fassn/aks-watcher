@@ -1,5 +1,5 @@
 import { Game } from "../pages/api/helpers/game"
-import { GameCard } from "./gameCard"
+import { GameCard } from "./game-card"
 
 type ListingProps = {
     games: Game[]

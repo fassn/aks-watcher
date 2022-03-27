@@ -1,11 +1,15 @@
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { Game } from "../pages/api/helpers/game"
+import { Modal } from "./modal"
 
 export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
+    const router = useRouter()
     const [game, setGame] = useState({...props.gameData})
+    const [modalOpen, setModalOpen] = useState(false)
 
     const updatePrice = async () => {
         await fetch(
@@ -13,10 +17,22 @@ export const GameCard = (props: { gameData: Game }) => {
             { method: 'PATCH' }
         )
         .then(res => res.json())
-        .then(updatedGame => {
-            console.log({updatedGame})
-            setGame({...game, ...updatedGame})
-        })
+        .then(updatedGame => setGame({...game, ...updatedGame}))
+    }
+
+    const deleteGame = async () => {
+        await fetch(
+            `/api/games/delete/${props.gameData.id}`,
+            { method: 'DELETE' }
+        )
+    }
+
+    const openModal = () => {
+        setModalOpen(!modalOpen)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
     }
 
     return (
@@ -33,6 +49,15 @@ export const GameCard = (props: { gameData: Game }) => {
                             />
                         </a>
                     </Link>
+                    <button onClick={openModal} className="relative w-0">
+                        <svg className="absolute top-0 right-0 h-6 w-6 text-cream hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"> <circle cx="12" cy="12" r="10" /> <line x1="15" y1="9" x2="9" y2="15" /> <line x1="9" y1="9" x2="15" y2="15" /></svg>
+                    </button>
+                    <Modal open={modalOpen} onRequestClose={closeModal} className="w-80 h-48">
+                        <p className="h-1/2">Are you sure you want to remove this game from the list?</p>
+                        <div className="flex h-1/2">
+                            <button onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>
+                        </div>
+                    </Modal>
                 </div>
                 <div className="flex flex-col h-40 px-4 py-6 font-josephin bg-light-grey">
                     <div className="flex space-x-3">
