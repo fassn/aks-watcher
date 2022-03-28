@@ -1,15 +1,18 @@
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Game } from "../pages/api/helpers/game"
 import { Modal } from "./modal"
 
 export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
-    const router = useRouter()
     const [game, setGame] = useState({...props.gameData})
     const [modalOpen, setModalOpen] = useState(false)
+
+    // allows the component to re-render when the props are updated from the parent
+    useEffect(() => {
+        setGame(props.gameData)
+    }, [props.gameData])
 
     const updatePrice = async () => {
         await fetch(
@@ -37,7 +40,7 @@ export const GameCard = (props: { gameData: Game }) => {
 
     return (
         <div className="flex justify-center">
-            <div className="w-64 my-10 outline outline-2 shadow shadow-light-grey">
+            <div className="w-64 my-10 outline outline-2 shadow-md shadow-deep-blue">
                 <div className="flex h-64">
                     <Link href={game.url}>
                         <a>

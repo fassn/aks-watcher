@@ -9,27 +9,36 @@ type ModalProps = {
 }
 
 export const Modal: React.FC<ModalProps> = ({ id, children, open, onRequestClose, className }) => {
-    const dialogRef = useRef<HTMLDialogElement>(null)
+    const dialogRef = useRef<any>(null)
 
     useEffect(() => {
         const dialogNode = dialogRef.current
 
         if (open) {
-            dialogNode.showModal()
+            dialogNode?.showModal()
         } else {
-            dialogNode.close()
+            dialogNode?.close()
         }
     }, [open])
 
     useEffect(() => {
         const dialogNode = dialogRef.current
+
         const handleCancel = (event: Event) => {
             event.preventDefault()
             onRequestClose()
         }
-        dialogNode.addEventListener('cancel', handleCancel)
+        const handleBackdropClick = (event: Event) => {
+            event.preventDefault()
+            if (event.target === dialogNode) {
+                onRequestClose()
+            }
+        }
+        dialogNode?.addEventListener('cancel', handleCancel)
+        dialogNode?.addEventListener('click', handleBackdropClick)
         return () => {
-            dialogNode.removeEventListener('cancel', handleCancel)
+            dialogNode?.removeEventListener('cancel', handleCancel)
+            dialogNode?.removeEventListener('click', handleBackdropClick)
         }
     }, [onRequestClose])
 

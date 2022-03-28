@@ -34,7 +34,7 @@ export const GameForm = () => {
     return (
         <>
             <form onSubmit={handleSubmit} method='post'>
-                <div className="flex flex-col h-96 bg-light-grey font-josephin border-solid border-2 px-4 pt-10 pb-4 shadow">
+                <div className="flex flex-col h-96 bg-light-grey font-josephin outline outline-2 shadow-md shadow-deep-blue px-4 pt-10 pb-4">
                     <div className="w-full mb-3">
                         Paste an AllKeyShop link:<br />
                         <i className="text-xs break-words">https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/</i>
