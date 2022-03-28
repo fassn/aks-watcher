@@ -10,7 +10,7 @@ export const Header = () => {
             </h1>
             <div className="flex w-full justify-end">
                 <button className="flex justify-center items-center w-11 h-11">
-                    <Link href='/add'>
+                    <Link href='/add' passHref={true}>
                         <svg className="h-6 w-6 text-cream"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/>
                         </svg>

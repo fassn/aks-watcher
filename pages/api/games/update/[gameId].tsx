@@ -19,16 +19,17 @@ export default async function handler(
     const url = game.url
     if (url) {
         try {
-            await fetch(url).then(res => res.text())
-            .then(contents => {
-                const newPrice = getPrice(contents)
-                gamesRepo.update(game.id, { bestPrice: newPrice })
-                const updatedGame = gamesRepo.getById(game.id)
-                res.status(200).json(JSON.stringify(updatedGame))
-            })
-            .catch(() => {
-                res.status(500).send({ error: 'There was an issue while updating the game.' })
-            })
+            fetch(url)
+                .then(res => res.text())
+                .then(contents => {
+                    const newPrice = getPrice(contents)
+                    gamesRepo.update(game.id, { bestPrice: newPrice })
+                    const updatedGame = gamesRepo.getById(game.id)
+                    res.status(200).json(JSON.stringify(updatedGame))
+                })
+                .catch(() => {
+                    res.status(500).send({ error: 'There was an issue while updating the game.' })
+                })
         } catch (err) {
             res.status(500).send({ error: 'Failed to fetch data.' })
         }
