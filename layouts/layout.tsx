@@ -10,8 +10,8 @@ export const Layout = ({ children }: LayoutProps) => {
         <>
             <Head>
                 <title>AllKeyShop Price Tracker</title>
-                <meta name="description" content="This app tracks prices on allkeyshop for games you want to buy." />
-                <link rel="icon" href="/favicon.ico" />
+                <meta name="description" content="This app tracks prices on allkeyshop for games you want to buy." key='description' />
+                <link rel="icon" href="/favicon.ico" key='icon' />
             </Head>
 
             <Header />
