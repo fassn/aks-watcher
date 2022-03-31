@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { gamesRepo } from './helpers/games-repo'
+import gamesRepo from './helpers/games-repo'
 import { Game } from "./helpers/game";
 import * as cheerio from "cheerio"
 

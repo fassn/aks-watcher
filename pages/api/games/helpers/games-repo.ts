@@ -1,9 +1,8 @@
 import { URL } from 'url';
 import { Game } from './game';
+import { promises as fsp } from 'fs';
 
-const fsp = require('fs').promises
-
-export const gamesRepo = {
+const gamesRepo = {
     getAll,
     getById,
     getNameFromUrl,
@@ -13,7 +12,7 @@ export const gamesRepo = {
 };
 
 async function getAll(): Promise<Game[]> {
-    const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`)
+    const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`, { encoding: 'utf8'})
     return JSON.parse(file_data)
 }
 
@@ -80,3 +79,5 @@ async function _delete(id: number) {
 async function saveData(games: Game[]) {
     await fsp.writeFile(`${process.cwd()}/data/games.json`, JSON.stringify(games, null, 4));
 }
+
+export default gamesRepo
