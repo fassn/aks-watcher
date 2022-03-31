@@ -2,7 +2,7 @@ import Link from "next/link"
 
 export const AddGameCard = () => {
     return (
-        <div>
+        <div className="flex justify-center">
             <div className="w-64 h-120 mx-5 my-10 outline outline-2 shadow shadow-light-grey">
                 <button>
                     <Link href='/add' passHref={true}>

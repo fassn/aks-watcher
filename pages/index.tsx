@@ -36,14 +36,14 @@ const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticPr
                 <link rel="preload" href="/api/games/get" as="fetch" crossOrigin="anonymous" key='get-games' />
             </Head>
             <div className={styles.container}>
-                <div className="flex flex-wrap justify-evenly">
+                <div className={"flex justify-evenly " + (games.length > 0? "flex-wrap": "flex-col")}>
                     {
                         games.length > 0
                             ? games.map((game: Game) => (
                                 <GameCard key={game.id} gameData={game} />
                             ))
                             : <div className="flex h-full justify-center items-center">
-                                <p className="flex-none">There are no games tracked yet.</p>
+                                <p>There are no games tracked yet.</p>
                             </div>
                     }
                     <AddGameCard></AddGameCard>
