@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     domains: ['www.allkeyshop.com'],
   },
-  experimental: { nftTracing: true }
+  outputFileTracing: true,
 }
 
 module.exports = nextConfig
