@@ -2,6 +2,9 @@ import { URL } from 'url';
 import { Game } from './game';
 import { promises as fsp } from 'fs';
 import { join, resolve } from 'path';
+import { tmpdir } from 'os'
+
+const filePath = join(tmpdir(), 'games.json')
 
 const gamesRepo = {
     getAll,
@@ -13,8 +16,22 @@ const gamesRepo = {
 };
 
 async function getAll(): Promise<Game[]> {
-    const dataDir = resolve(process.cwd(), 'data')
-    const file_data = await fsp.readFile(join(dataDir, 'games.json'), { encoding: 'utf8'})
+    // const dataDir = resolve(process.cwd(), 'data')
+    // try {
+    //     fsp.access(filePath)
+    //     acces
+    //     console.log('Can access file.')
+    // } catch {
+    //     console.log('Cannot access file. Writing an empty file.')
+    //     await fsp.writeFile(filePath, new Uint8Array(Buffer.from('[]')))
+    // }
+    let file_data = '[]'
+    try {
+        file_data = await fsp.readFile(filePath, { encoding: 'utf8'})
+    } catch {
+        console.log('Cannot access file. Writing an empty file.')
+        await fsp.writeFile(filePath, new Uint8Array(Buffer.from('[]')))
+    }
     // const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`, { encoding: 'utf8'})
     return JSON.parse(file_data)
 }
@@ -80,7 +97,7 @@ async function _delete(id: number) {
 // private helper functions
 
 async function saveData(games: Game[]) {
-    await fsp.writeFile(`${process.cwd()}/data/games.json`, JSON.stringify(games, null, 4));
+    await fsp.writeFile(filePath, JSON.stringify(games, null, 4));
 }
 
 export default gamesRepo
