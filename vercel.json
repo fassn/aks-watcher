@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "pages/api/games/get.ts": {
+      "includeFiles": "data/games.json"
+    }
+  }
+}

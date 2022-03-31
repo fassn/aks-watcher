@@ -1,6 +1,7 @@
 import { URL } from 'url';
 import { Game } from './game';
 import { promises as fsp } from 'fs';
+import { join, resolve } from 'path';
 
 const gamesRepo = {
     getAll,
@@ -12,7 +13,9 @@ const gamesRepo = {
 };
 
 async function getAll(): Promise<Game[]> {
-    const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`, { encoding: 'utf8'})
+    const dataDir = resolve(process.cwd(), 'data')
+    const file_data = await fsp.readFile(join(dataDir, 'games.json'), { encoding: 'utf8'})
+    // const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`, { encoding: 'utf8'})
     return JSON.parse(file_data)
 }
 
