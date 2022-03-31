@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { gamesRepo } from '../../helpers/games-repo'
+import { gamesRepo } from '../helpers/games-repo'
 import * as cheerio from "cheerio"
 
 export default async function handler(
@@ -11,7 +11,7 @@ export default async function handler(
     }
 
     const gameId = parseInt((req.query['gameId']) as string)
-    const game = gamesRepo.getById(gameId)
+    const game = await gamesRepo.getById(gameId)
     if (!game) {
         return res.status(500).send(`Server couldn't find a game with the id ${gameId}.`)
     }
@@ -21,10 +21,9 @@ export default async function handler(
         try {
             fetch(url)
                 .then(res => res.text())
-                .then(contents => {
+                .then(async contents => {
                     const newPrice = getPrice(contents)
-                    gamesRepo.update(game.id, { bestPrice: newPrice })
-                    const updatedGame = gamesRepo.getById(game.id)
+                    const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
                     res.status(200).json(JSON.stringify(updatedGame))
                 })
                 .catch(() => {

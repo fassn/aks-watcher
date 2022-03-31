@@ -1,27 +1,37 @@
-import { writeFileSync } from 'fs';
 import { URL } from 'url';
-import data from '../../../data/games.json'
 import { Game } from './game';
 
-let games: Game[] = data
+const fsp = require('fs').promises
 
 export const gamesRepo = {
-    getAll: () => games,
-    getById: (id: number) => games.find((game: Game) => game.id === id),
-    // getByUrl: (url: URL) => games.find((game: Game) => game.url === url),
+    getAll,
+    getById,
     getNameFromUrl,
-    find: (x: any) => games.find(x),
     create,
     update,
     delete: _delete
 };
+
+async function getAll(): Promise<Game[]> {
+    const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`)
+    return JSON.parse(file_data)
+}
+
+async function getById(id: number): Promise<Game | undefined> {
+    const games = await getAll()
+    const game = games.find((game: Game) => game.id === id)
+
+    return game
+}
 
 function getNameFromUrl(url: string): string {
     const splittedUrl = new URL(url).pathname.split('-')
     return splittedUrl.slice(1, splittedUrl.length - 4).join(' ').toUpperCase()
 }
 
-function create(game: any) {
+async function create(game: any) {
+    const games = await getAll()
+
     // generate new game id
     game.id = games.length ? Math.max(...games.map((game: Game) => game.id)) + 1 : 1;
 
@@ -31,12 +41,12 @@ function create(game: any) {
 
     // add and save game
     games.push(game);
-    saveData();
+    saveData(games);
 }
 
-function update(id: number, params: any) {
+async function update(id: number, params: any): Promise<Game | undefined> {
+    let games = await getAll()
     let game = games.find((game: Game) => game.id === id)
-
     if (!game) {
         console.warn(`Nothing updated as the game with the id ${id} wasn't found.`)
         return
@@ -51,18 +61,22 @@ function update(id: number, params: any) {
         if (game.id === updatedGame.id) game = {...updatedGame}
         return game
     })
-    saveData();
+    saveData(games);
+
+    return updatedGame
 }
 
 // prefixed with underscore '_' because 'delete' is a reserved word in javascript
-function _delete(id: number) {
+async function _delete(id: number) {
+    let games = await getAll()
+
     // filter out deleted game and save
     games = games.filter((game: Game) => game.id !== id);
-    saveData();
+    saveData(games);
 }
 
 // private helper functions
 
-function saveData() {
-    writeFileSync('data/games.json', JSON.stringify(games, null, 4));
+async function saveData(games: Game[]) {
+    await fsp.writeFile(`${process.cwd()}/data/games.json`, JSON.stringify(games, null, 4));
 }

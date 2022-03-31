@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { gamesRepo } from '../helpers/games-repo'
+import { gamesRepo } from './helpers/games-repo'
+import { Game } from "./helpers/game";
 import * as cheerio from "cheerio"
 
 export default async function handler(
@@ -10,9 +11,10 @@ export default async function handler(
         res.status(405).send('Request must be POST.')
     }
 
+    let updatedGames: Game[] = []
     const gameIds: number[] = req.body
     for (const id of gameIds) {
-        const game = gamesRepo.getById(id)
+        const game = await gamesRepo.getById(id)
         if (!game) {
             console.warn(`There is no game with the id ${id}. Skipping to the next one.`)
             continue
@@ -21,9 +23,10 @@ export default async function handler(
         await Promise.all([
             fetch(game.url)
                 .then(res => res.text())
-                .then(contents => {
+                .then(async contents => {
                     const newPrice = getPrice(contents)
-                    gamesRepo.update(game.id, { bestPrice: newPrice })
+                    const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
+                    if (updatedGame) updatedGames.push(updatedGame)
                 })
                 .catch(() => {
                     res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
@@ -31,7 +34,7 @@ export default async function handler(
             timeout(10000)
         ])
     }
-    res.status(200).json(JSON.stringify(gamesRepo.getAll()))
+    res.status(200).json(JSON.stringify(updatedGames))
 }
 
 const timeout = (ms: number) => {

@@ -16,6 +16,9 @@ module.exports = {
         'cream': '#f4f9e9',
         'deep-blue': '#284b63',
       },
+      height: {
+        '120': '30rem',
+      }
     },
   },
   plugins: [],
