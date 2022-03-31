@@ -2,7 +2,8 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useEffect } from "react";
 import Head from 'next/head'
 import useSWR, { mutate, SWRConfig } from 'swr'
-import fetcher from './helpers/fetcher'
+import fetcher from './api/games/helpers/fetcher'
+import gamesRepo from './api/games/helpers/games-repo'
 
 import { Game } from "./api/games/helpers/game";
 import { GameCard } from "../components/game-card";
@@ -10,7 +11,7 @@ import { AddGameCard } from "../components/add-game-card"
 import styles from "../styles/Home.module.css";
 
 export const getStaticProps: GetStaticProps = async () => {
-    const games = await fetch(`${process.env.BASE_URL}/api/games/get`).then(res => res.json().then((games: Game[]) => games))
+    const games = await gamesRepo.getAll()
     return {
         props: {
             fallback: {

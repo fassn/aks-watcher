@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { Game } from "./helpers/game"
-import { gamesRepo } from "./helpers/games-repo"
-
-const fsp = require('fs').promises
+import gamesRepo from "./helpers/games-repo"
 
 export default async function handler(
   req: NextApiRequest,
