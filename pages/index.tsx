@@ -22,9 +22,8 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticProps>) => {
-    const { data: games, error, isValidating } = useSWR('/api/games/get', fetcher, {
+    const { data: games, error } = useSWR('/api/games/get', fetcher, {
         fallbackData: fallback['/api/games/get'],
-        revalidateOnMount: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
