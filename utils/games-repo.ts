@@ -1,10 +1,18 @@
 import { URL } from 'url';
 import { Game } from './game';
 import { promises as fsp } from 'fs';
-import { join, resolve } from 'path';
-import { tmpdir } from 'os'
+import { join } from 'path';
 
-const filePath = join(tmpdir(), 'games.json')
+// const filePath = join(tmpdir(), 'games.json')
+// let filePath = ''
+// if (process.env.NODE_ENV === 'development') {
+//     filePath = join(process.cwd(), 'games.json')
+// } else {
+
+// }
+
+const jsonStorageUrl = process.env.JSONSTORAGE_URL as string
+const jsonStorageId = process.env.JSONSTORAGE_ID
 
 const gamesRepo = {
     getAll,
@@ -16,24 +24,15 @@ const gamesRepo = {
 };
 
 async function getAll(): Promise<Game[]> {
-    // const dataDir = resolve(process.cwd(), 'data')
-    // try {
-    //     fsp.access(filePath)
-    //     acces
-    //     console.log('Can access file.')
-    // } catch {
-    //     console.log('Cannot access file. Writing an empty file.')
-    //     await fsp.writeFile(filePath, new Uint8Array(Buffer.from('[]')))
-    // }
-    let file_data = '[]'
-    try {
-        file_data = await fsp.readFile(filePath, { encoding: 'utf8'})
-    } catch {
-        console.log('Cannot access file. Writing an empty file.')
-        await fsp.writeFile(filePath, new Uint8Array(Buffer.from('[]')))
+    let games: Game[] = []
+    if (!jsonStorageId) {
+        console.log('No JSONStorage ID was provided. Please provide one in your .env file.')
+    } else {
+        await fetch(join(jsonStorageUrl, jsonStorageId))
+            .then(res => res.json())
+            .then((data: Game[]) => games = data)
     }
-    // const file_data = await fsp.readFile(`${process.cwd()}/data/games.json`, { encoding: 'utf8'})
-    return JSON.parse(file_data)
+    return games
 }
 
 async function getById(id: number): Promise<Game | undefined> {
@@ -65,6 +64,7 @@ async function create(game: any) {
 
 async function update(id: number, params: any): Promise<Game | undefined> {
     let games = await getAll()
+
     let game = games.find((game: Game) => game.id === id)
     if (!game) {
         console.warn(`Nothing updated as the game with the id ${id} wasn't found.`)
@@ -94,10 +94,16 @@ async function _delete(id: number) {
     saveData(games);
 }
 
-// private helper functions
-
 async function saveData(games: Game[]) {
-    await fsp.writeFile(filePath, JSON.stringify(games, null, 4));
+    if (!jsonStorageId) {
+        console.log('No JSONStorage ID was provided. Please provide one in your .env file.')
+    } else {
+        fetch(join(jsonStorageUrl, jsonStorageId), {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(games),
+        })
+    }
 }
 
 export default gamesRepo
