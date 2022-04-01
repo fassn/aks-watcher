@@ -29,8 +29,7 @@ export const GameCard = (props: { gameData: Game }) => {
         await fetch(
             `/api/games/delete/${props.gameData.id}`,
             { method: 'DELETE' }
-        )
-        mutate('/api/games/get')
+        ).then(() => mutate('/api/games/get'))
         setModalOpen(false)
     }
 
