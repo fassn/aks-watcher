@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import gamesRepo from './helpers/games-repo'
-import { Game } from "./helpers/game";
+import gamesRepo from '../../../utils/games-repo'
+import { Game } from "../../../utils/game";
 import * as cheerio from "cheerio"
 
 export default async function handler(

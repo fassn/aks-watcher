@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { Game } from "./helpers/game"
-import gamesRepo from "./helpers/games-repo"
+import { Game } from "../../../utils/game"
+import gamesRepo from "../../../utils/games-repo"
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,4 +14,4 @@ export default async function handler(
     console.log(error)
     res.status(500).json({ error: 'Error reading data' })
   }
-} 
+}

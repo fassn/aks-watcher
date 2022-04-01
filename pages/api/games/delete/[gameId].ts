@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import gamesRepo from "../helpers/games-repo"
+import gamesRepo from "../../../../utils/games-repo"
 
 export default async function handler (
     req: NextApiRequest,

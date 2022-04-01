@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
-import { Game } from "../pages/api/games/helpers/game"
+import { Game } from "../utils/game"
 import { Modal } from "./modal"
 
 export const GameCard = (props: { gameData: Game }) => {
