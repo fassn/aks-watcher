@@ -77,8 +77,7 @@ const updateGames = async (games: Game[]) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(gamesIdToUpdate),
-        })
-        mutate('/api/games/get')
+        }).then(() => mutate('/api/games/get'))
     }
 }
 
