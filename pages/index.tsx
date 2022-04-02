@@ -1,9 +1,7 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
-import { useEffect } from "react";
 import useSWR, { mutate, SWRConfig } from 'swr'
 import fetcher from "../utils/fetcher";
 import gamesRepo from "../utils/games-repo";
-import moment from 'moment'
 
 import { Game } from "../utils/game";
 import { GameCard } from "../components/game-card";
@@ -21,45 +19,13 @@ export const getStaticProps: GetStaticProps = async () => {
     }
 }
 
-// const getGamesIdToUpdate = (games: Game[]) => {
-//     const daysBeforeStale = process.env.NEXT_PUBLIC_DAYS_BEFORE_STALE
-//     const today = moment()
-//     let gamesIdToUpdate: number[] = []
-
-//     for (const game of games) {
-//         const lastUpdated = moment(game.dateUpdated)
-//         const dateDiff = Math.round(today.diff(lastUpdated) / (1000 * 60 * 60 * 24))
-//         if (dateDiff >= (daysBeforeStale ?? 3)) {
-//             gamesIdToUpdate.push(game.id)
-//         }
-//     }
-//     return gamesIdToUpdate
-// }
-
-// const updateGames = async (games: Game[]) => {
-//     const gamesIdToUpdate: number[] = getGamesIdToUpdate(games)
-
-//     if (gamesIdToUpdate.length > 0) {
-//         mutate('/api/games/get', async (cachedGames = games) => { // provide defaults to cachedGames if undefined
-//             const updatedGames: Game[] = await fetch('/api/games/update', {
-//                 method: 'POST',
-//                 headers: { 'Content-Type': 'application/json' },
-//                 body: JSON.stringify(gamesIdToUpdate),
-//             }).then((res) => res.json())
-//             const filteredGames = cachedGames.filter((game: Game) => {
-//                 return !updatedGames.some((ug: Game) => ug.id === game.id)
-//             })
-//             return [...filteredGames, ...updatedGames]
-//         })
-//     }
-// }
-
 const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticProps>) => {
     const { data: games, error, mutate } = useSWR('/api/games/get', fetcher, {
         fallbackData: fallback['/api/games/get'],
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
+
     useSWR(() => {
         if (games === undefined) throw Error('`games` is not ready yet.')
         return '/api/games/update'
@@ -75,10 +41,6 @@ const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticPr
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
-
-    // useEffect(() => {
-    //     updateGames(games)
-    // }, [])
 
     if (error) return <div>failed to load</div>
     if (!games) return <div>loading...</div>

@@ -29,8 +29,8 @@ export default async function handler(
                     })
                     .catch(() => {
                         res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
-                    }),
-                timeout(10000)
+                    })
+                // timeout(10000)
             ])
         }
     }
