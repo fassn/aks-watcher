@@ -1,4 +1,6 @@
 import { useRouter } from "next/router"
+import { mutate } from "swr"
+import { Game } from "../utils/game"
 
 interface FormData {
     aksLink: { value: string }
@@ -11,15 +13,16 @@ export const GameForm = () => {
         event.preventDefault()
 
         const target = event.target as typeof event.target & FormData
-        const endpoint = '/api/games/store'
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({url: target.aksLink.value}),
-        }
-        await fetch(endpoint, options)
+        await mutate('/api/get/games', async () => {
+            const updatedGames = await fetch('/api/games/store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({url: target.aksLink.value}),
+            }).then(res => res.json())
+            return [...updatedGames]
+        })
 
         router.push('/')
     }

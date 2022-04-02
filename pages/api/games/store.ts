@@ -18,10 +18,10 @@ export default async function handler(
     if (url) {
         try {
             await fetch(url).then(res => res.text())
-                .then(data => {
+                .then(async data => {
                     const content = getContent(url, data)
-                    gamesRepo.create(content)
-                    res.status(200).send({ msg: 'Game has been created successfully.' })
+                    const updatedGames = await gamesRepo.create(content)
+                    res.status(200).send(updatedGames)
                 })
                 .catch(() => {
                     res.status(500).send({ error: 'There was an issue while creating the game.' })
