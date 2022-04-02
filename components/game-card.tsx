@@ -17,19 +17,28 @@ export const GameCard = (props: { gameData: Game }) => {
     }, [props.gameData])
 
     const updatePrice = async () => {
-        await fetch(
-            `/api/games/update/${props.gameData.id}`,
-            { method: 'PATCH' }
-        )
-        .then(res => res.json())
-        .then(updatedGame => setGame({...game, ...updatedGame}))
+        mutate('/api/games/get', async (games: Game[]) => {
+            const updatedGame = await fetch(
+                `/api/games/update/${props.gameData.id}`,
+                { method: 'PATCH' }
+            ).then(res => res.json())
+            setGame({...game, ...updatedGame})
+            const filteredGames = games.filter((g: Game) => g.id !==  game.id)
+            return [...filteredGames, updatedGame]
+        })
     }
 
     const deleteGame = async () => {
-        await fetch(
-            `/api/games/delete/${props.gameData.id}`,
-            { method: 'DELETE' }
-        ).then(() => mutate('/api/games/get'))
+        mutate('/api/games/get', async (games: Game[]) => {
+            const deletedGame = props.gameData
+
+            await fetch(
+                `/api/games/delete/${props.gameData.id}`,
+                { method: 'DELETE' }
+            ).then(() => mutate('/api/games/get'))
+            const filteredGames = games.filter((game: Game) => game.id !==  deletedGame.id)
+            return [...filteredGames]
+        })
         setModalOpen(false)
     }
 

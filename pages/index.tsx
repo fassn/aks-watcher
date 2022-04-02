@@ -21,6 +21,39 @@ export const getStaticProps: GetStaticProps = async () => {
     }
 }
 
+const getGamesIdToUpdate = (games: Game[]) => {
+    const daysBeforeStale = process.env.NEXT_PUBLIC_DAYS_BEFORE_STALE
+    const today = moment()
+    let gamesIdToUpdate: number[] = []
+
+    for (const game of games) {
+        const lastUpdated = moment(game.dateUpdated)
+        const dateDiff = Math.round(today.diff(lastUpdated) / (1000 * 60 * 60 * 24))
+        if (dateDiff >= (daysBeforeStale ?? 3)) {
+            gamesIdToUpdate.push(game.id)
+        }
+    }
+    return gamesIdToUpdate
+}
+
+const updateGames = async (games: Game[]) => {
+    const gamesIdToUpdate: number[] = getGamesIdToUpdate(games)
+
+    if (gamesIdToUpdate.length > 0) {
+        mutate('/api/games/get', async (cachedGames = games) => { // provide defaults to cachedGames if undefined
+            const updatedGames: Game[] = await fetch('/api/games/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(gamesIdToUpdate),
+            }).then((res) => res.json())
+            const filteredGames = cachedGames.filter((game: Game) => {
+                return !updatedGames.some((ug: Game) => ug.id === game.id)
+            })
+            return [...filteredGames, ...updatedGames]
+        })
+    }
+}
+
 const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticProps>) => {
     const { data: games, error } = useSWR('/api/games/get', fetcher, {
         fallbackData: fallback['/api/games/get'],
@@ -53,32 +86,5 @@ const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticPr
         </SWRConfig>
     );
 };
-
-const getGamesIdToUpdate = (games: Game[]) => {
-    const daysBeforeStale = process.env.NEXT_PUBLIC_DAYS_BEFORE_STALE
-    const today = moment()
-    let gamesIdToUpdate: number[] = []
-
-    for (const game of games) {
-        const lastUpdated = moment(game.dateUpdated)
-        const dateDiff = Math.round(today.diff(lastUpdated) / (1000 * 60 * 60 * 24))
-        if (dateDiff >= (daysBeforeStale ?? 3)) {
-            gamesIdToUpdate.push(game.id)
-        }
-    }
-    return gamesIdToUpdate
-}
-
-const updateGames = async (games: Game[]) => {
-    const gamesIdToUpdate: number[] = getGamesIdToUpdate(games)
-
-    if (gamesIdToUpdate.length > 0) {
-        await fetch('/api/games/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(gamesIdToUpdate),
-        }).then(() => mutate('/api/games/get'))
-    }
-}
 
 export default Home;

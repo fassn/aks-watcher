@@ -60,6 +60,7 @@ async function create(game: any) {
     // add and save game
     games.push(game);
     saveData(games);
+    return games
 }
 
 async function update(id: number, params: any): Promise<Game | undefined> {
@@ -80,8 +81,8 @@ async function update(id: number, params: any): Promise<Game | undefined> {
         if (game.id === updatedGame.id) game = {...updatedGame}
         return game
     })
-    saveData(games);
 
+    saveData(games);
     return updatedGame
 }
 
