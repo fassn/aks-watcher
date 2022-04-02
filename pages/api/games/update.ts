@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import gamesRepo from '../../../utils/games-repo'
 import { Game } from "../../../utils/game";
 import * as cheerio from "cheerio"
+import moment from "moment";
 
 export default async function handler(
     req: NextApiRequest,
@@ -11,30 +12,47 @@ export default async function handler(
         res.status(405).send('Request must be POST.')
     }
 
-    let updatedGames: Game[] = []
-    const gameIds: number[] = req.body
-    for (const id of gameIds) {
-        const game = await gamesRepo.getById(id)
-        if (!game) {
-            console.warn(`There is no game with the id ${id}. Skipping to the next one.`)
-            continue
-        }
+    const games = req.body
 
-        await Promise.all([
-            fetch(game.url)
-                .then(res => res.text())
-                .then(async contents => {
-                    const newPrice = getPrice(contents)
-                    const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
-                    if (updatedGame) updatedGames.push(updatedGame)
-                })
-                .catch(() => {
-                    res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
-                }),
-            timeout(10000)
-        ])
+    const gamesToUpdate: Game[] = getGamesToUpdate(games)
+
+    let updatedGames: Game[] = []
+    if (gamesToUpdate.length > 0) {
+        for (const game of gamesToUpdate) {
+            await Promise.all([
+                fetch(game.url)
+                    .then(res => res.text())
+                    .then(async contents => {
+                        const newPrice = getPrice(contents)
+                        const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
+                        if (updatedGame) updatedGames.push(updatedGame)
+                    })
+                    .catch(() => {
+                        res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
+                    }),
+                timeout(10000)
+            ])
+        }
     }
-    res.status(200).json(JSON.stringify(updatedGames))
+    const filteredGames = gamesToUpdate.filter((game: Game) => {
+        return !updatedGames.some((ug: Game) => ug.id === game.id)
+    })
+    res.status(200).json(JSON.stringify([...filteredGames, ...updatedGames]))
+}
+
+const getGamesToUpdate = (games: Game[]) => {
+    const daysBeforeStale = process.env.NEXT_PUBLIC_DAYS_BEFORE_STALE
+    const today = moment()
+    let gamesToUpdate: Game[] = []
+
+    for (const game of games) {
+        const lastUpdated = moment(game.dateUpdated)
+        const dateDiff = Math.round(today.diff(lastUpdated) / (1000 * 60 * 60 * 24))
+        if (dateDiff >= (daysBeforeStale ?? 3)) {
+            gamesToUpdate.push(game)
+        }
+    }
+    return gamesToUpdate
 }
 
 const timeout = (ms: number) => {
