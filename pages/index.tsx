@@ -1,27 +1,26 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import useSWR, { mutate, SWRConfig } from 'swr'
 import fetcher from "../utils/fetcher";
-import gamesRepo from "../utils/games-repo";
 
 import { Game } from "../utils/game";
 import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
 import styles from "../styles/Home.module.css";
 
-export const getStaticProps: GetStaticProps = async () => {
-    const games = await gamesRepo.getAll()
-    return {
-        props: {
-            fallback: {
-                '/api/games/get': games
-            }
-        }
-    }
-}
+// export const getStaticProps: GetStaticProps = async () => {
+//     const games = await gamesRepo.getAll()
+//     return {
+//         props: {
+//             fallback: {
+//                 '/api/games/get': games
+//             }
+//         }
+//     }
+// }
 
-const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home: NextPage = () => {
     const { data: games, error, mutate } = useSWR('/api/games/get', fetcher, {
-        fallbackData: fallback['/api/games/get'],
+        // fallbackData: fallback['/api/games/get'],
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
@@ -45,7 +44,7 @@ const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticPr
     if (error) return <div>failed to load</div>
     if (!games) return <div>loading...</div>
     return (
-        <SWRConfig value={{ fallback }}>
+        <>
             <div className={styles.container}>
                 <div className={"flex justify-evenly " + (games.length > 0? "flex-wrap": "flex-col")}>
                     {
@@ -60,7 +59,7 @@ const Home: NextPage = ({ fallback }: InferGetStaticPropsType<typeof getStaticPr
                     <AddGameCard></AddGameCard>
                 </div>
             </div>
-        </SWRConfig>
+        </>
     );
 };
 
