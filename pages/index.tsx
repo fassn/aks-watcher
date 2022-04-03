@@ -23,13 +23,7 @@ const Home: NextPage = () => {
     }), {
         onSuccess: async (data) => {
             const updatedGames = await data.json()
-            console.log({updatedGames})
-            mutate('/api/games/get', async (games: Game[]) => {
-                games = games.filter(game => {
-                    return !updatedGames.some((ug: Game) => ug.id === game.id)
-                })
-                return [...games, ...updatedGames]
-            })
+            mutate('/api/games/get', async (games: Game[]) => [...updatedGames])
         },
         revalidateOnFocus: false,
         revalidateOnReconnect: false

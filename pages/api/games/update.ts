@@ -19,19 +19,16 @@ export default async function handler(
     let updatedGames: Game[] = []
     if (gamesToUpdate.length > 0) {
         for (const game of gamesToUpdate) {
-            await Promise.all([
-                await fetch(game.url)
-                    .then(res => res.text())
-                    .then(async contents => {
-                        const newPrice = getPrice(contents)
-                        const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
-                        if (updatedGame) updatedGames.push(updatedGame)
-                    })
-                    .catch(() => {
-                        res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
-                    })
-                // timeout(10000)
-            ])
+            fetch(game.url)
+                .then(res => res.text())
+                .then(async contents => {
+                    const newPrice = getPrice(contents)
+                    const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
+                    if (updatedGame) updatedGames.push(updatedGame)
+                })
+                .catch(() => {
+                    res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
+                })
         }
     }
     const filteredGames = gamesToUpdate.filter((game: Game) => {
