@@ -1,26 +1,14 @@
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
-import useSWR, { mutate, SWRConfig } from 'swr'
+import type { NextPage } from "next";
+import useSWR, { mutate } from 'swr'
 import fetcher from "../utils/fetcher";
 
 import { Game } from "../utils/game";
 import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
-import styles from "../styles/Home.module.css";
-
-// export const getStaticProps: GetStaticProps = async () => {
-//     const games = await gamesRepo.getAll()
-//     return {
-//         props: {
-//             fallback: {
-//                 '/api/games/get': games
-//             }
-//         }
-//     }
-// }
+import styles from "../styles/Home.module.css"
 
 const Home: NextPage = () => {
-    const { data: games, error, mutate } = useSWR('/api/games/get', fetcher, {
-        // fallbackData: fallback['/api/games/get'],
+    const { data: games, error } = useSWR('/api/games/get', fetcher, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
@@ -28,14 +16,20 @@ const Home: NextPage = () => {
     useSWR(() => {
         if (games === undefined) throw Error('`games` is not ready yet.')
         return '/api/games/update'
-    }, (payload) => fetch('api/games/update', {
+    }, () => fetch('api/games/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(games)
     }), {
         onSuccess: async (data) => {
             const updatedGames = await data.json()
-            mutate([...updatedGames])
+            console.log({updatedGames})
+            mutate('/api/games/get', async (games: Game[]) => {
+                games = games.filter(game => {
+                    return !updatedGames.some((ug: Game) => ug.id === game.id)
+                })
+                return [...games, ...updatedGames]
+            })
         },
         revalidateOnFocus: false,
         revalidateOnReconnect: false
