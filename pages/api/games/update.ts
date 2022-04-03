@@ -19,7 +19,7 @@ export default async function handler(
     let updatedGames: Game[] = []
     if (gamesToUpdate.length > 0) {
         for (const game of gamesToUpdate) {
-            fetch(game.url)
+            await fetch(game.url)
                 .then(res => res.text())
                 .then(async contents => {
                     const newPrice = getPrice(contents)
