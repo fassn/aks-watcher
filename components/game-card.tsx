@@ -18,10 +18,11 @@ export const GameCard = (props: { gameData: Game }) => {
 
     const updatePrice = async () => {
         mutate('/api/games/get', async (games: Game[]) => {
-            const updatedGame = await fetch(
+            const res = await fetch(
                 `/api/games/update/${props.gameData.id}`,
                 { method: 'PATCH' }
-            ).then(res => res.json())
+            )
+            const updatedGame: Game = await res.json()
             setGame({...game, ...updatedGame})
             const filteredGames = games.filter((g: Game) => g.id !==  game.id)
             return [...filteredGames, updatedGame]
@@ -30,12 +31,11 @@ export const GameCard = (props: { gameData: Game }) => {
 
     const deleteGame = async () => {
         mutate('/api/games/get', async (games: Game[]) => {
-            const deletedGame = props.gameData
-
-            await fetch(
+            const res = await fetch(
                 `/api/games/delete/${props.gameData.id}`,
                 { method: 'DELETE' }
-            ).then(() => mutate('/api/games/get'))
+            )
+            const deletedGame: Game = await res.json()
             const filteredGames = games.filter((game: Game) => game.id !==  deletedGame.id)
             return [...filteredGames]
         })

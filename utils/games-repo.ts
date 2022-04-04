@@ -3,14 +3,6 @@ import { Game } from './game';
 import { promises as fsp } from 'fs';
 import { join } from 'path';
 
-// const filePath = join(tmpdir(), 'games.json')
-// let filePath = ''
-// if (process.env.NODE_ENV === 'development') {
-//     filePath = join(process.cwd(), 'games.json')
-// } else {
-
-// }
-
 const jsonStorageUrl = process.env.JSONSTORAGE_URL as string
 const jsonStorageId = process.env.JSONSTORAGE_ID
 
@@ -28,9 +20,8 @@ async function getAll(): Promise<Game[]> {
     if (!jsonStorageId) {
         console.log('No JSONStorage ID was provided. Please provide one in your .env file.')
     } else {
-        await fetch(join(jsonStorageUrl, jsonStorageId))
-            .then(res => res.json())
-            .then((data: Game[]) => games = data)
+        const res = await fetch(join(jsonStorageUrl, jsonStorageId))
+        games = await res.json()
     }
     return games
 }
@@ -91,15 +82,17 @@ async function _delete(id: number) {
     let games = await getAll()
 
     // filter out deleted game and save
+    const deletedGame = games.filter((game: Game) => game.id === id)
     games = games.filter((game: Game) => game.id !== id);
     saveData(games);
+    return deletedGame
 }
 
 async function saveData(games: Game[]) {
     if (!jsonStorageId) {
         console.log('No JSONStorage ID was provided. Please provide one in your .env file.')
     } else {
-        fetch(join(jsonStorageUrl, jsonStorageId), {
+        await fetch(join(jsonStorageUrl, jsonStorageId), {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(games),

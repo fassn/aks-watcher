@@ -10,11 +10,7 @@ export default async function handler (
     }
 
     const gameId = parseInt((req.query['gameId']) as string)
-    const game = await gamesRepo.getById(gameId)
-    if (!game) {
-        return res.status(500).send(`Server couldn't find a game with the id ${gameId}.`)
-    }
-    await gamesRepo.delete(gameId)
+    const game = await gamesRepo.delete(gameId)
 
-    res.status(200).json({})
+    res.status(200).json(game)
 }
