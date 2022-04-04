@@ -13,14 +13,15 @@ export const GameForm = () => {
         event.preventDefault()
 
         const target = event.target as typeof event.target & FormData
-        await mutate('/api/get/games', async () => {
-            const updatedGames = await fetch('/api/games/store', {
+        mutate('/api/get/games', async () => {
+            const res = await fetch('/api/games/store', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({url: target.aksLink.value}),
-            }).then(res => res.json())
+            })
+            const updatedGames = await res.json()
             return [...updatedGames]
         })
 

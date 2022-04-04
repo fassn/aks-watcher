@@ -19,18 +19,13 @@ export default async function handler(
     const url = game.url
     if (url) {
         try {
-            fetch(url)
-                .then(res => res.text())
-                .then(async contents => {
-                    const newPrice = getPrice(contents)
-                    const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
-                    res.status(200).json(JSON.stringify(updatedGame))
-                })
-                .catch(() => {
-                    res.status(500).send({ error: 'There was an issue while updating the game.' })
-                })
+            const response = await fetch(url)
+            const contents = await response.text()
+            const newPrice = getPrice(contents)
+            const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
+            res.status(200).json(JSON.stringify(updatedGame))
         } catch (err) {
-            res.status(500).send({ error: 'Failed to fetch data.' })
+            res.status(500).send({ error: 'There was an issue while updating the game.' })
         }
     }
 }
