@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import gamesRepo from '../../../utils/games-repo'
-import { Game } from "../../../utils/game";
+import prisma from "../../../utils/prisma"
+import { Game } from "../../../utils/game"
 import * as cheerio from "cheerio"
 import moment from "moment";
 
@@ -24,7 +24,15 @@ export default async function handler(
                     .then(res => res.text())
                     .then(async contents => {
                         const newPrice = getPrice(contents)
-                        const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
+                        const updatedGame = await prisma.game.update({
+                            where: { id: game.id },
+                            data: {
+                                bestPrice: newPrice,
+                                dateUpdated: new Date().toISOString()
+                            }
+                        }).catch(e => {
+                            return res.status(500).send(e);
+                        })
                         if (updatedGame) updatedGames.push(updatedGame)
                     })
                     .catch(() => {

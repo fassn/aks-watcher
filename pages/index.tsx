@@ -13,6 +13,7 @@ const Home: NextPage = () => {
         revalidateOnReconnect: false
     })
 
+    // TODO: I should probably just check the game updated when doing the GET query
     useSWR(() => {
         if (games === undefined) throw Error('`games` is not ready yet.')
         return '/api/games/update'
