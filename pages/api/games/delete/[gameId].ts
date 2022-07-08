@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import gamesRepo from "../../../../utils/games-repo"
+import prisma from "../../../../utils/prisma"
 
 export default async function handler (
     req: NextApiRequest,
@@ -9,8 +9,10 @@ export default async function handler (
         res.status(405).send('Request must be DELETE.')
     }
 
-    const gameId = parseInt((req.query['gameId']) as string)
-    const game = await gamesRepo.delete(gameId)
+    const gameId = (req.query['gameId'] as string)
+    const deletedGame = await prisma.game.delete({
+        where: { id: gameId }
+    })
 
-    res.status(200).json(game)
+    res.status(200).json(deletedGame)
 }

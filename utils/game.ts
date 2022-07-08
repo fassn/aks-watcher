@@ -1,10 +1,10 @@
 export interface Game {
-    id: number,
+    id: string,
     name: string,
     url: string,
     cover: string,
     platform: string,
     bestPrice: number,
-    dateCreated: string,
-    dateUpdated: string,
+    dateCreated: Date,
+    dateUpdated: Date,
 }

@@ -1,32 +1,38 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import gamesRepo from '../../../../utils/games-repo'
+import prisma from "../../../../utils/prisma"
 import * as cheerio from "cheerio"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
 ) {
-    if (req.method !== 'PATCH') {
-        res.status(405).send('Request must be PATCH.')
+    if (req.method !== 'POST') {
+        res.status(405).send('Request must be POST.')
     }
 
-    const gameId = parseInt((req.query['gameId']) as string)
-    const game = await gamesRepo.getById(gameId)
-    if (!game) {
-        return res.status(500).send(`Server couldn't find a game with the id ${gameId}.`)
+    const url: string = req.body.url
+    if (!url) {
+        res.status(500).send({ error: 'There is no provided link.' })
     }
 
-    const url = game.url
-    if (url) {
-        try {
-            const response = await fetch(url)
-            const contents = await response.text()
-            const newPrice = getPrice(contents)
-            const updatedGame = await gamesRepo.update(game.id, { bestPrice: newPrice })
-            res.status(200).json(JSON.stringify(updatedGame))
-        } catch (err) {
-            res.status(500).send({ error: 'There was an issue while updating the game.' })
-        }
+    try {
+        const response = await fetch(url)
+        const contents = await response.text()
+        const newPrice = getPrice(contents)
+
+        const gameId = (req.query['gameId']) as string
+        const updatedGame = await prisma.game.update({
+            where: { id: gameId },
+            data: {
+                bestPrice: newPrice,
+                dateUpdated: new Date().toISOString()
+            }
+        }).catch(e => {
+            return res.status(500).send(e);
+        })
+        res.status(200).json(updatedGame)
+    } catch (err) {
+        res.status(500).send({ error: 'There was an issue while updating the game.' })
     }
 }
 

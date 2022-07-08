@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import gamesRepo from '../../../utils/games-repo'
+import prisma from "../../../utils/prisma"
+import { Platform } from "@prisma/client"
 import * as cheerio from "cheerio"
 
 export default async function handler(
@@ -20,8 +22,20 @@ export default async function handler(
             await fetch(url).then(res => res.text())
                 .then(async data => {
                     const content = getContent(url, data)
-                    const updatedGames = await gamesRepo.create(content)
-                    res.status(200).send(updatedGames)
+                    const game = await prisma.game.upsert({
+                        where: { url: url },
+                        update: {},
+                        create: {
+                            url: url,
+                            name: content.name,
+                            cover: content.cover,
+                            platform: content.platform,
+                            bestPrice: content.bestPrice,
+                            dateCreated: new Date().toISOString(),
+                            dateUpdated: new Date().toISOString(),
+                        }
+                    })
+                    res.status(200).send(game)
                 })
                 .catch(() => {
                     res.status(500).send({ error: 'There was an issue while creating the game.' })
@@ -46,11 +60,11 @@ const getContent = (url: string, data: string) => {
 const getPlatform = (url: string) => {
     // URLs on AllKeyShop seem to follow a pattern when it comes to the game's platform
     // We'll use that to determine on what platform the game is on.
-    let platform = ''
-    if (url.includes('-cd-key-')) platform = 'PC'
-    if (url.includes('-ps5-')) platform = 'PS5'
-    if (url.includes('-ps4-')) platform = 'PS5'
-    if (url.includes('-xbox-one-')) platform = 'Xbox One'
-    if (url.includes('-xbox-series-')) platform = 'Xbox Series'
+    let platform: Platform = Platform.PC
+    if (url.includes('-cd-key-')) platform = Platform.PC
+    if (url.includes('-ps5-')) platform = Platform.PS5
+    if (url.includes('-ps4-')) platform = Platform.PS4
+    if (url.includes('-xbox-one-')) platform = Platform.XBOX_ONE
+    if (url.includes('-xbox-series-')) platform = Platform.XBOX_SERIES
     return platform
 }

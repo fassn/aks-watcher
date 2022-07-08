@@ -17,25 +17,21 @@ export const GameCard = (props: { gameData: Game }) => {
     }, [props.gameData])
 
     const updatePrice = async () => {
-        mutate('/api/games/get', async (games: Game[]) => {
-            const res = await fetch(
-                `/api/games/update/${props.gameData.id}`,
-                { method: 'PATCH' }
-            )
-            const updatedGame: Game = await res.json()
+        const updatedGame = await fetch(`/api/games/update/${props.gameData.id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: props.gameData.url })
+        })
+        mutate('/api/games/get', async () => {
             setGame({...game, ...updatedGame})
-            const filteredGames = games.filter((g: Game) => g.id !==  game.id)
-            return [...filteredGames, updatedGame]
         })
     }
 
     const deleteGame = async () => {
+        const res = await fetch(`/api/games/delete/${props.gameData.id}`, { method: 'DELETE' })
+        const deletedGame: Game = await res.json()
+
         mutate('/api/games/get', async (games: Game[]) => {
-            const res = await fetch(
-                `/api/games/delete/${props.gameData.id}`,
-                { method: 'DELETE' }
-            )
-            const deletedGame: Game = await res.json()
             const filteredGames = games.filter((game: Game) => game.id !==  deletedGame.id)
             return [...filteredGames]
         })
