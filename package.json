@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "lint": "next lint"
   },
   "dependencies": {
@@ -18,12 +18,12 @@
     "dotenv-flow": "^3.2.0",
     "dotenv-flow-cli": "^1.0.0",
     "moment": "^2.29.1",
-    "next": "12.1.4",
+    "next": "^12.2.1",
     "next-auth": "^4.3.1",
     "node": "^16.14.2",
     "nodemailer": "^6.7.3",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "swr": "^1.2.2"
   },
   "devDependencies": {
