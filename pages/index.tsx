@@ -34,7 +34,6 @@ const Home: NextPage = () => {
     })
 
     const sortGames = (event: ChangeEvent<HTMLSelectElement>) => {
-        console.log(event.target.value)
         switch (event.target.value) {
             case 'game_asc':
                 games.sort((a: Game, b: Game) => {

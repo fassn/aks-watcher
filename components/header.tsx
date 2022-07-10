@@ -8,6 +8,12 @@ export const Header = () => {
                     <a>AKS Price Tracker</a>
                 </Link>
             </h1>
+            <span className="flex-none text-light-grey mx-6 pb-1">|</span>
+            <div className="flex text-light-grey justify-center font-josephin font-bold">
+                <Link href='/login'>
+                    <a>Login</a>
+                </Link>
+            </div>
             <div className="flex w-full justify-end">
                 <button className="flex justify-center items-center w-11 h-11">
                     <Link href='/add' passHref={true}>
