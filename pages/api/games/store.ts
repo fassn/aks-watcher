@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import prisma from "../../../utils/prisma"
+import prisma from "../../../lib/prisma"
 import { Platform } from "@prisma/client"
 import * as cheerio from "cheerio"
 
