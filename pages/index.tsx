@@ -1,37 +1,22 @@
 import type { NextPage } from "next";
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 import fetcher from "../lib/fetcher";
 
 import { Game } from "@prisma/client";
 import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
 import styles from "../styles/Home.module.css"
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 const Home: NextPage = () => {
+    const [games, setGames] = useState([])
     const { data, error } = useSWR('/api/games/get', fetcher, {
+        onSuccess: (games) => {
+            setGames(games)
+        },
         revalidateOnFocus: false,
         revalidateOnReconnect: false
     })
-    const [games, setGames] = useState([])
-    useEffect(() => { setGames(data) })
-
-    // TODO: I should probably just check the game updated when doing the GET query
-    // useSWR(() => {
-    //     if (games === undefined) throw Error('`games` is not ready yet.')
-    //     return '/api/games/update'
-    // }, () => fetch('api/games/update', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(games)
-    // }), {
-    //     onSuccess: async (data) => {
-    //         const updatedGames = await data.json()
-    //         mutate('/api/games/get', async () => [...updatedGames])
-    //     },
-    //     revalidateOnFocus: false,
-    //     revalidateOnReconnect: false
-    // })
 
     const sortGames = (event: ChangeEvent<HTMLSelectElement>) => {
         switch (event.target.value) {
