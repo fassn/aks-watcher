@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import prisma from "../../../../utils/prisma"
+import prisma from "../../../../lib/prisma"
 import * as cheerio from "cheerio"
 
 export default async function handler(

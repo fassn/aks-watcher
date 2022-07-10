@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import prisma from "../../../utils/prisma"
+import prisma from "../../../lib/prisma"
 
 export default async function handler(
   _: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const games = await prisma.game.findMany()
+    const games = await prisma.game.findMany({
+      orderBy: { name: 'asc' }
+    })
     res.status(200).json(games)
   }
   catch (error) {
