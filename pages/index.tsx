@@ -17,21 +17,21 @@ const Home: NextPage = () => {
     useEffect(() => { setGames(data) })
 
     // TODO: I should probably just check the game updated when doing the GET query
-    useSWR(() => {
-        if (games === undefined) throw Error('`games` is not ready yet.')
-        return '/api/games/update'
-    }, () => fetch('api/games/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(games)
-    }), {
-        onSuccess: async (data) => {
-            const updatedGames = await data.json()
-            mutate('/api/games/get', async () => [...updatedGames])
-        },
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-    })
+    // useSWR(() => {
+    //     if (games === undefined) throw Error('`games` is not ready yet.')
+    //     return '/api/games/update'
+    // }, () => fetch('api/games/update', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(games)
+    // }), {
+    //     onSuccess: async (data) => {
+    //         const updatedGames = await data.json()
+    //         mutate('/api/games/get', async () => [...updatedGames])
+    //     },
+    //     revalidateOnFocus: false,
+    //     revalidateOnReconnect: false
+    // })
 
     const sortGames = (event: ChangeEvent<HTMLSelectElement>) => {
         switch (event.target.value) {
