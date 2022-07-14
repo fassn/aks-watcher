@@ -8,11 +8,17 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const session = await unstable_getServerSession(req, res, authOptions);
-    const { id: userId } = session?.user
+    if (!session) {
+        res.status(200).json([])
+    }
 
-    const games = await prisma.game.findMany({
-        where: { userId: userId },
-        orderBy: { name: 'asc' }
-    })
-    res.status(200).json(games)
+    if (session) {
+        const { id: userId } = session?.user
+
+        const games = await prisma.game.findMany({
+            where: { userId: userId },
+            orderBy: { name: 'asc' }
+        })
+        res.status(200).json(games)
+    }
 }

@@ -16,45 +16,52 @@ export default async function handler(
 
     const { userId } = req.body
     const session = await unstable_getServerSession(req, res, authOptions);
-    const { id } = session?.user
-
-    if (id !== userId) {
-        res.status(403).send({ error: 'You are not allowed to update the games.' })
+    if (!session) {
+        res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
 
-    const games = req.body
-    const gamesToUpdate: Game[] = getGamesToUpdate(games)
+    if (session) {
+        const { id } = session?.user
 
-    let updatedGames: Game[] = []
-    if (gamesToUpdate.length > 0) {
-        for (const game of gamesToUpdate) {
-            await Promise.all([
-                fetch(game.url)
-                    .then(res => res.text())
-                    .then(async contents => {
-                        const newPrice = getPrice(contents)
-                        const updatedGame = await prisma.game.update({
-                            where: { id: game.id },
-                            data: {
-                                bestPrice: newPrice,
-                                dateUpdated: new Date().toISOString()
-                            }
-                        }).catch(e => {
-                            return res.status(500).send(e);
-                        })
-                        if (updatedGame) updatedGames.push(updatedGame)
-                    })
-                    .catch(() => {
-                        res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
-                    }),
-                timeout(1000)
-            ])
+        if (id !== userId) {
+            res.status(403).send({ error: 'You are not allowed to update the games.' })
         }
+
+        const games = req.body
+        const gamesToUpdate: Game[] = getGamesToUpdate(games)
+
+        let updatedGames: Game[] = []
+        if (gamesToUpdate.length > 0) {
+            for (const game of gamesToUpdate) {
+                await Promise.all([
+                    fetch(game.url)
+                        .then(res => res.text())
+                        .then(async contents => {
+                            const newPrice = getPrice(contents)
+                            const updatedGame = await prisma.game.update({
+                                where: { id: game.id },
+                                data: {
+                                    bestPrice: newPrice,
+                                    dateUpdated: new Date().toISOString()
+                                }
+                            }).catch(e => {
+                                return res.status(500).send(e);
+                            })
+                            if (updatedGame) updatedGames.push(updatedGame)
+                        })
+                        .catch(() => {
+                            res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
+                        }),
+                    timeout(1000)
+                ])
+            }
+        }
+        const filteredGames = gamesToUpdate.filter((game: Game) => {
+            return !updatedGames.some((ug: Game) => ug.id === game.id)
+        })
+        res.status(200).json(JSON.stringify([...filteredGames, ...updatedGames]))
+
     }
-    const filteredGames = gamesToUpdate.filter((game: Game) => {
-        return !updatedGames.some((ug: Game) => ug.id === game.id)
-    })
-    res.status(200).json(JSON.stringify([...filteredGames, ...updatedGames]))
 }
 
 const getGamesToUpdate = (games: Game[]) => {
