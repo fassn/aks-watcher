@@ -3,6 +3,8 @@ import prisma from "lib/prisma"
 import { Game } from "@prisma/client";
 import * as cheerio from "cheerio"
 import moment from "moment";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,8 +14,15 @@ export default async function handler(
         res.status(405).send('Request must be POST.')
     }
 
-    const games = req.body
+    const { userId } = req.body
+    const session = await unstable_getServerSession(req, res, authOptions);
+    const { id } = session?.user
 
+    if (id !== userId) {
+        res.status(403).send({ error: 'You are not allowed to update the games.' })
+    }
+
+    const games = req.body
     const gamesToUpdate: Game[] = getGamesToUpdate(games)
 
     let updatedGames: Game[] = []

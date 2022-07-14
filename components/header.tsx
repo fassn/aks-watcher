@@ -1,6 +1,47 @@
+import { signIn, signOut, useSession } from "next-auth/react"
 import Link from "next/link"
 
 export const Header = () => {
+    const {data: session} = useSession()
+
+    const handleSubmit = (event: any) => {
+        event.preventDefault()
+        const target = event.target as typeof event.target & FormData
+        signIn("email", { email: target.email.value })
+    }
+
+    const LoginBtn = () => {
+        if (session?.user) {
+            return (
+                <div>
+                    <span className="text-cream">
+                        <strong>{session.user.email}</strong>
+                    </span>
+                    <button onClick={() => signOut()} className='w-32'>
+                        Sign Out
+                    </button>
+                </div>
+            )
+        } else {
+            return (
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type='text'
+                        id='email'
+                        name='email'
+                        placeholder='email@example.com'
+                        className="shadow appearance-none border border-deep-blue rounded text-center text-deep-blue"
+                    />
+                    <button type='submit'
+                        className="w-20 justify-center bg-deep-blue text-cream font-semibold"
+                    >
+                        Sign In
+                    </button>
+                </form>
+            )
+        }
+    }
+
     return (
         <header className="flex w-full fixed top-0 z-50 h-12 items-center bg-deep-blue pl-8 pr-4">
             <h1 className="flex-none text-light-grey justify-center uppercase font-josephin font-bold">
@@ -9,10 +50,8 @@ export const Header = () => {
                 </Link>
             </h1>
             <span className="flex-none text-light-grey mx-6 pb-1">|</span>
-            <div className="flex text-light-grey justify-center font-josephin font-bold">
-                <Link href='/login'>
-                    <a>Login</a>
-                </Link>
+            <div className="flex-none text-light-grey justify-center font-josephin font-bold">
+                <LoginBtn />
             </div>
             <div className="flex w-full justify-end">
                 <button className="flex justify-center items-center w-11 h-11">

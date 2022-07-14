@@ -13,7 +13,7 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
         'light-grey': '#eef0eb',
-        'cream': '#f4f9e9',
+        'cream': '#f2efe9',
         'deep-blue': '#284b63',
       },
       height: {

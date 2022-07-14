@@ -2,45 +2,57 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
 import { Platform } from "@prisma/client"
 import * as cheerio from "cheerio"
+import { unstable_getServerSession } from "next-auth"
+import { authOptions } from "../auth/[...nextauth]"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    if (req.method !== 'POST') {
-        res.status(405).send({ error: 'Request needs to be POST.' })
+    const session = await unstable_getServerSession(req, res, authOptions)
+    const { id: userId } = session?.user
+
+    if (!session) {
+        res.status(500).send({ error: 'You need to be signin to use this API route.'})
     }
 
-    const url: string = req.body.url
-    if (!url) {
-        res.status(500).send({ error: 'There is no provided link.' })
-    }
+    if (session) {
+        if (req.method !== 'POST') {
+            res.status(405).send({ error: 'Request needs to be POST.' })
+        }
 
-    if (url) {
-        try {
-            await fetch(url).then(res => res.text())
-                .then(async data => {
-                    const content = getContent(url, data)
-                    const game = await prisma.game.upsert({
-                        where: { url: url },
-                        update: {},
-                        create: {
-                            url: url,
-                            name: content.name,
-                            cover: content.cover,
-                            platform: content.platform,
-                            bestPrice: content.bestPrice,
-                            dateCreated: new Date().toISOString(),
-                            dateUpdated: new Date().toISOString(),
-                        }
+        const url: string = req.body.url
+        if (!url) {
+            res.status(500).send({ error: 'There is no provided link.' })
+        }
+
+        if (url) {
+            try {
+                await fetch(url).then(res => res.text())
+                    .then(async data => {
+                        const content = getContent(url, data)
+                        const game = await prisma.game.upsert({
+                            where: { url: url },
+                            update: {},
+                            create: {
+                                userId: userId,
+                                url: url,
+                                name: content.name,
+                                cover: content.cover,
+                                platform: content.platform,
+                                bestPrice: content.bestPrice,
+                                dateCreated: new Date().toISOString(),
+                                dateUpdated: new Date().toISOString(),
+                            }
+                        })
+                        res.status(200).send(game)
                     })
-                    res.status(200).send(game)
-                })
-                .catch(() => {
-                    res.status(500).send({ error: 'There was an issue while creating the game.' })
-                })
-        } catch (err) {
-            res.status(500).send({ error: 'Failed to fetch data.' })
+                    .catch(() => {
+                        res.status(500).send({ error: 'There was an issue while creating the game.' })
+                    })
+            } catch (err) {
+                res.status(500).send({ error: 'Failed to fetch data.' })
+            }
         }
     }
 }
