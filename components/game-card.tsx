@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 import { Game } from "@prisma/client"
 import { Modal } from "./modal"
+import { useSession } from "next-auth/react"
 
 export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
@@ -16,11 +17,14 @@ export const GameCard = (props: { gameData: Game }) => {
         setGame(props.gameData)
     }, [props.gameData])
 
+    const session = useSession()
+    const { id: userId } = session.data?.user
+
     const updatePrice = async () => {
         const updatedGame = await fetch(`/api/games/update/${props.gameData.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: props.gameData.url })
+            body: JSON.stringify({ url: props.gameData.url, userId: userId})
         })
         mutate('/api/games/get', async () => {
             setGame({...game, ...updatedGame})
@@ -28,7 +32,11 @@ export const GameCard = (props: { gameData: Game }) => {
     }
 
     const deleteGame = async () => {
-        const res = await fetch(`/api/games/delete/${props.gameData.id}`, { method: 'DELETE' })
+        const res = await fetch(`/api/games/delete/${props.gameData.id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: userId})
+        })
         const deletedGame: Game = await res.json()
 
         mutate('/api/games/get', async (games: Game[]) => {

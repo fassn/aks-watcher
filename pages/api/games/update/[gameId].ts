@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
 import * as cheerio from "cheerio"
+import { unstable_getServerSession } from "next-auth"
+import { authOptions } from "pages/api/auth/[...nextauth]"
 
 export default async function handler(
     req: NextApiRequest,
@@ -10,9 +12,15 @@ export default async function handler(
         res.status(405).send('Request must be POST.')
     }
 
-    const url: string = req.body.url
+    const { userId, url } = req.body
+    const session = await unstable_getServerSession(req, res, authOptions);
+    const { id } = session?.user
     if (!url) {
         res.status(500).send({ error: 'There is no provided link.' })
+    }
+
+    if (id !== userId) {
+        res.status(403).send({ error: 'You are not allowed to update this game.' })
     }
 
     try {
