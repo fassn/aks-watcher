@@ -3,10 +3,10 @@ const prisma = new PrismaClient()
 
 async function main() {
     const fassn = await prisma.user.upsert({
-        where: { email: 'fassn@seed.io' },
+        where: { email: 'christopher.fargere@gmail.com' },
         update: {},
         create: {
-            email: 'fassn@seed.io',
+            email: 'christopher.fargere@gmail.com',
             name: 'fassn',
         },
     })
@@ -14,6 +14,7 @@ async function main() {
     const doom = await prisma.game.createMany({
         data: [
             {
+                userId: fassn.id,
                 url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
                 name: 'DOOM Eternal',
                 cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/DOOMEternal-1.jpg',
@@ -23,6 +24,7 @@ async function main() {
                 dateUpdated: '2022-04-03T20:00:17.299Z'
             },
             {
+                userId: fassn.id,
                 url: 'https://www.allkeyshop.com/blog/buy-fallout-4-cd-key-compare-prices/',
                 name: 'Fallout 4',
                 cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/Fallout4-1.jpg',
