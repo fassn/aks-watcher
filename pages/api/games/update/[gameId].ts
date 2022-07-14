@@ -13,34 +13,40 @@ export default async function handler(
     }
 
     const { userId, url } = req.body
-    const session = await unstable_getServerSession(req, res, authOptions);
-    const { id } = session?.user
     if (!url) {
         res.status(500).send({ error: 'There is no provided link.' })
     }
 
-    if (id !== userId) {
-        res.status(403).send({ error: 'You are not allowed to update this game.' })
+    const session = await unstable_getServerSession(req, res, authOptions);
+    if (!session) {
+        res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
 
-    try {
-        const response = await fetch(url)
-        const contents = await response.text()
-        const newPrice = getPrice(contents)
+    if (session) {
+        const { id } = session?.user
+        if (id !== userId) {
+            res.status(403).send({ error: 'You are not allowed to update this game.' })
+        }
 
-        const gameId = (req.query['gameId']) as string
-        const updatedGame = await prisma.game.update({
-            where: { id: gameId },
-            data: {
-                bestPrice: newPrice,
-                dateUpdated: new Date().toISOString()
-            }
-        }).catch(e => {
-            return res.status(500).send(e);
-        })
-        res.status(200).json(updatedGame)
-    } catch (err) {
-        res.status(500).send({ error: 'There was an issue while updating the game.' })
+        try {
+            const response = await fetch(url)
+            const contents = await response.text()
+            const newPrice = getPrice(contents)
+
+            const gameId = (req.query['gameId']) as string
+            const updatedGame = await prisma.game.update({
+                where: { id: gameId },
+                data: {
+                    bestPrice: newPrice,
+                    dateUpdated: new Date().toISOString()
+                }
+            }).catch(e => {
+                return res.status(500).send(e);
+            })
+            res.status(200).json(updatedGame)
+        } catch (err) {
+            res.status(500).send({ error: 'There was an issue while updating the game.' })
+        }
     }
 }
 

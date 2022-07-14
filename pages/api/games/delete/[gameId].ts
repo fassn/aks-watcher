@@ -13,15 +13,21 @@ export default async function handler (
 
     const { userId } = req.body
     const session = await unstable_getServerSession(req, res, authOptions);
-    const { id } = session?.user
-    if (id !== userId) {
-        res.status(403).send({ error: 'You are not allowed to update this game.' })
+    if (!session) {
+        res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
-    const gameId = (req.query['gameId'] as string)
-    const deletedGame = await prisma.game.delete({
-        where: { id: gameId }
-    })
+    if (session) {
+        const { id } = session?.user
+        if (id !== userId) {
+            res.status(403).send({ error: 'You are not allowed to update this game.' })
+        }
 
-    res.status(200).json(deletedGame)
+        const gameId = (req.query['gameId'] as string)
+        const deletedGame = await prisma.game.delete({
+            where: { id: gameId }
+        })
+
+        res.status(200).json(deletedGame)
+    }
 }

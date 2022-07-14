@@ -20,12 +20,12 @@ export const authOptions: NextAuthOptions = {
       session.user.id = user.id;
       return Promise.resolve(session);
     }
-  }
-//   pages: {
-//     signIn: '/login',
-//     error: '/login', // Error code passed in query string as ?error=
-//     verifyRequest: '/verify-request', // (used for check email message)
-// }
+  },
+  pages: {
+    // signIn: '/login',
+    // error: '/login', // Error code passed in query string as ?error=
+    verifyRequest: '/auth/verify-request', // (used for check email message)
+}
 }
 
 export default NextAuth(authOptions)

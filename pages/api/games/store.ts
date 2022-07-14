@@ -11,9 +11,8 @@ export default async function handler(
 ) {
     const session = await unstable_getServerSession(req, res, authOptions)
     const { id: userId } = session?.user
-
     if (!session) {
-        res.status(500).send({ error: 'You need to be signin to use this API route.'})
+        res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
     if (session) {

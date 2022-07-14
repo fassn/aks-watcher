@@ -95,7 +95,13 @@ const Home: NextPage = () => {
                             <AddGameCard></AddGameCard>
                         </div>
                     </> :
-                    <div>Please signin first.</div>
+                    <div className="flex justify-center text-3xl text-deep-blue leading-loose">
+                        <ol className="list-decimal">
+                            <li>Please signin first</li>
+                            <li>Track games from AllKeyShop</li>
+                            <li>Voilà!</li>
+                        </ol>
+                    </div>
                 }
             </div>
         </>

@@ -10,7 +10,7 @@ export const Header = () => {
         signIn("email", { email: target.email.value })
     }
 
-    const LoginBtn = () => {
+    const LoginButton = () => {
         if (session?.user) {
             return (
                 <div>
@@ -42,6 +42,23 @@ export const Header = () => {
         }
     }
 
+    const AddGameButton = () => {
+        if (session) {
+            return (
+                <div className="flex w-full justify-end">
+                    <button className="flex justify-center items-center w-11 h-11">
+                        <Link href='/add' passHref={true}>
+                            <svg className="h-6 w-6 text-cream"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </Link>
+                    </button>
+                </div>
+            )
+        }
+        return <></>
+    }
+
     return (
         <header className="flex w-full fixed top-0 z-50 h-12 items-center bg-deep-blue pl-8 pr-4">
             <h1 className="flex-none text-light-grey justify-center uppercase font-josephin font-bold">
@@ -51,17 +68,9 @@ export const Header = () => {
             </h1>
             <span className="flex-none text-light-grey mx-6 pb-1">|</span>
             <div className="flex-none text-light-grey justify-center font-josephin font-bold">
-                <LoginBtn />
+                <LoginButton />
             </div>
-            <div className="flex w-full justify-end">
-                <button className="flex justify-center items-center w-11 h-11">
-                    <Link href='/add' passHref={true}>
-                        <svg className="h-6 w-6 text-cream"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                    </Link>
-                </button>
-            </div>
+            <AddGameButton />
         </header>
     )
 }
