@@ -9,7 +9,7 @@ export default async function handler(
     res: NextApiResponse<any>
 ) {
     if (req.method !== 'POST') {
-        res.status(405).send('Request must be POST.')
+        res.status(405).send({ error: 'Request must be POST.' })
     }
 
     const { userId, url } = req.body

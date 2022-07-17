@@ -5,12 +5,22 @@ import { useSWRConfig } from "swr"
 import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
+import FlashMsg from "./flash-msg"
+
+export interface Flash {
+    show: boolean,
+    message: string,
+    severity?: ('success'|'error'),
+    delay?: number
+}
 
 export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
     const [game, setGame] = useState({...props.gameData})
     const [modalOpen, setModalOpen] = useState(false)
     const { mutate } = useSWRConfig()
+
+    const [flash, setFlash] = useState<Flash>({ show: false, message: '', delay: 5000 })
 
     // allows the component to re-render when the props are updated from the parent
     useEffect(() => {
@@ -21,14 +31,28 @@ export const GameCard = (props: { gameData: Game }) => {
     const { id: userId } = session.data?.user
 
     const updatePrice = async () => {
-        const updatedGame = await fetch(`/api/games/update/${props.gameData.id}`, {
+        const res = await fetch(`/api/games/update/${props.gameData.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: props.gameData.url, userId: userId})
         })
-        mutate('/api/games/get', async () => {
-            setGame({...game, ...updatedGame})
-        })
+        if(res.status !== 200) {
+            const error = await res.json().then(res => res.error)
+            flashMessage(error, 'error')
+        } else {
+            const updatedGame = res
+            mutate('/api/games/get', async () => {
+                setGame({...game, ...updatedGame})
+            })
+            flashMessage('Game was successfully updated', 'success')
+        }
+    }
+
+    const flashMessage = (message: string, severity: ('success'|'error')) => {
+        setFlash({ show: true, severity: severity, message: message})
+        setTimeout(() => {
+            setFlash({ show: false, message: '', delay: 5000 })
+        }, 5000)
     }
 
     const deleteGame = async () => {
@@ -56,6 +80,9 @@ export const GameCard = (props: { gameData: Game }) => {
 
     return (
         <div className="w-64 mx-5 my-10 outline outline-2 shadow-md shadow-deep-blue">
+            <FlashMsg severity={(flash.severity) as ('success'|'error')}>
+                { flash.message }
+            </FlashMsg>
             <div className="flex h-64">
                 <Link href={game.url}>
                     <a>
