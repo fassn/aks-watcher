@@ -5,6 +5,14 @@ import * as cheerio from "cheerio"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]"
 
+interface ScrapedContent {
+    url: string,
+    name: string,
+    cover: string,
+    platform: Platform,
+    bestPrice: number
+}
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -29,7 +37,13 @@ export default async function handler(
             try {
                 await fetch(url).then(res => res.text())
                     .then(async data => {
-                        const content = getContent(url, data)
+                        let content: ScrapedContent
+                        try {
+                            content = getContent(url, data)
+                        } catch (e: any) {
+                            const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
+                            return res.status(500).send({ error: error })
+                        }
                         const game = await prisma.game.upsert({
                             where: { url: url },
                             update: {},
@@ -59,11 +73,19 @@ export default async function handler(
 const getContent = (url: string, data: string) => {
     const $ = cheerio.load(data)
 
-    const cover = $('#gamepageSlider').find('.showing').find('img').attr('src') || ''
+    const cover = $('#gamepageSlider').find('.showing').find('img').attr('src')
+    if (!cover) {
+        throw new Error('Couldn\'t get the image from ' + url)
+    }
     const name = $('h1').find('span').first().text().trim()
+    if (!name) {
+        throw new Error('Couldn\'t get the name from ' + url)
+    }
     const platform = getPlatform(url)
-    const bestPrice = Number($('.content').find('meta[data-itemprop=lowPrice]').attr('content') || -1)
-
+    const bestPrice = Number($('.content').find('meta[data-itemprop=lowPrice]').attr('content'))
+    if (!bestPrice) {
+        throw new Error('Couldn\'t get the price from ' + url)
+    }
     return { url, cover, name, platform, bestPrice }
 }
 
