@@ -5,14 +5,7 @@ import { useSWRConfig } from "swr"
 import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
-import FlashMsg from "./flash-msg"
-
-export interface Flash {
-    show: boolean,
-    message: string,
-    severity?: ('success'|'error'),
-    delay?: number
-}
+import FlashMsg, { Flash } from "./flash-msg"
 
 export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
@@ -20,9 +13,10 @@ export const GameCard = (props: { gameData: Game }) => {
     const [modalOpen, setModalOpen] = useState(false)
     const { mutate } = useSWRConfig()
 
-    const [flash, setFlash] = useState<Flash>({ show: false, message: '', delay: 5000 })
+    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [flash, setFlash] = useState<Flash>({})
+    const FLASH_MESSAGE_DELAY = 5000
 
-    // allows the component to re-render when the props are updated from the parent
     useEffect(() => {
         setGame(props.gameData)
     }, [props.gameData])
@@ -31,28 +25,28 @@ export const GameCard = (props: { gameData: Game }) => {
     const { id: userId } = session.data?.user
 
     const updatePrice = async () => {
+        if (isRefreshing) {
+            throw new Error('You have already requested an update for this game. No need to spam the button ;-)')
+        }
+        setIsRefreshing(true)
         const res = await fetch(`/api/games/update/${props.gameData.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: props.gameData.url, userId: userId})
+            body: JSON.stringify({ url: props.gameData.url, lastUpdated: props.gameData.dateUpdated, userId: userId })
         })
         if(res.status !== 200) {
             const error = await res.json().then(res => res.error)
-            flashMessage(error, 'error')
+            setFlash({ message: error, severity: 'error', delay: FLASH_MESSAGE_DELAY })
+
         } else {
             const updatedGame = res
             mutate('/api/games/get', async () => {
                 setGame({...game, ...updatedGame})
             })
-            flashMessage('Game was successfully updated', 'success')
+            setFlash({ message: 'Game was successfully updated', severity: 'success', delay: FLASH_MESSAGE_DELAY })
         }
-    }
-
-    const flashMessage = (message: string, severity: ('success'|'error')) => {
-        setFlash({ show: true, severity: severity, message: message})
-        setTimeout(() => {
-            setFlash({ show: false, message: '', delay: 5000 })
-        }, 5000)
+        setIsRefreshing(false)
+        setTimeout(() => setFlash({}), FLASH_MESSAGE_DELAY)
     }
 
     const deleteGame = async () => {
@@ -80,7 +74,7 @@ export const GameCard = (props: { gameData: Game }) => {
 
     return (
         <div className="w-64 mx-5 my-10 outline outline-2 shadow-md shadow-deep-blue">
-            <FlashMsg severity={(flash.severity) as ('success'|'error')}>
+            <FlashMsg severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
                 { flash.message }
             </FlashMsg>
             <div className="flex h-64">

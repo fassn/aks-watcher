@@ -27,8 +27,12 @@ export default async function handler(
             res.status(403).send({ error: 'You are not allowed to update the games.' })
         }
 
-        const games = req.body
+        const { games } = req.body
         const gamesToUpdate: Game[] = getGamesToUpdate(games)
+        if (gamesToUpdate.length === 0) {
+            res.status(500).send({ error: 'There were no games to update. \
+            Have you already updated the games in the last hour?'})
+        }
 
         let updatedGames: Game[] = []
         if (gamesToUpdate.length > 0) {
@@ -45,7 +49,7 @@ export default async function handler(
                                     dateUpdated: new Date().toISOString()
                                 }
                             }).catch(e => {
-                                return res.status(500).send(e);
+                                return res.status(500).send({ error: e.message });
                             })
                             if (updatedGame) updatedGames.push(updatedGame)
                         })
@@ -59,20 +63,20 @@ export default async function handler(
         const filteredGames = gamesToUpdate.filter((game: Game) => {
             return !updatedGames.some((ug: Game) => ug.id === game.id)
         })
-        res.status(200).json(JSON.stringify([...filteredGames, ...updatedGames]))
+        res.status(200).json([...filteredGames, ...updatedGames])
 
     }
 }
 
 const getGamesToUpdate = (games: Game[]) => {
-    const daysBeforeStale = process.env.NEXT_PUBLIC_DAYS_BEFORE_STALE
+    const minutesBeforeStale = process.env.NEXT_PUBLIC_MINUTES_BEFORE_STALE
     const today = moment()
     let gamesToUpdate: Game[] = []
 
     for (const game of games) {
         const lastUpdated = moment(game.dateUpdated)
-        const dateDiff = Math.round(today.diff(lastUpdated) / (1000 * 60 * 60 * 24))
-        if (dateDiff >= (daysBeforeStale ?? 3)) {
+        const dateDiff = Math.round(today.diff(lastUpdated) / (1000 * 60)) // diff in minutes
+        if (dateDiff >= (minutesBeforeStale ?? 60)) {
             gamesToUpdate.push(game)
         }
     }
