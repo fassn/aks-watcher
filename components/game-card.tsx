@@ -5,7 +5,7 @@ import { useSWRConfig } from "swr"
 import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
-import FlashMsg, { Flash } from "./flash-msg"
+import FlashMessage, { Flash } from "./flash-msg"
 
 export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
@@ -74,9 +74,13 @@ export const GameCard = (props: { gameData: Game }) => {
 
     return (
         <div className="w-64 mx-5 my-10 outline outline-2 shadow-md shadow-deep-blue">
-            <FlashMsg severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
-                { flash.message }
-            </FlashMsg>
+            <div className="relative">
+                <div className="absolute top-0 z-10">
+                    <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
+                        { flash.message }
+                    </FlashMessage>
+                </div>
+            </div>
             <div className="flex h-64">
                 <Link href={game.url}>
                     <a>
