@@ -6,10 +6,11 @@ import { Game } from "@prisma/client";
 import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
 import styles from "../styles/Home.module.css"
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
-import FlashMsg, { Flash } from "components/flash-msg";
+import FlashMessage, { Flash } from "components/flash-msg";
 import Image from "next/image";
+import { SortGames } from "components/sort-games";
 
 const Home: NextPage = () => {
     const { data: session } = useSession()
@@ -22,42 +23,8 @@ const Home: NextPage = () => {
         revalidateOnReconnect: false
     })
 
-    const sortGames = (event: ChangeEvent<HTMLSelectElement>) => {
-        switch (event.target.value) {
-            case 'game_asc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.name < b.name) return -1
-                    if (a.name > b.name) return 1
-                    return 0
-                })
-                break;
-            case 'game_desc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.name < b.name) return 1
-                    if (a.name > b.name) return -1
-                    return 0
-                })
-                break;
-            case 'price_asc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.bestPrice < b.bestPrice) return -1
-                    if (a.bestPrice > b.bestPrice) return 1
-                    return 0
-                })
-                break;
-            case 'price_desc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.bestPrice < b.bestPrice) return 1
-                    if (a.bestPrice > b.bestPrice) return -1
-                    return 0
-                })
-                break;
-        }
-        setGames([...games])
-    }
-    const [flash, setFlash] = useState<Flash>({})
-
     const [isRefreshing, setIsRefreshing] = useState(false)
+    const [flash, setFlash] = useState<Flash>({})
     const refreshAll = async () => {
         if (isRefreshing) {
             throw new Error('You have already requested a full refresh. No need to spam the button ;-)')
@@ -97,17 +64,8 @@ const Home: NextPage = () => {
                     session ?
                     <>
                         <div className="flex border-solid border-deep-blue border-b-2 py-2">
-                            <FlashMsg severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
-                                { flash.message }
-                            </FlashMsg>
-                            <div className="flex">
-                                <label htmlFor="sort_games" className="font-josephin">Sort </label>
-                                <select onChange={sortGames} id="sort_games" className="font-josephin">
-                                    <option value='game_asc'>Game (a-z)</option>
-                                    <option value='game_desc'>Game (z-a)</option>
-                                    <option value='price_asc'>Price (smallest)</option>
-                                    <option value='price_desc'>Price (biggest)</option>
-                                </select>
+                            <div className="flex font-josephin">
+                                <SortGames games={games} setGames={setGames} />
                             </div>
 
                             <div className="flex mx-10">
@@ -115,6 +73,11 @@ const Home: NextPage = () => {
                                 <button onClick={refreshAll} id="refresh_all">
                                     <svg className="inline-block h-4 w-4 mx-2 text-deep-blue" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
                                 </button>
+                            </div>
+                            <div>
+                                <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
+                                    { flash.message }
+                                </FlashMessage>
                             </div>
                         </div>
 

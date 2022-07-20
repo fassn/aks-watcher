@@ -6,16 +6,16 @@ export interface Flash {
     delay?: number
 }
 
-type FlashMsgProps = {
+type FlashMessageProps = {
     children: ReactNode,
     severity: ('success'|'error'),
     delay: number,
 }
 
-const FlashMsg: React.FC<FlashMsgProps> = ({ children, severity, delay }) => {
+const FlashMessage: React.FC<FlashMessageProps> = ({ children, severity, delay }) => {
     const [isVisible, setIsVisible] = useState(false)
 
-    let className = 'text-base '
+    let className = 'text-base text-center '
     switch (severity) {
         case 'success':
             className += 'bg-green-100 text-green-700 '
@@ -35,15 +35,12 @@ const FlashMsg: React.FC<FlashMsgProps> = ({ children, severity, delay }) => {
     }, [children])
 
     return (
-        isVisible ? <div className="relative">
-            <div className='absolute top-0 z-10' role="alert">
-                <div className={'whitespace-nowrap w-full opacity-80 ' + className}>
-                    {children}
-                </div>
-            </div>
-        </div> :
+        isVisible ?
+            <div className={className} role="alert">
+                {children}
+            </div> :
         <></>
     )
 }
 
-export default FlashMsg
+export default FlashMessage
