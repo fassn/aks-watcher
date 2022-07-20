@@ -20,17 +20,17 @@ export default async function handler(
     const session = await unstable_getServerSession(req, res, authOptions)
     const { id: userId } = session?.user
     if (!session) {
-        res.status(403).send({ error: 'You need to be signed in to use this API route.'})
+        return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
     if (session) {
         if (req.method !== 'POST') {
-            res.status(405).send({ error: 'Request needs to be POST.' })
+            return res.status(405).send({ error: 'Request needs to be POST.' })
         }
 
         const url: string = req.body.url
         if (!url) {
-            res.status(500).send({ error: 'There is no provided link.' })
+            return res.status(500).send({ error: 'There is no provided link.' })
         }
 
         if (url) {
@@ -58,13 +58,13 @@ export default async function handler(
                                 dateUpdated: new Date().toISOString(),
                             }
                         })
-                        res.status(200).send(game)
+                        return res.status(200).send(game)
                     })
                     .catch(() => {
-                        res.status(500).send({ error: 'There was an issue while creating the game.' })
+                        return res.status(500).send({ error: 'There was an issue while creating the game.' })
                     })
             } catch (err) {
-                res.status(500).send({ error: 'Failed to fetch data.' })
+                return res.status(500).send({ error: 'Failed to fetch data.' })
             }
         }
     }

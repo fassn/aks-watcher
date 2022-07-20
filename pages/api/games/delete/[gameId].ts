@@ -8,19 +8,19 @@ export default async function handler (
     res: NextApiResponse<any>
     ) {
     if (req.method !== 'DELETE') {
-        res.status(405).send('Request must be DELETE.')
+        return res.status(405).send('Request must be DELETE.')
     }
 
     const { userId } = req.body
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-        res.status(403).send({ error: 'You need to be signed in to use this API route.'})
+        return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
     if (session) {
         const { id } = session?.user
         if (id !== userId) {
-            res.status(403).send({ error: 'You are not allowed to update this game.' })
+            return res.status(403).send({ error: 'You are not allowed to update this game.' })
         }
 
         const gameId = (req.query['gameId'] as string)
@@ -28,6 +28,6 @@ export default async function handler (
             where: { id: gameId }
         })
 
-        res.status(200).json(deletedGame)
+        return res.status(200).json(deletedGame)
     }
 }

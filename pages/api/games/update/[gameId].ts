@@ -10,26 +10,26 @@ export default async function handler(
     res: NextApiResponse<any>
 ) {
     if (req.method !== 'POST') {
-        res.status(405).send({ error: 'Request must be POST.' })
+        return res.status(405).send({ error: 'Request must be POST.' })
     }
 
     const { userId, url, lastUpdated } = req.body
     if (!url) {
-        res.status(500).send({ error: 'There is no provided link.' })
+        return res.status(500).send({ error: 'There is no provided link.' })
     }
     if (!isUpdatable(lastUpdated)) {
-        res.status(500).send({ error: 'This game has already been updated in the last 60 minutes.' })
+        return res.status(500).send({ error: 'This game has already been updated in the last 60 minutes.' })
     }
 
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-        res.status(403).send({ error: 'You need to be signed in to use this API route.' })
+        return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
 
     if (session) {
         const { id } = session?.user
         if (id !== userId) {
-            res.status(403).send({ error: 'You are not allowed to update this game.' })
+            return res.status(403).send({ error: 'You are not allowed to update this game.' })
         }
 
         try {
@@ -47,9 +47,9 @@ export default async function handler(
             }).catch(e => {
                 return res.status(500).send({ error: e.message });
             })
-            res.status(200).json(updatedGame)
+            return res.status(200).json(updatedGame)
         } catch (err) {
-            res.status(500).send({ error: 'There was an issue while updating the game.' })
+            return res.status(500).send({ error: 'There was an issue while updating the game.' })
         }
     }
 }
