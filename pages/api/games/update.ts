@@ -11,26 +11,26 @@ export default async function handler(
     res: NextApiResponse<any>
 ) {
     if (req.method !== 'POST') {
-        res.status(405).send('Request must be POST.')
+        return res.status(405).send('Request must be POST.')
     }
 
     const { userId } = req.body
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-        res.status(403).send({ error: 'You need to be signed in to use this API route.' })
+        return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
 
     if (session) {
         const { id } = session?.user
 
         if (id !== userId) {
-            res.status(403).send({ error: 'You are not allowed to update the games.' })
+            return res.status(403).send({ error: 'You are not allowed to update the games.' })
         }
 
         const { games } = req.body
         const gamesToUpdate: Game[] = getGamesToUpdate(games)
         if (gamesToUpdate.length === 0) {
-            res.status(500).send({ error: 'There were no games to update. \
+            return res.status(500).send({ error: 'There were no games to update. \
             Have you already updated the games in the last hour?'})
         }
 
@@ -54,7 +54,7 @@ export default async function handler(
                             if (updatedGame) updatedGames.push(updatedGame)
                         })
                         .catch(() => {
-                            res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
+                            return res.status(500).send({ error: `There was an issue while updating ${game.name}.` })
                         }),
                     timeout(1000)
                 ])
@@ -63,7 +63,7 @@ export default async function handler(
         const filteredGames = gamesToUpdate.filter((game: Game) => {
             return !updatedGames.some((ug: Game) => ug.id === game.id)
         })
-        res.status(200).json([...filteredGames, ...updatedGames])
+        return res.status(200).json([...filteredGames, ...updatedGames])
 
     }
 }

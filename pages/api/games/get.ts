@@ -9,7 +9,7 @@ export default async function handler(
 ) {
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-        res.status(200).json([])
+        return res.status(200).json([])
     }
 
     if (session) {
@@ -19,6 +19,6 @@ export default async function handler(
             where: { userId: userId },
             orderBy: { name: 'asc' }
         })
-        res.status(200).json(games)
+        return res.status(200).json(games)
     }
 }

@@ -6,39 +6,39 @@ type SortGamesProps = {
     setGames: any
 }
 
-export const SortGames = ({ games, setGames }: SortGamesProps) => {
+export const SortGames = (props: SortGamesProps) => {
     const sort = (event: ChangeEvent<HTMLSelectElement>) => {
         switch (event.target.value) {
             case 'game_asc':
-                games.sort((a: Game, b: Game) => {
+                props.games.sort((a: Game, b: Game) => {
                     if (a.name < b.name) return -1
                     if (a.name > b.name) return 1
                     return 0
                 })
                 break;
             case 'game_desc':
-                games.sort((a: Game, b: Game) => {
+                props.games.sort((a: Game, b: Game) => {
                     if (a.name < b.name) return 1
                     if (a.name > b.name) return -1
                     return 0
                 })
                 break;
             case 'price_asc':
-                games.sort((a: Game, b: Game) => {
+                props.games.sort((a: Game, b: Game) => {
                     if (a.bestPrice < b.bestPrice) return -1
                     if (a.bestPrice > b.bestPrice) return 1
                     return 0
                 })
                 break;
             case 'price_desc':
-                games.sort((a: Game, b: Game) => {
+                props.games.sort((a: Game, b: Game) => {
                     if (a.bestPrice < b.bestPrice) return 1
                     if (a.bestPrice > b.bestPrice) return -1
                     return 0
                 })
                 break;
         }
-        setGames([...games])
+        props.setGames([...props.games])
     }
 
     return (

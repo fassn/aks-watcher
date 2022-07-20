@@ -12,11 +12,11 @@ type FlashMessageProps = {
     delay: number,
 }
 
-const FlashMessage: React.FC<FlashMessageProps> = ({ children, severity, delay }) => {
+const FlashMessage: React.FC<FlashMessageProps> = (props) => {
     const [isVisible, setIsVisible] = useState(false)
 
     let className = 'text-base text-center '
-    switch (severity) {
+    switch (props.severity) {
         case 'success':
             className += 'bg-green-100 text-green-700 '
             break;
@@ -31,13 +31,13 @@ const FlashMessage: React.FC<FlashMessageProps> = ({ children, severity, delay }
             setIsVisible(true)
             setTimeout(() => {
                 setIsVisible(false)
-            }, delay)
-    }, [children])
+            }, props.delay)
+    }, [props.children])
 
     return (
         isVisible ?
             <div className={className} role="alert">
-                {children}
+                {props.children}
             </div> :
         <></>
     )
