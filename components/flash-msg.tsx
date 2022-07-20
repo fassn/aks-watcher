@@ -1,12 +1,21 @@
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
+
+export interface Flash {
+    message?: string,
+    severity?: ('success'|'error'),
+    delay?: number
+}
 
 type FlashMsgProps = {
     children: ReactNode,
     severity: ('success'|'error'),
+    delay: number,
 }
 
-const FlashMsg: React.FC<FlashMsgProps> = ({ children, severity }) => {
-    let className = 'absolute top-0 z-10 text-base py-2 px-6 mb-4 '
+const FlashMsg: React.FC<FlashMsgProps> = ({ children, severity, delay }) => {
+    const [isVisible, setIsVisible] = useState(false)
+
+    let className = 'text-base '
     switch (severity) {
         case 'success':
             className += 'bg-green-100 text-green-700 '
@@ -17,12 +26,23 @@ const FlashMsg: React.FC<FlashMsgProps> = ({ children, severity }) => {
         default:
             className = ''
     }
+
+    useEffect(() => {
+            setIsVisible(true)
+            setTimeout(() => {
+                setIsVisible(false)
+            }, delay)
+    }, [children])
+
     return (
-        <div className="relative">
-            <div className={className} role="alert">
-                {children}
+        isVisible ? <div className="relative">
+            <div className='absolute top-0 z-10' role="alert">
+                <div className={'whitespace-nowrap w-full opacity-80 ' + className}>
+                    {children}
+                </div>
             </div>
-        </div>
+        </div> :
+        <></>
     )
 }
 
