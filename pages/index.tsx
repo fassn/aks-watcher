@@ -35,6 +35,7 @@ const Home: NextPage = () => {
         }
 
         setIsRefreshing(true)
+
         const res = await fetch('/api/games/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -71,7 +72,7 @@ const Home: NextPage = () => {
                             <div className="flex mx-10">
                                 <span className="font-josephin">Refresh all </span>
                                 <button onClick={refreshAll} id="refresh_all">
-                                    <svg className="inline-block h-4 w-4 mx-2 text-deep-blue" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
+                                    <svg className={`${isRefreshing ? 'animate-spin ' : ''} inline-block h-4 w-4 mx-2 text-deep-blue`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
                                 </button>
                             </div>
                             <div>

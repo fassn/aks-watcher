@@ -1,46 +1,9 @@
-import { signIn, signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
+import SignIn from "./signin"
 
 export const Header = () => {
     const {data: session} = useSession()
-
-    const handleSubmit = (event: any) => {
-        event.preventDefault()
-        const target = event.target as typeof event.target & FormData
-        signIn("email", { email: target.email.value })
-    }
-
-    const LoginButton = () => {
-        if (session?.user) {
-            return (
-                <div>
-                    <span className="text-cream">
-                        <strong>{session.user.email}</strong>
-                    </span>
-                    <button onClick={() => signOut()} className='w-32'>
-                        Sign Out
-                    </button>
-                </div>
-            )
-        } else {
-            return (
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type='text'
-                        id='email'
-                        name='email'
-                        placeholder='email@example.com'
-                        className="shadow appearance-none border border-deep-blue rounded text-center text-deep-blue"
-                    />
-                    <button type='submit'
-                        className="w-20 justify-center bg-deep-blue text-cream font-semibold"
-                    >
-                        Sign In
-                    </button>
-                </form>
-            )
-        }
-    }
 
     const AddGameButton = () => {
         if (session) {
@@ -63,12 +26,12 @@ export const Header = () => {
         <header className="flex w-full fixed top-0 z-50 h-12 items-center bg-deep-blue pl-8 pr-4">
             <h1 className="flex-none text-light-grey justify-center uppercase font-josephin font-bold">
                 <Link href='/'>
-                    <a>AKS Price Tracker</a>
+                    <a data-cy='homepage_link'>AKS Price Tracker</a>
                 </Link>
             </h1>
             <span className="flex-none text-light-grey mx-6 pb-1">|</span>
             <div className="flex-none text-light-grey justify-center font-josephin font-bold">
-                <LoginButton />
+                <SignIn />
             </div>
             <AddGameButton />
         </header>
