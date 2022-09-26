@@ -28,44 +28,52 @@ export default async function handler(
             return res.status(405).send({ error: 'Request needs to be POST.' })
         }
 
-        const url: string = req.body.url
-        if (!url) {
+        const urls: string = req.body.urls
+        if (urls.length === 0) {
             return res.status(500).send({ error: 'There is no provided link.' })
         }
 
-        if (url) {
-            try {
-                await fetch(url).then(res => res.text())
-                    .then(async data => {
-                        let content: ScrapedContent
-                        try {
-                            content = getContent(url, data)
-                        } catch (e: any) {
-                            const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
-                            return res.status(500).send({ error: error })
-                        }
-                        const game = await prisma.game.upsert({
-                            where: { url: url },
-                            update: {},
-                            create: {
-                                userId: userId,
-                                url: url,
-                                name: content.name,
-                                cover: content.cover,
-                                platform: content.platform,
-                                bestPrice: content.bestPrice,
-                                dateCreated: new Date().toISOString(),
-                                dateUpdated: new Date().toISOString(),
-                            }
-                        })
-                        return res.status(200).send(game)
-                    })
-                    .catch(() => {
-                        return res.status(500).send({ error: 'There was an issue while creating the game.' })
-                    })
-            } catch (err) {
-                return res.status(500).send({ error: 'Failed to fetch data.' })
+        if (urls) {
+            for (const url of urls) {
+                // test URLs
+                // https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/
+                // https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/
+                try {
+                    await Promise.all([
+                        fetch(url).then(res => res.text())
+                            .then(async data => {
+                                let content: ScrapedContent
+                                try {
+                                    content = getContent(url, data)
+                                } catch (e: any) {
+                                    const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
+                                    return res.status(500).send({ error: error })
+                                }
+                                const game = await prisma.game.upsert({
+                                    where: { url: url },
+                                    update: {},
+                                    create: {
+                                        userId: userId,
+                                        url: url,
+                                        name: content.name,
+                                        cover: content.cover,
+                                        platform: content.platform,
+                                        bestPrice: content.bestPrice,
+                                        dateCreated: new Date().toISOString(),
+                                        dateUpdated: new Date().toISOString(),
+                                    }
+                                })
+                            })
+                            .catch(e => {
+                                return res.status(500).send({ error: `There was an issue while creating the game from ${url}. ${e.message}` })
+                            }),
+                        timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
+                    ])
+                } catch (err) {
+                    return res.status(500).send({ error: `Failed to fetch data from ${url}.` })
+                }
             }
+            return res.status(200).send('Game(s) successfully stored.')
         }
     }
 }
@@ -99,4 +107,9 @@ const getPlatform = (url: string) => {
     if (url.includes('-xbox-one-')) platform = Platform.XBOX_ONE
     if (url.includes('-xbox-series-')) platform = Platform.XBOX_SERIES
     return platform
+}
+
+const timeout = (ms: number) => {
+    console.warn(`Waiting ${ms / 1000} s between requests.`)
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
