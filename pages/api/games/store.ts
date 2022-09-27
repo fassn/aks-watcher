@@ -28,16 +28,25 @@ export default async function handler(
             return res.status(405).send({ error: 'Request needs to be POST.' })
         }
 
-        const urls: string = req.body.urls
+        const urls: string[] = req.body.urls
         if (urls.length === 0) {
             return res.status(500).send({ error: 'There is no provided link.' })
         }
 
         if (urls) {
+            // test URLs
+            // https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/
+            // https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/
+            const checkIfRecordsExist = await prisma.game.findMany({
+                where: { url: { in: urls }}
+            })
+            if (checkIfRecordsExist.length > 0) {
+                for (const record of checkIfRecordsExist) {
+                    console.warn(`Record from url ${record.url} exists already. Skipping.`)
+                    urls.splice(urls.indexOf(record.url), 1)
+                }
+            }
             for (const url of urls) {
-                // test URLs
-                // https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/
-                // https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/
                 try {
                     await Promise.all([
                         fetch(url).then(res => res.text())
