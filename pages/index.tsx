@@ -35,6 +35,7 @@ const Home: NextPage = () => {
         }
 
         setIsRefreshing(true)
+        setFlash({ message: 'Update has started. This may take a while. Please do not reload the page.', severity:'info', delay: 5000 })
 
         const res = await fetch('/api/games/update', {
             method: 'POST',
@@ -76,7 +77,7 @@ const Home: NextPage = () => {
                                 </button>
                             </div>
                             <div>
-                                <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
+                                <FlashMessage severity={(flash.severity) as ('success'|'info'|'error')} delay={flash.delay ?? 5000}>
                                     { flash.message }
                                 </FlashMessage>
                             </div>

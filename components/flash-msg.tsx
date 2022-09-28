@@ -2,13 +2,13 @@ import { ReactNode, useEffect, useState } from "react"
 
 export interface Flash {
     message?: string,
-    severity?: ('success'|'error'),
+    severity?: ('success'|'info'|'error'),
     delay?: number
 }
 
 type FlashMessageProps = {
     children: ReactNode,
-    severity: ('success'|'error'),
+    severity: ('success'|'info'|'error'),
     delay: number,
 }
 
@@ -19,6 +19,9 @@ const FlashMessage: React.FC<FlashMessageProps> = (props) => {
     switch (props.severity) {
         case 'success':
             className += 'bg-green-100 text-green-700 '
+            break;
+        case 'info':
+            className += 'bg-yellow-100 text-yellow-700'
             break;
         case 'error':
             className += 'bg-red-100 text-red-700'
