@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
-import { Platform } from "@prisma/client"
+import { Game, Platform } from "@prisma/client"
 import * as cheerio from "cheerio"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]"
@@ -34,18 +34,16 @@ export default async function handler(
         }
 
         if (urls) {
-            // test URLs
-            // https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/
-            // https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/
-            const checkIfRecordsExist = await prisma.game.findMany({
+            const existingGames = await prisma.game.findMany({
                 where: { url: { in: urls }}
             })
-            if (checkIfRecordsExist.length > 0) {
-                for (const record of checkIfRecordsExist) {
-                    console.warn(`Record from url ${record.url} exists already. Skipping.`)
-                    urls.splice(urls.indexOf(record.url), 1)
+            if (existingGames.length > 0) {
+                for (const game of existingGames) {
+                    console.warn(`Game ${game.name} already exists in the database. Skipping.`)
+                    urls.splice(urls.indexOf(game.url), 1)
                 }
             }
+            const newGames: Game[] = []
             for (const url of urls) {
                 try {
                     await Promise.all([
@@ -72,6 +70,7 @@ export default async function handler(
                                         dateUpdated: new Date().toISOString(),
                                     }
                                 })
+                                if (game) newGames.push(game)
                             })
                             .catch(e => {
                                 return res.status(500).send({ error: `There was an issue while creating the game from ${url}. ${e.message}` })
@@ -82,7 +81,7 @@ export default async function handler(
                     return res.status(500).send({ error: `Failed to fetch data from ${url}.` })
                 }
             }
-            return res.status(200).send('Game(s) successfully stored.')
+            return res.status(200).json(newGames)
         }
     }
 }
