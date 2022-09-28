@@ -1,5 +1,7 @@
+import { Game } from "@prisma/client"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { mutate } from "swr"
 import FlashMessage, { Flash } from "./flash-msg"
 
 interface FormData {
@@ -20,11 +22,16 @@ export const GameForm = () => {
             setFlash({ message: error, severity: 'error', delay: FLASH_MESSAGE_DELAY })
             setTimeout(() => setFlash({}), FLASH_MESSAGE_DELAY)
         } else {
-            await fetch('/api/games/store', {
+            fetch('/api/games/store', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ urls: links })
-            })
+            }).then(res => res.json().then((newGames: Game[]) => {
+                // This refreshes the page with the new content even after the router.push('/)
+                mutate('/api/games/get', async (games: Game[]) => {
+                    return [...games, ...newGames]
+                })
+            }))
             router.push('/')
         }
 
