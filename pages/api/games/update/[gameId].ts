@@ -36,6 +36,9 @@ export default async function handler(
             const response = await fetch(url)
             const contents = await response.text()
             const newPrice = getPrice(contents)
+            if (newPrice === -1) {
+                return res.status(500).send({ error: 'Couldn\'t get the new price. Game has not been updated.' })
+            }
 
             const gameId = (req.query['gameId']) as string
             const updatedGame = await prisma.game.update({
