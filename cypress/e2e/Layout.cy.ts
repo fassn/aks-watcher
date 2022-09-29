@@ -33,3 +33,5 @@ describe('Layout', () => {
     cy.get('footer').should('exist')
   })
 })
+
+export {}
