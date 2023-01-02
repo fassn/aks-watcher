@@ -19,7 +19,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const session = await unstable_getServerSession(req, res, authOptions)
-    const { id: userId } = session?.user
+    const { id: userId, email: userEmail } = session?.user
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
@@ -51,8 +51,20 @@ export default async function handler(
                         fetch(url).then(res => res.text())
                             .then(async data => {
                                 let content: ScrapedContent
+                                let cloudinaryUrl: string
                                 try {
                                     content = await getContent(url, data)
+                                    const cloudinaryImage: any = await uploadImage(content.cover,
+                                        {
+                                            public_id: `${userEmail}/${content.name}`,
+                                            resource_type: 'image',
+                                            overwrite: true,
+                                        })
+
+                                    cloudinaryUrl = cloudinaryImage.secure_url
+                                    if (!cloudinaryUrl) {
+                                        throw new Error('Couldn\'t upload image to cloudinary')
+                                    }
                                 } catch (e: any) {
                                     const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
                                     return res.status(500).send({ error: error })
@@ -64,7 +76,7 @@ export default async function handler(
                                         userId: userId,
                                         url: url,
                                         name: content.name,
-                                        cover: content.cover,
+                                        cover: cloudinaryUrl,
                                         platform: content.platform,
                                         bestPrice: content.bestPrice,
                                         dateCreated: new Date().toISOString(),
@@ -90,15 +102,9 @@ export default async function handler(
 const getContent = async (url: string, data: string) => {
     const $ = cheerio.load(data)
 
-    const cover_url = $('#gamepageSlider').find('.showing').find('img').attr('src')
-    if (!cover_url) {
-        throw new Error('Couldn\'t get the image from ' + url)
-    }
-
-    const cloudinaryImage: any = await uploadImage(cover_url)
-    const cover = cloudinaryImage.secure_url
+    const cover = $('#gamepageSlider').find('.showing').find('img').attr('src')
     if (!cover) {
-        throw new Error('Couldn\'t upload image to cloudinary')
+        throw new Error('Couldn\'t get the image from ' + url)
     }
 
     const name = $('h1').find('span').first().text().trim()

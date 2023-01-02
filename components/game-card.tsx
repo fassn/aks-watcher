@@ -53,7 +53,7 @@ export const GameCard = (props: { gameData: Game }) => {
         const res = await fetch(`/api/games/delete/${props.gameData.id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: userId})
+            body: JSON.stringify({ userId: userId, name: props.gameData.name })
         })
         const deletedGame: Game = await res.json()
 
