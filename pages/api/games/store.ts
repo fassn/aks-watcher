@@ -4,6 +4,7 @@ import { Game, Platform } from "@prisma/client"
 import * as cheerio from "cheerio"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]"
+import { uploadImage } from "lib/cloudinary"
 
 interface ScrapedContent {
     url: string,
@@ -51,7 +52,7 @@ export default async function handler(
                             .then(async data => {
                                 let content: ScrapedContent
                                 try {
-                                    content = getContent(url, data)
+                                    content = await getContent(url, data)
                                 } catch (e: any) {
                                     const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
                                     return res.status(500).send({ error: error })
@@ -86,13 +87,20 @@ export default async function handler(
     }
 }
 
-const getContent = (url: string, data: string) => {
+const getContent = async (url: string, data: string) => {
     const $ = cheerio.load(data)
 
-    const cover = $('#gamepageSlider').find('.showing').find('img').attr('src')
-    if (!cover) {
+    const cover_url = $('#gamepageSlider').find('.showing').find('img').attr('src')
+    if (!cover_url) {
         throw new Error('Couldn\'t get the image from ' + url)
     }
+
+    const cloudinaryImage: any = await uploadImage(cover_url)
+    const cover = cloudinaryImage.secure_url
+    if (!cover) {
+        throw new Error('Couldn\'t upload image to cloudinary')
+    }
+
     const name = $('h1').find('span').first().text().trim()
     if (!name) {
         throw new Error('Couldn\'t get the name from ' + url)
