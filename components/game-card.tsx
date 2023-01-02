@@ -89,6 +89,7 @@ export const GameCard = (props: { gameData: Game }) => {
                             alt={ game.name + ' game cover'}
                             width='256'
                             height='256'
+                            unoptimized={true}
                         />
                     </a>
                 </Link>

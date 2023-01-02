@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['www.allkeyshop.com'],
+    domains: ['www.allkeyshop.com, res.cloudinary.com'],
   },
   outputFileTracing: true,
 }
