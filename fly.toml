@@ -1,4 +1,4 @@
-# fly.toml file generated for aks-watcher on 2022-09-29T13:50:58+02:00
+# fly.toml file generated for aks-watcher on 2023-01-02T13:48:22+01:00
 
 app = "aks-watcher"
 kill_signal = "SIGINT"
