@@ -3,7 +3,7 @@ import prisma from "lib/prisma"
 import { Game } from "@prisma/client";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { destroyImage } from "lib/cloudinary";
+import { destroyImage, destroyImages } from "lib/cloudinary";
 
 export default async function handler(
     req: NextApiRequest,
@@ -28,24 +28,17 @@ export default async function handler(
 
         const games: Game[] = req.body.games
 
-        // TODO SEE if I can mass delete cover picture on cloudinary instead of looping
+        // delete cover picture from cloudinary
+        let public_ids = []
         for (const game of games) {
-            const name = game.name
-            // delete cover picture from cloudinary
-            try {
-                await destroyImage(`${email}/${name}`)
-            } catch {
-                console.warn('There was an issue deleting the cover image of the deleted game ' + name)
-            }
+            public_ids.push(`${email}/${game.name}`)
         }
+        await destroyImages(public_ids)
 
         const gamesIds = games.map((game: Game) => game.id)
-
         const deletedGames = await prisma.game.deleteMany({
             where: { id: { in: gamesIds} }
         })
-
-        console.log({deletedGames})
 
         return res.status(200).json(deletedGames)
     }
