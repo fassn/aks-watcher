@@ -34,3 +34,16 @@ export function destroyImage(public_id: any,
         )
     })
 }
+
+export function destroyImages(public_ids: string[],
+        options: any = { resource_type: 'image', invalidate: true }) {
+
+    return new Promise((resolve, reject) => {
+        cloudinary.api.delete_resources(public_ids, options,
+            (err, res) => {
+                if (err) reject(err)
+                resolve(res)
+            }
+        )
+    })
+}
