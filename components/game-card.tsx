@@ -93,8 +93,10 @@ export const GameCard = (props: { gameData: Game }) => {
                         />
                     </a>
                 </Link>
-                <button onClick={openModal} className="relative w-0">
-                    <svg className="absolute top-0 right-0 h-6 w-6 text-cream hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"> <circle cx="12" cy="12" r="10" /> <line x1="15" y1="9" x2="9" y2="15" /> <line x1="9" y1="9" x2="15" y2="15" /></svg>
+            </div>
+            <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey">
+                <button onClick={openModal}>
+                    <svg className="absolute top-0 right-0 h-6 w-6 text-red-600 hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="7" x2="7" y2="15" /> <line x1="7" y1="7" x2="15" y2="15" /></svg>
                 </button>
                 <Modal open={modalOpen} onRequestClose={closeModal} className="w-80 h-48">
                     <p className="h-1/2">Are you sure you want to remove this game from the list?</p>
@@ -102,8 +104,6 @@ export const GameCard = (props: { gameData: Game }) => {
                         <button onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>
                     </div>
                 </Modal>
-            </div>
-            <div className="flex flex-col h-40 px-4 py-6 font-josephin bg-light-grey">
                 <div className="flex space-x-3">
                     <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold">{ game.platform }</span>
                     <div>
