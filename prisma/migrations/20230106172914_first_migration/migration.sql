@@ -44,6 +44,21 @@ CREATE TABLE "Game" (
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "ExampleGame" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT,
+    "url" TEXT NOT NULL,
+    "cover" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "platform" "Platform" NOT NULL,
+    "bestPrice" DOUBLE PRECISION NOT NULL,
+    "dateCreated" TIMESTAMP(3) NOT NULL,
+    "dateUpdated" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ExampleGame_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
@@ -58,6 +73,9 @@ CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationTok
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Game_url_key" ON "Game"("url");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ExampleGame_url_key" ON "ExampleGame"("url");
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

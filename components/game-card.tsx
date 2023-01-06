@@ -22,7 +22,7 @@ export const GameCard = (props: { gameData: Game }) => {
     }, [props.gameData])
 
     const session = useSession()
-    const { id: userId } = session.data?.user
+    const { id: userId } = session.data?.user || '' // default when using with unsigned user (exampleGames)
 
     const updatePrice = async () => {
         if (isRefreshing) {
@@ -95,9 +95,13 @@ export const GameCard = (props: { gameData: Game }) => {
                 </Link>
             </div>
             <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey">
-                <button onClick={openModal}>
-                    <svg className="absolute top-0 right-0 h-6 w-6 text-red-600 hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="7" x2="7" y2="15" /> <line x1="7" y1="7" x2="15" y2="15" /></svg>
-                </button>
+                {
+                    session.status === 'authenticated' ?
+                    <button onClick={openModal}>
+                        <svg className="absolute top-0 right-0 h-6 w-6 text-red-600 hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="7" x2="7" y2="15" /> <line x1="7" y1="7" x2="15" y2="15" /></svg>
+                    </button> :
+                    <></>
+                }
                 <Modal open={modalOpen} onRequestClose={closeModal} className="w-80 h-48">
                     <p className="h-1/2">Are you sure you want to remove this game from the list?</p>
                     <div className="flex h-1/2">
@@ -114,9 +118,13 @@ export const GameCard = (props: { gameData: Game }) => {
                 <div className="flex h-full justify-center items-end text-sm">
                     <pre className="inline-block font-josephin">Last updated: </pre>
                     <span className="font-semibold text-deep-blue">{ new Date(game.dateUpdated).toLocaleDateString(locale) }</span>
-                    <button onClick={updatePrice} className="w-12">
-                        <svg className={`${isRefreshing ? 'animate-spin ' : ''} inline-block h-4 w-4 text-deep-blue`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
-                    </button>
+                    {
+                        session.status === 'authenticated' ?
+                        <button onClick={updatePrice} className="w-12">
+                            <svg className={`${isRefreshing ? 'animate-spin ' : ''} inline-block h-4 w-4 text-deep-blue`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
+                        </button> :
+                        <></>
+                    }
                 </div>
             </div>
             <div className="flex justify-center items-center h-16 bg-deep-blue text-cream text-center uppercase text-xl leading-6">
