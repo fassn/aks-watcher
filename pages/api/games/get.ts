@@ -9,7 +9,10 @@ export default async function handler(
 ) {
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-        return res.status(200).json([])
+        const exampleGames = await prisma.exampleGame.findMany({
+            where: { userId: undefined }
+        })
+        return res.status(200).json(exampleGames)
     }
 
     if (session) {

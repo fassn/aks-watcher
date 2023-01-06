@@ -47,6 +47,18 @@ model Game {
     user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model ExampleGame {
+    id          String @id @default(cuid())
+    userId      String?
+    url         String @unique
+    cover       String
+    name        String
+    platform    Platform
+    bestPrice   Float
+    dateCreated DateTime
+    dateUpdated DateTime
+}
+
 enum Platform {
     PC
     PS4

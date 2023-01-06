@@ -153,21 +153,27 @@ const Home: NextPage = () => {
                             <AddGameCard></AddGameCard>
                         </div>
                     </> :
-                    <div className="flex-col text-center text-3xl text-deep-blue leading-loose">
-                        <div>
-                            <ol className="list-decimal text-left inline-block">
-                                <li>Please signin first</li>
-                                <li>Track games from AllKeyShop</li>
-                                <li>Voilà!</li>
+                    <div className="text-center text-deep-blue leading-loose">
+                        <p className="text-lg mb-4 italic">The AKS Price Tracker uses the links from a game price comparison page on the <a href="https://www.allkeyshop.com">AllKeyShop</a> website.<br/>
+                        For example the <a href="https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/">game page for Doom Eternal</a> is https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/.
+                        </p>
+                        <div className="justify-center text-xl">
+                            <h1 className="underline text-4xl">How to use</h1>
+                            <ol className="list-decimal text-lg text-left inline-block my-10">
+                                <li>Sign-in using your email in the header field.</li>
+                                <li>Search for the games you would like to track on the <a href="https://www.allkeyshop.com">AllKeyShop</a> website.</li>
+                                <li>Copy the link from a game price comparison page.</li>
+                                <li>Once signed-in, add a game by clicking the + icon at the top right or the blank game card.</li>
+                                <li>Profit!</li>
                             </ol>
                         </div>
-                            <Image
-                                src='/aks-games.png'
-                                alt='Tracked games example'
-                                width='384'
-                                height='256'
-                            />
-                        <div>
+                        <h2 className="underline text-3xl">Example of tracked games:</h2>
+                        <div className="flex justify-evenly flex-wrap">
+                            {
+                                games.map((exampleGame: Game) => (
+                                    <GameCard key={exampleGame.id} gameData={exampleGame} />
+                                ))
+                            }
                         </div>
                     </div>
                 }
