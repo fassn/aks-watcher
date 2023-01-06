@@ -73,7 +73,7 @@ export const GameCard = (props: { gameData: Game }) => {
     }
 
     return (
-        <div className="w-64 mx-5 my-10 outline outline-2 shadow-md shadow-deep-blue">
+        <div className="w-64 mx-5 my-10 shadow-md shadow-deep-blue">
             <div className="relative">
                 <div className="absolute top-0 z-10">
                     <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
