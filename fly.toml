@@ -14,6 +14,7 @@ processes = []
 
 [deploy]
   release_command = "npx prisma migrate deploy"
+  # release_command = "npx prisma migrate reset --force"
   # release_command = "npx quirrel ci" // use this when registering cronjobs for quirrel
 
 [env]
