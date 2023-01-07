@@ -34,7 +34,7 @@ export default async function handler(
         }
 
         if (gamesToUpdate.length > 0) {
-            await update.enqueue(games)
+            await update.enqueue(gamesToUpdate) // send as a job
             .then(() => res.status(200).send({}))
             .catch((e) => {
                 return res.status(500).send({ error: `There was an issue with the update queue: ${e.message}`})

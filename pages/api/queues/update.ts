@@ -12,7 +12,6 @@ export default Queue('api/queues/update', async (games: Game[]) => {
                 .then(res => res.text())
                 .then(async contents => {
                     const newPrice = getPrice(contents)
-                    // TODO update all at once instead
                     const updatedGame = await prisma.game.update({
                         where: { id: game.id },
                         data: {
