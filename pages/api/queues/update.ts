@@ -30,13 +30,6 @@ export default Queue('api/queues/update', async (games: Game[]) => {
             timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
         ])
     }
-
-    mutate('/api/games/get', async (games: Game[]) => {
-        return [...updatedGames]
-    })
-    // console.log(mutate('/api/games/get', async (games: Game[]) => {
-    //     return [...updatedGames]
-    // }))
 })
 
 const timeout = (ms: number) => {
