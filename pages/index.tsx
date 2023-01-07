@@ -9,7 +9,6 @@ import styles from "../styles/Home.module.css"
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import FlashMessage, { Flash } from "components/flash-msg";
-import Image from "next/image";
 import { SortGames } from "components/sort-games";
 import { Modal } from "components/modal";
 
@@ -37,7 +36,7 @@ const Home: NextPage = () => {
         }
 
         setIsRefreshing(true)
-        setFlash({ message: 'Update has started. This may take a while. Please do not reload the page.', severity:'info', delay: 5000 })
+        setFlash({ message: 'Update has started. This may take some time.', severity:'info', delay: 5000 })
 
         const res = await fetch('/api/games/update', {
             method: 'POST',
@@ -47,16 +46,21 @@ const Home: NextPage = () => {
         if (res.status !== 200) {
             const error = await res.json().then(res => res.error)
             setFlash({ message: error, severity: 'error', delay: 5000 })
+            setIsRefreshing(false)
+            setTimeout(() => setFlash({}), 5000)
         }
         if (res.status === 200) {
-            const updatedGames = await res.json()
-            mutate('/api/games/get', async (games: Game[]) => {
-                return [...updatedGames]
-            })
-            setFlash({ message: 'Games were successfully updated', severity: 'success', delay: 5000 })
+            /*
+            ** Pretty terrible but since a job doesn't return anything and I seemingly cant mutate from the job or an api route,
+            ** I cheat by delaying the mutation here by the max number of games that can be updated.
+            */
+            const timeout = games.length * process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES
+            setTimeout(() => {
+                mutate('/api/games/get')
+                setFlash({ message: 'Games were successfully updated', severity: 'success', delay: 5000 })
+                setIsRefreshing(false)
+            }, timeout)
         }
-        setIsRefreshing(false)
-        setTimeout(() => setFlash({}), 5000)
     }
 
     const [modalOpen, setModalOpen] = useState(false)
@@ -119,7 +123,7 @@ const Home: NextPage = () => {
                                     <svg className={`${isRefreshing ? 'animate-spin ' : ''} inline-block h-4 w-4 mx-2 text-deep-blue`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
                                 </button>
                             </div>
-                            <div>
+                            <div className="flex min-w-fit">
                                 <FlashMessage severity={(flash.severity) as ('success'|'info'|'error')} delay={flash.delay ?? 5000}>
                                     { flash.message }
                                 </FlashMessage>

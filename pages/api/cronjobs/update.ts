@@ -5,7 +5,7 @@ import * as cheerio from "cheerio"
 
 
 export default CronJob(
-    "api/queues/update-games",
+    "api/cronjobs/update",
     ["0 10 * * *", "Europe/Paris"], // (see https://crontab.guru/)
     async () => {
         const games: Game[] = await prisma.game.findMany()
