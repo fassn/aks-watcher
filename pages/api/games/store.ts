@@ -36,7 +36,10 @@ export default async function handler(
 
         if (urls) {
             const existingGames = await prisma.game.findMany({
-                where: { url: { in: urls }}
+                where: {
+                    userId: userId,
+                    url: { in: urls }
+                }
             })
             if (existingGames.length > 0) {
                 for (const game of existingGames) {
@@ -69,10 +72,8 @@ export default async function handler(
                                     const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
                                     return res.status(400).send({ error: error })
                                 }
-                                const game = await prisma.game.upsert({
-                                    where: { url: url },
-                                    update: {},
-                                    create: {
+                                const game = await prisma.game.create({
+                                    data: {
                                         userId: userId,
                                         url: url,
                                         name: content.name,

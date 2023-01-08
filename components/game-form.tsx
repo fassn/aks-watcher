@@ -2,7 +2,6 @@ import { Game } from "@prisma/client"
 import { useGames } from "lib/hooks"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { mutate } from "swr"
 import FlashMessage, { Flash } from "./flash-msg"
 
 interface FormData {
@@ -28,10 +27,15 @@ export const GameForm = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ urls: links })
-            }).then(res => res.json().then((storedGames: Game[]) => {
+            })
+            .then(res => res.json()
+            .then((storedGames: Game[]) => {
                 const newGames = [...games, ...storedGames]
                 mutate(newGames)
             }))
+            .catch((e) => {
+                throw new Error(`There was an issue while storing the games ${e.message}`)
+            })
             router.push('/')
         }
 

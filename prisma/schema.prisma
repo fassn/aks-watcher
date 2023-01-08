@@ -37,7 +37,7 @@ model VerificationToken {
 model Game {
     id          String  @id @default(cuid())
     userId      String
-    url         String  @unique
+    url         String
     cover       String
     name        String
     platform    Platform
@@ -50,7 +50,7 @@ model Game {
 model ExampleGame {
     id          String @id @default(cuid())
     userId      String?
-    url         String @unique
+    url         String
     cover       String
     name        String
     platform    Platform
