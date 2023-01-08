@@ -29,7 +29,7 @@ export default async function handler(
         const { games } = req.body
         const gamesToUpdate: Game[] = getGamesToUpdate(games)
         if (gamesToUpdate.length === 0) {
-            return res.status(500).send({ error: 'There were no games to update. \
+            return res.status(400).send({ error: 'There were no games to update. \
             Have you already updated the games in the last hour?'})
         }
 
