@@ -2,7 +2,6 @@ import { Game } from "@prisma/client";
 import { Queue } from "quirrel/next";
 import prisma from "lib/prisma"
 import * as cheerio from "cheerio"
-import { mutate } from "swr";
 
 export default Queue('api/queues/update', async (games: Game[]) => {
     let updatedGames: Game[] = []

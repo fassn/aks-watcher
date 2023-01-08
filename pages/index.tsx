@@ -1,11 +1,10 @@
 import type { NextPage } from "next";
-import useSWR, { mutate } from 'swr'
-import fetcher from "../lib/fetcher";
+import styles from "../styles/Home.module.css"
+import { useGames } from "lib/hooks";
 
 import { Game } from "@prisma/client";
 import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
-import styles from "../styles/Home.module.css"
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import FlashMessage, { Flash } from "components/flash-msg";
@@ -14,14 +13,7 @@ import { Modal } from "components/modal";
 
 const Home: NextPage = () => {
     const { data: session } = useSession()
-    const [games, setGames] = useState([])
-    const { data, error } = useSWR('/api/games/get', fetcher, {
-        onSuccess: (games) => {
-            setGames(games)
-        },
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-    })
+    const { games, isError, isLoading, mutate } = useGames()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
@@ -56,7 +48,7 @@ const Home: NextPage = () => {
             */
             const timeout = games.length * process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES
             setTimeout(() => {
-                mutate('/api/games/get')
+                mutate()
                 setFlash({ message: 'Games were successfully updated', severity: 'success', delay: 5000 })
                 setIsRefreshing(false)
             }, timeout)
@@ -87,17 +79,23 @@ const Home: NextPage = () => {
             setFlash({ message: error, severity: 'error', delay: 5000 })
         }
         if (res.status === 200) {
-            mutate('/api/games/get', async (games: Game[]) => {
-                return []
-            })
+            mutate([])
             setFlash({ message: 'Games were successfully deleted', severity: 'success', delay: 5000 })
         }
         setIsDeleting(false)
         setTimeout(() => setFlash({}), 5000)
     }
 
-    if (error) return <div>failed to load</div>
-    if (!games) return <div>loading...</div>
+    const openModal = () => {
+        setModalOpen(!modalOpen)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+    }
+
+    if (isError) return <div>failed to load</div>
+    if (isLoading) return <div>loading...</div>
     return (
         <>
             <div className={styles.container}>
@@ -106,7 +104,7 @@ const Home: NextPage = () => {
                     <>
                         <div className="flex border-solid border-deep-blue border-b-2 py-2">
                             <div className="flex font-josephin">
-                                <SortGames games={games} setGames={setGames} />
+                                <SortGames games={games} />
                             </div>
 
                             <div className="flex mx-10">
@@ -176,14 +174,6 @@ const Home: NextPage = () => {
             </div>
         </>
     );
-
-    const openModal = () => {
-        setModalOpen(!modalOpen)
-    }
-
-    const closeModal = () => {
-        setModalOpen(false)
-    }
 };
 
 

@@ -1,44 +1,47 @@
 import { Game } from "@prisma/client"
-import { ChangeEvent } from "react"
+import { ChangeEvent, useState } from "react"
+import { useGames } from "lib/hooks"
 
 type SortGamesProps = {
-    games: Game[],
-    setGames: any
+    games: Game[]
 }
 
 export const SortGames = (props: SortGamesProps) => {
+    const [games, setGames] = useState(props.games)
+    const { mutate } = useGames()
     const sort = (event: ChangeEvent<HTMLSelectElement>) => {
         switch (event.target.value) {
             case 'game_asc':
-                props.games.sort((a: Game, b: Game) => {
+                games.sort((a: Game, b: Game) => {
                     if (a.name < b.name) return -1
                     if (a.name > b.name) return 1
                     return 0
                 })
                 break;
             case 'game_desc':
-                props.games.sort((a: Game, b: Game) => {
+                games.sort((a: Game, b: Game) => {
                     if (a.name < b.name) return 1
                     if (a.name > b.name) return -1
                     return 0
                 })
                 break;
             case 'price_asc':
-                props.games.sort((a: Game, b: Game) => {
+                games.sort((a: Game, b: Game) => {
                     if (a.bestPrice < b.bestPrice) return -1
                     if (a.bestPrice > b.bestPrice) return 1
                     return 0
                 })
                 break;
             case 'price_desc':
-                props.games.sort((a: Game, b: Game) => {
+                games.sort((a: Game, b: Game) => {
                     if (a.bestPrice < b.bestPrice) return 1
                     if (a.bestPrice > b.bestPrice) return -1
                     return 0
                 })
                 break;
         }
-        props.setGames([...props.games])
+        mutate(games)
+        setGames(games)
     }
 
     return (
