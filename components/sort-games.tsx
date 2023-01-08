@@ -1,16 +1,19 @@
 import { Game } from "@prisma/client"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { useGames } from "lib/hooks"
 
-type SortGamesProps = {
-    games: Game[]
-}
+type SortValue = ('game_asc' | 'game_desc' | 'price_asc' | 'price_desc')
 
-export const SortGames = (props: SortGamesProps) => {
-    const [games, setGames] = useState(props.games)
-    const { mutate } = useGames()
-    const sort = (event: ChangeEvent<HTMLSelectElement>) => {
-        switch (event.target.value) {
+export const SortGames = () => {
+    const { games, mutate } = useGames()
+    const [sortValue, setSortValue] = useState<SortValue>('game_asc')
+
+    useEffect(() => {
+        sort(sortValue)
+    }, [games])
+
+    const sort = (sortValue: SortValue) => {
+        switch (sortValue) {
             case 'game_asc':
                 games.sort((a: Game, b: Game) => {
                     if (a.name < b.name) return -1
@@ -41,13 +44,18 @@ export const SortGames = (props: SortGamesProps) => {
                 break;
         }
         mutate(games)
-        setGames(games)
+    }
+
+    const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const newValue = event.target.value as SortValue
+        sort(newValue)
+        setSortValue(newValue)
     }
 
     return (
         <>
             <label htmlFor="sort_games">Sort </label>
-            <select onChange={sort} id="sort_games">
+            <select value={sortValue} onChange={onChange} id="sort_games">
                 <option value='game_asc'>Game (a-z)</option>
                 <option value='game_desc'>Game (z-a)</option>
                 <option value='price_asc'>Price (smallest)</option>
