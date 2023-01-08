@@ -96,14 +96,6 @@ const Home: NextPage = () => {
         setTimeout(() => setFlash({}), 5000)
     }
 
-    const openModal = () => {
-        setModalOpen(!modalOpen)
-    }
-
-    const closeModal = () => {
-        setModalOpen(false)
-    }
-
     if (error) return <div>failed to load</div>
     if (!games) return <div>loading...</div>
     return (
@@ -184,6 +176,16 @@ const Home: NextPage = () => {
             </div>
         </>
     );
+
+    const openModal = () => {
+        setModalOpen(!modalOpen)
+    }
+
+    const closeModal = () => {
+        setModalOpen(false)
+    }
 };
+
+
 
 export default Home;

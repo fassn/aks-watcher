@@ -15,10 +15,10 @@ export default async function handler(
 
     const { userId, url, lastUpdated } = req.body
     if (!url) {
-        return res.status(500).send({ error: 'There is no provided link.' })
+        return res.status(400).send({ error: 'There is no provided link.' })
     }
     if (!isUpdatable(lastUpdated)) {
-        return res.status(500).send({ error: 'This game has already been updated in the last 60 minutes.' })
+        return res.status(400).send({ error: 'This game has already been updated in the last 60 minutes.' })
     }
 
     const session = await unstable_getServerSession(req, res, authOptions);

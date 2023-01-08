@@ -31,7 +31,7 @@ export default async function handler(
 
         const urls: string[] = req.body.urls
         if (urls.length === 0) {
-            return res.status(500).send({ error: 'There is no provided link.' })
+            return res.status(400).send({ error: 'There is no provided link.' })
         }
 
         if (urls) {
@@ -67,7 +67,7 @@ export default async function handler(
                                     }
                                 } catch (e: any) {
                                     const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
-                                    return res.status(500).send({ error: error })
+                                    return res.status(400).send({ error: error })
                                 }
                                 const game = await prisma.game.upsert({
                                     where: { url: url },
