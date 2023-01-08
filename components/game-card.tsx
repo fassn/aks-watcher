@@ -1,25 +1,20 @@
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useGames } from "lib/hooks"
 import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
 import FlashMessage, { Flash } from "./flash-msg"
 
-export const GameCard = (props: { gameData: Game }) => {
+export const GameCard = (props: { game: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
-    const [game, setGame] = useState({...props.gameData})
     const [modalOpen, setModalOpen] = useState(false)
     const { games, mutate } = useGames()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [flash, setFlash] = useState<Flash>({})
     const FLASH_MESSAGE_DELAY = 5000
-
-    useEffect(() => {
-        setGame(props.gameData)
-    }, [props.gameData])
 
     const session = useSession()
     const { id: userId } = session.data?.user || '' // default when using with unsigned user (exampleGames)
@@ -29,10 +24,10 @@ export const GameCard = (props: { gameData: Game }) => {
             throw new Error('You have already requested an update for this game. No need to spam the button ;-)')
         }
         setIsRefreshing(true)
-        const res = await fetch(`/api/games/update/${props.gameData.id}`, {
+        const res = await fetch(`/api/games/update/${props.game.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: props.gameData.url, lastUpdated: props.gameData.dateUpdated, userId: userId })
+            body: JSON.stringify({ url: props.game.url, lastUpdated: props.game.dateUpdated, userId: userId })
         })
         if(res.status !== 200) {
             const error = await res.json().then(res => res.error)
@@ -40,7 +35,7 @@ export const GameCard = (props: { gameData: Game }) => {
 
         } else {
             const updatedGame = res
-            mutate({...game, ...updatedGame})
+            mutate({...props.game, ...updatedGame})
             setFlash({ message: 'Game was successfully updated', severity: 'success', delay: FLASH_MESSAGE_DELAY })
         }
         setIsRefreshing(false)
@@ -48,10 +43,10 @@ export const GameCard = (props: { gameData: Game }) => {
     }
 
     const deleteGame = async () => {
-        const res = await fetch(`/api/games/delete/${props.gameData.id}`, {
+        const res = await fetch(`/api/games/delete/${props.game.id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: userId, name: props.gameData.name })
+            body: JSON.stringify({ userId: userId, name: props.game.name })
         })
         const deletedGame: Game = await res.json()
 
@@ -77,12 +72,12 @@ export const GameCard = (props: { gameData: Game }) => {
                     </FlashMessage>
                 </div>
             </div>
-            <Link href={game.url} >
+            <Link href={props.game.url} >
                 <div className="w-64 h-64 relative">
                     <Image className="object-fill"
                         fill
-                        src={ game.cover }
-                        alt={ game.name + ' game cover'}
+                        src={ props.game.cover }
+                        alt={ props.game.name + ' game cover'}
                         unoptimized={true}
                     />
                 </div>
@@ -102,15 +97,15 @@ export const GameCard = (props: { gameData: Game }) => {
                     </div>
                 </Modal>
                 <div className="flex space-x-3">
-                    <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold">{ game.platform }</span>
+                    <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold">{ props.game.platform }</span>
                     <div>
                         <pre className="inline-block font-josephin">Best Price: </pre>
-                        <span className="font-semibold text-deep-blue">{ game.bestPrice }€</span>
+                        <span className="font-semibold text-deep-blue">{ props.game.bestPrice }€</span>
                     </div>
                 </div>
                 <div className="flex h-full justify-center items-end text-sm">
                     <pre className="inline-block font-josephin">Last updated: </pre>
-                    <span className="font-semibold text-deep-blue">{ new Date(game.dateUpdated).toLocaleDateString(locale) }</span>
+                    <span className="font-semibold text-deep-blue">{ new Date(props.game.dateUpdated).toLocaleDateString(locale) }</span>
                     {
                         session.status === 'authenticated' ?
                         <button onClick={updatePrice} className="w-12">
@@ -121,8 +116,8 @@ export const GameCard = (props: { gameData: Game }) => {
                 </div>
             </div>
             <div className="flex justify-center items-center h-16 bg-deep-blue text-cream text-center uppercase text-xl leading-6">
-                <Link href={game.url}>
-                    { game.name }
+                <Link href={props.game.url}>
+                    { props.game.name }
                 </Link>
             </div>
         </div>

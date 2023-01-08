@@ -138,7 +138,7 @@ const Home: NextPage = () => {
                             {
                                 games.length > 0
                                     ? games.map((game: Game) => (
-                                        <GameCard key={game.id} gameData={game} />
+                                        <GameCard key={game.id} game={game} />
                                     ))
                                     : <div className="flex h-full justify-center items-center">
                                         <p>There are no games tracked yet.</p>
@@ -165,7 +165,7 @@ const Home: NextPage = () => {
                         <div className="flex justify-evenly flex-wrap">
                             {
                                 games.map((exampleGame: Game) => (
-                                    <GameCard key={exampleGame.id} gameData={exampleGame} />
+                                    <GameCard key={exampleGame.id} game={exampleGame} />
                                 ))
                             }
                         </div>
