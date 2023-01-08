@@ -34,8 +34,7 @@ export const GameCard = (props: { game: Game }) => {
             setFlash({ message: error, severity: 'error', delay: FLASH_MESSAGE_DELAY })
 
         } else {
-            const updatedGame = res
-            mutate({...props.game, ...updatedGame})
+            mutate()
             setFlash({ message: 'Game was successfully updated', severity: 'success', delay: FLASH_MESSAGE_DELAY })
         }
         setIsRefreshing(false)
@@ -48,10 +47,7 @@ export const GameCard = (props: { game: Game }) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: userId, name: props.game.name })
         })
-        const deletedGame: Game = await res.json()
-
-        const filteredGames = games.filter((game: Game) => game.id !==  deletedGame.id)
-        mutate(...filteredGames)
+        mutate()
         setModalOpen(false)
     }
 
