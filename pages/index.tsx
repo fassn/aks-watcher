@@ -104,7 +104,7 @@ const Home: NextPage = () => {
                     <>
                         <div className="flex border-solid border-deep-blue border-b-2 py-2">
                             <div className="flex font-josephin">
-                                <SortGames games={games} />
+                                <SortGames />
                             </div>
 
                             <div className="flex mx-10">
