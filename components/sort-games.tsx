@@ -43,7 +43,7 @@ export const SortGames = () => {
                 })
                 break;
         }
-        mutate(games)
+        mutate()
     }
 
     const onChange = (event: ChangeEvent<HTMLSelectElement>) => {

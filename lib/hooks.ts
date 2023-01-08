@@ -12,6 +12,8 @@ interface useGames {
 
 export function useGames() {
     const { data, error, isLoading, isValidating, mutate } = useSWR('/api/games/get', fetcher, {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
         suspense: true,
         fallbackData: []
     })
