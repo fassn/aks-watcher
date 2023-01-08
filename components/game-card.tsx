@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { useSWRConfig } from "swr"
+import { useGames } from "lib/hooks"
 import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
@@ -11,7 +11,7 @@ export const GameCard = (props: { gameData: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
     const [game, setGame] = useState({...props.gameData})
     const [modalOpen, setModalOpen] = useState(false)
-    const { mutate } = useSWRConfig()
+    const { games, mutate } = useGames()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [flash, setFlash] = useState<Flash>({})
@@ -40,9 +40,7 @@ export const GameCard = (props: { gameData: Game }) => {
 
         } else {
             const updatedGame = res
-            mutate('/api/games/get', async () => {
-                setGame({...game, ...updatedGame})
-            })
+            mutate({...game, ...updatedGame})
             setFlash({ message: 'Game was successfully updated', severity: 'success', delay: FLASH_MESSAGE_DELAY })
         }
         setIsRefreshing(false)
@@ -57,10 +55,8 @@ export const GameCard = (props: { gameData: Game }) => {
         })
         const deletedGame: Game = await res.json()
 
-        mutate('/api/games/get', async (games: Game[]) => {
-            const filteredGames = games.filter((game: Game) => game.id !==  deletedGame.id)
-            return [...filteredGames]
-        })
+        const filteredGames = games.filter((game: Game) => game.id !==  deletedGame.id)
+        mutate(...filteredGames)
         setModalOpen(false)
     }
 
@@ -81,19 +77,16 @@ export const GameCard = (props: { gameData: Game }) => {
                     </FlashMessage>
                 </div>
             </div>
-            <div className="flex h-64">
-                <Link href={game.url}>
-                    <a>
-                        <Image
-                            src={ game.cover }
-                            alt={ game.name + ' game cover'}
-                            width='256'
-                            height='256'
-                            unoptimized={true}
-                        />
-                    </a>
-                </Link>
-            </div>
+            <Link href={game.url} >
+                <div className="w-64 h-64 relative">
+                    <Image className="object-fill"
+                        fill
+                        src={ game.cover }
+                        alt={ game.name + ' game cover'}
+                        unoptimized={true}
+                    />
+                </div>
+            </Link>
             <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey">
                 {
                     session.status === 'authenticated' ?
@@ -129,7 +122,7 @@ export const GameCard = (props: { gameData: Game }) => {
             </div>
             <div className="flex justify-center items-center h-16 bg-deep-blue text-cream text-center uppercase text-xl leading-6">
                 <Link href={game.url}>
-                    <a>{ game.name }</a>
+                    { game.name }
                 </Link>
             </div>
         </div>

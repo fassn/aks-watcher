@@ -26,7 +26,7 @@ export const Header = () => {
         <header className="flex w-full fixed top-0 z-50 h-12 items-center bg-deep-blue pl-8 pr-4">
             <h1 className="flex-none text-light-grey justify-center uppercase font-josephin font-bold">
                 <Link href='/'>
-                    <a data-cy='homepage_link'>AKS Price Tracker</a>
+                    AKS Price Tracker
                 </Link>
             </h1>
             <span className="flex-none text-light-grey mx-6 pb-1">|</span>
