@@ -8,6 +8,8 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const session = await unstable_getServerSession(req, res, authOptions);
+
+    /** Unlogged User */
     if (!session) {
         const exampleGames = await prisma.exampleGame.findMany({
             where: { userId: undefined }
@@ -15,6 +17,7 @@ export default async function handler(
         return res.status(200).json(exampleGames)
     }
 
+    /** Logged User */
     if (session) {
         const { id: userId } = session?.user
 

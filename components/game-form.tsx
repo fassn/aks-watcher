@@ -39,9 +39,10 @@ export const GameForm = () => {
     }
 
     // Can easily add new patterns if AllKeyShop URLs were to change in the future.
+    const baseUrlPattern = 'https:\/\/www\.allkeyshop\.com\/'
     const regexPatterns = [
-        'https:\/\/www\.allkeyshop\.com\/blog\/buy-[A-Za-z0-9\-]+compare-prices\/?$',
-        'https:\/\/www\.allkeyshop\.com\/blog\/compare-and-buy-cd-key-for-digital-download-[A-Za-z0-9\-]+\/?$'
+        baseUrlPattern + 'blog\/buy-[A-Za-z0-9\-]+compare-prices\/?$',
+        baseUrlPattern + 'blog\/compare-and-buy-cd-key-for-digital-download-[A-Za-z0-9\-]+\/?$'
     ]
     const pattern = regexPatterns.join('|')
 

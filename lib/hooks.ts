@@ -1,5 +1,5 @@
 import useSWR, { KeyedMutator } from 'swr'
-import fetcher from 'lib/fetcher'
+import { fetcher } from 'lib/utils'
 import { Game } from '@prisma/client'
 
 interface useGames {

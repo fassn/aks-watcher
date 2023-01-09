@@ -5,6 +5,7 @@ import * as cheerio from "cheerio"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]"
 import { uploadImage } from "lib/cloudinary"
+import { timeout } from "lib/utils"
 
 interface ScrapedContent {
     url: string,
@@ -131,9 +132,4 @@ const getPlatform = (url: string) => {
     if (url.includes('-xbox-one-')) platform = Platform.XBOX_ONE
     if (url.includes('-xbox-series-')) platform = Platform.XBOX_SERIES
     return platform
-}
-
-const timeout = (ms: number) => {
-    console.warn(`Waiting ${ms / 1000} s between requests.`)
-    return new Promise(resolve => setTimeout(resolve, ms))
 }

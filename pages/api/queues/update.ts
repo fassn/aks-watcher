@@ -1,7 +1,7 @@
 import { Game } from "@prisma/client";
 import { Queue } from "quirrel/next";
 import prisma from "lib/prisma"
-import * as cheerio from "cheerio"
+import { getPrice, timeout } from "lib/utils";
 
 export default Queue('api/queues/update', async (games: Game[]) => {
     let updatedGames: Game[] = []
@@ -29,14 +29,3 @@ export default Queue('api/queues/update', async (games: Game[]) => {
         ])
     }
 })
-
-const timeout = (ms: number) => {
-    console.warn(`Waiting ${ms / 1000} s between requests.`)
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-const getPrice = (contents: string) => {
-    const $ = cheerio.load(contents)
-
-    return Number($('.content').find('meta[data-itemprop=lowPrice]').attr('content') || -1)
-}
