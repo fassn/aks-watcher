@@ -11,7 +11,7 @@ export function uploadImage(
         imageUploaded: string,
         options: UploadApiOptions = { use_filename: true, unique_filename: false, overwrite: true }
     ) {
-    return new Promise<UploadApiResponse|UploadApiErrorResponse|undefined>((resolve, reject) => {
+    return new Promise<UploadApiResponse|undefined>((resolve, reject) => {
         cloudinary.uploader.upload(
             imageUploaded,
             options,
