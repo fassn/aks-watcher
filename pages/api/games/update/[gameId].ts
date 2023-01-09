@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
-import * as cheerio from "cheerio"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import moment from "moment"
+import { getPrice } from "lib/utils"
 
 export default async function handler(
     req: NextApiRequest,
@@ -62,10 +62,4 @@ const isUpdatable = (lastUpdated: string) => {
     const today = moment()
     const dateDiff = Math.round(today.diff(moment(lastUpdated)) / (1000 * 60)) // diff in minutes
     return dateDiff >= (minutesBeforeStale ?? 60)
-}
-
-const getPrice = (contents: string) => {
-    const $ = cheerio.load(contents)
-
-    return Number($('.content').find('meta[data-itemprop=lowPrice]').attr('content') || -1)
 }

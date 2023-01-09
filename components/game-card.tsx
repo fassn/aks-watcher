@@ -6,11 +6,12 @@ import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
 import FlashMessage, { Flash } from "./flash-msg"
+import { fetcher } from "lib/utils"
 
 export const GameCard = (props: { game: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
     const [modalOpen, setModalOpen] = useState(false)
-    const { games, mutate } = useGames()
+    const { mutate } = useGames()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
     const [flash, setFlash] = useState<Flash>({})
@@ -19,7 +20,7 @@ export const GameCard = (props: { game: Game }) => {
     const session = useSession()
     const { id: userId } = session.data?.user || '' // default when using with unsigned user (exampleGames)
 
-    const updatePrice = async () => {
+    const updateGame = async () => {
         if (isRefreshing) {
             throw new Error('You have already requested an update for this game. No need to spam the button ;-)')
         }
@@ -104,7 +105,7 @@ export const GameCard = (props: { game: Game }) => {
                     <span className="font-semibold text-deep-blue">{ new Date(props.game.dateUpdated).toLocaleDateString(locale) }</span>
                     {
                         session.status === 'authenticated' ?
-                        <button onClick={updatePrice} className="w-12">
+                        <button onClick={updateGame} className="w-12">
                             <svg className={`${isRefreshing ? 'animate-spin ' : ''} inline-block h-4 w-4 text-deep-blue`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
                         </button> :
                         <></>
