@@ -10,7 +10,7 @@ interface FormData {
 
 export const GameForm = () => {
     const router = useRouter()
-    const { games, mutate } = useGames()
+    const { mutate } = useGames()
     const [flash, setFlash] = useState<Flash>({})
     const FLASH_MESSAGE_DELAY = 5000
 
@@ -29,10 +29,7 @@ export const GameForm = () => {
                 body: JSON.stringify({ urls: links })
             })
             .then(res => res.json()
-            .then((storedGames: Game[]) => {
-                const newGames = [...games, ...storedGames]
-                mutate(newGames)
-            }))
+            .then(() => { mutate() }))
             .catch((e) => {
                 throw new Error(`There was an issue while storing the games ${e.message}`)
             })
