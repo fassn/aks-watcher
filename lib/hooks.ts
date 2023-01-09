@@ -1,8 +1,9 @@
 import useSWR, { KeyedMutator } from 'swr'
 import { fetcher } from 'lib/utils'
 import { Game } from '@prisma/client'
+import { DependencyList, EffectCallback, useEffect, useRef } from 'react'
 
-interface useGames {
+interface IUseGames {
     games: Game[] | undefined,
     isLoading: boolean,
     isError: Error | undefined,
@@ -18,7 +19,7 @@ export function useGames() {
         fallbackData: []
     })
 
-    const useGames: useGames = {
+    const useGames: IUseGames = {
         games: data,
         isLoading,
         isError: error,
@@ -26,4 +27,18 @@ export function useGames() {
         mutate
     }
     return useGames
+}
+
+export function useEffectAfterMount(effect: EffectCallback, deps: DependencyList) {
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        if (isMounted.current) return effect();
+        else isMounted.current = true;
+    }, deps);
+
+    // reset on unmount; in React 18, components can mount again, development only
+    // useEffect(() => {
+    //     isMounted.current = false;
+    // });
 }
