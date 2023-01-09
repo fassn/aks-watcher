@@ -3,15 +3,15 @@ import fetcher from 'lib/fetcher'
 import { Game } from '@prisma/client'
 
 interface useGames {
-    games: Game[],
+    games: Game[] | undefined,
     isLoading: boolean,
-    isError: any,
+    isError: Error | undefined,
     isValidating: boolean,
     mutate: KeyedMutator<any>
 }
 
 export function useGames() {
-    const { data, error, isLoading, isValidating, mutate } = useSWR('/api/games/get', fetcher, {
+    const { data, error, isLoading, isValidating, mutate } = useSWR<Game[], Error>('/api/games/get', fetcher, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         suspense: true,

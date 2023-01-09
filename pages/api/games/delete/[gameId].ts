@@ -6,7 +6,7 @@ import { destroyImage } from "lib/cloudinary";
 
 export default async function handler (
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse
     ) {
     if (req.method !== 'DELETE') {
         return res.status(405).send('Request must be DELETE.')

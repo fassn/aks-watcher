@@ -7,7 +7,7 @@ import update from "../queues/update";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse
 ) {
     if (req.method !== 'POST') {
         return res.status(405).send('Request must be POST.')

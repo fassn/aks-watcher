@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
-import { Game } from "@prisma/client";
+import { Game, Prisma } from "@prisma/client";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { destroyImage, destroyImages } from "lib/cloudinary";
+import { destroyImages } from "lib/cloudinary";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse
 ) {
     if (req.method !== 'POST') {
         return res.status(405).send('Request must be POST.')
