@@ -40,7 +40,7 @@ export default CronJob(
                     .then(res => res.text())
                     .then(async contents => {
                         const newPrice = getPrice(contents)
-                        await prisma.game.update({
+                        await prisma.exampleGame.update({
                             where: { id: game.id },
                             data: {
                                 bestPrice: newPrice,
