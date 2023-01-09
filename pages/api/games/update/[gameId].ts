@@ -7,7 +7,7 @@ import moment from "moment"
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse
 ) {
     if (req.method !== 'POST') {
         return res.status(405).send({ error: 'Request must be POST.' })

@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from 'cloudinary'
+import { AdminAndResourceOptions, UploadApiErrorResponse, UploadApiOptions, UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -7,10 +7,11 @@ cloudinary.config({
     secure: true,
 })
 
-export function uploadImage(imageUploaded: any,
-        options: any = { use_filename: true, unique_filename: false, overwrite: true }) {
-
-    return new Promise((resolve, reject) => {
+export function uploadImage(
+        imageUploaded: string,
+        options: UploadApiOptions = { use_filename: true, unique_filename: false, overwrite: true }
+    ) {
+    return new Promise<UploadApiResponse|UploadApiErrorResponse|undefined>((resolve, reject) => {
         cloudinary.uploader.upload(
             imageUploaded,
             options,
@@ -22,9 +23,16 @@ export function uploadImage(imageUploaded: any,
     })
 }
 
-export function destroyImage(public_id: any,
-        options: any = { resource_type: 'image', invalidate: true }) {
+type DestroyApiOptions = {
+    resource_type: string | undefined,
+    type: string | undefined,
+    invalidate: boolean | undefined
+}
 
+export function destroyImage(
+        public_id: string,
+        options: DestroyApiOptions = { resource_type: 'image', type: undefined,  invalidate: true }
+    ) {
     return new Promise((resolve, reject) => {
         cloudinary.uploader.destroy(public_id, options,
             (err, res) => {
@@ -35,9 +43,10 @@ export function destroyImage(public_id: any,
     })
 }
 
-export function destroyImages(public_ids: string[],
-        options: any = { resource_type: 'image', invalidate: true }) {
-
+export function destroyImages(
+        public_ids: string[],
+        options: AdminAndResourceOptions = { resource_type: 'image', invalidate: true }
+    ) {
     return new Promise((resolve, reject) => {
         cloudinary.api.delete_resources(public_ids, options,
             (err, res) => {

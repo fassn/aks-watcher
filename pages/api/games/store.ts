@@ -57,34 +57,35 @@ export default async function handler(
                                 let cloudinaryUrl: string
                                 try {
                                     content = await getContent(url, data)
-                                    const cloudinaryImage: any = await uploadImage(content.cover,
+                                    const cloudinaryImage = await uploadImage(content.cover,
                                         {
                                             public_id: `${userEmail}/${content.name}`,
                                             resource_type: 'image',
                                             overwrite: true,
                                         })
 
-                                    cloudinaryUrl = cloudinaryImage.secure_url
+                                    cloudinaryUrl = cloudinaryImage?.secure_url
                                     if (!cloudinaryUrl) {
                                         throw new Error('Couldn\'t upload image to cloudinary')
                                     }
+
+                                    const game = await prisma.game.create({
+                                        data: {
+                                            userId: userId,
+                                            url: url,
+                                            name: content.name,
+                                            cover: cloudinaryUrl,
+                                            platform: content.platform,
+                                            bestPrice: content.bestPrice,
+                                            dateCreated: new Date().toISOString(),
+                                            dateUpdated: new Date().toISOString(),
+                                        }
+                                    })
+                                    if (game) newGames.push(game)
                                 } catch (e: any) {
                                     const error = 'Are you sure the AllKeyShop URL is correct? ' + e.message
                                     return res.status(400).send({ error: error })
                                 }
-                                const game = await prisma.game.create({
-                                    data: {
-                                        userId: userId,
-                                        url: url,
-                                        name: content.name,
-                                        cover: cloudinaryUrl,
-                                        platform: content.platform,
-                                        bestPrice: content.bestPrice,
-                                        dateCreated: new Date().toISOString(),
-                                        dateUpdated: new Date().toISOString(),
-                                    }
-                                })
-                                if (game) newGames.push(game)
                             })
                             .catch(e => {
                                 return res.status(500).send({ error: `There was an issue while creating the game from ${url}. ${e.message}` })
