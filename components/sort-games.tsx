@@ -1,6 +1,6 @@
 import { Game } from "@prisma/client"
 import { ChangeEvent, useEffect, useState } from "react"
-import { useGames } from "lib/hooks"
+import { useEffectAfterMount, useGames } from "lib/hooks"
 
 type SortValue = ('game_asc' | 'game_desc' | 'price_asc' | 'price_desc')
 
@@ -8,42 +8,44 @@ export const SortGames = () => {
     const { games, mutate } = useGames()
     const [sortValue, setSortValue] = useState<SortValue>('game_asc')
 
-    useEffect(() => {
+    useEffectAfterMount(() => { // There is no need to sort on inital render
         sort(sortValue)
     }, [games])
 
     const sort = (sortValue: SortValue) => {
-        switch (sortValue) {
-            case 'game_asc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.name < b.name) return -1
-                    if (a.name > b.name) return 1
-                    return 0
-                })
-                break;
-            case 'game_desc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.name < b.name) return 1
-                    if (a.name > b.name) return -1
-                    return 0
-                })
-                break;
-            case 'price_asc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.bestPrice < b.bestPrice) return -1
-                    if (a.bestPrice > b.bestPrice) return 1
-                    return 0
-                })
-                break;
-            case 'price_desc':
-                games.sort((a: Game, b: Game) => {
-                    if (a.bestPrice < b.bestPrice) return 1
-                    if (a.bestPrice > b.bestPrice) return -1
-                    return 0
-                })
-                break;
+        if (games) {
+            switch (sortValue) {
+                case 'game_asc':
+                    games.sort((a: Game, b: Game) => {
+                        if (a.name < b.name) return -1
+                        if (a.name > b.name) return 1
+                        return 0
+                    })
+                    break;
+                case 'game_desc':
+                    games.sort((a: Game, b: Game) => {
+                        if (a.name < b.name) return 1
+                        if (a.name > b.name) return -1
+                        return 0
+                    })
+                    break;
+                case 'price_asc':
+                    games.sort((a: Game, b: Game) => {
+                        if (a.bestPrice < b.bestPrice) return -1
+                        if (a.bestPrice > b.bestPrice) return 1
+                        return 0
+                    })
+                    break;
+                case 'price_desc':
+                    games.sort((a: Game, b: Game) => {
+                        if (a.bestPrice < b.bestPrice) return 1
+                        if (a.bestPrice > b.bestPrice) return -1
+                        return 0
+                    })
+                    break;
+            }
+            mutate()
         }
-        mutate()
     }
 
     const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
