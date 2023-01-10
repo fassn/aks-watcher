@@ -18,25 +18,23 @@ export default async function handler (
         return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
-    if (session) {
-        const { id, email } = session?.user
-        if (id !== userId) {
-            return res.status(403).send({ error: 'You are not allowed to update this game.' })
-        }
-
-        const gameId = (req.query['gameId'] as string)
-
-        const deletedGame = await prisma.game.delete({
-            where: { id: gameId }
-        })
-
-        // delete cover picture from cloudinary
-        try {
-            await destroyImage(`${email}/${name}`)
-        } catch {
-            console.warn('There was an issue deleting the cover image of the deleted game ' + name)
-        }
-
-        return res.status(200).json(deletedGame)
+    const { id, email } = session?.user
+    if (id !== userId) {
+        return res.status(403).send({ error: 'You are not allowed to update this game.' })
     }
+
+    const gameId = (req.query['gameId'] as string)
+
+    const deletedGame = await prisma.game.delete({
+        where: { id: gameId }
+    })
+
+    // delete cover picture from cloudinary
+    try {
+        await destroyImage(`${email}/${name}`)
+    } catch {
+        console.warn('There was an issue deleting the cover image of the deleted game ' + name)
+    }
+
+    return res.status(200).json(deletedGame)
 }
