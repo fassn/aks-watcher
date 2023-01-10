@@ -5,7 +5,7 @@ import * as cheerio from "cheerio"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]"
 import { uploadImage } from "lib/cloudinary"
-import { timeout } from "lib/utils"
+import { timeout } from "../utils"
 
 interface ScrapedContent {
     url: string,

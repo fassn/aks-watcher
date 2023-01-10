@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import prisma from "lib/prisma"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import moment from "moment"
-import { getPrice } from "lib/utils"
+import { updateGame } from "pages/api/utils"
 
 export default async function handler(
     req: NextApiRequest,
@@ -26,34 +25,17 @@ export default async function handler(
         return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
 
-    if (session) {
-        const { id } = session?.user
-        if (id !== userId) {
-            return res.status(403).send({ error: 'You are not allowed to update this game.' })
-        }
+    const { id } = session?.user
+    if (id !== userId) {
+        return res.status(403).send({ error: 'You are not allowed to update this game.' })
+    }
 
-        try {
-            const response = await fetch(url)
-            const contents = await response.text()
-            const newPrice = getPrice(contents)
-            if (newPrice === -1) {
-                return res.status(500).send({ error: 'Couldn\'t get the new price. Game has not been updated.' })
-            }
-
-            const gameId = (req.query['gameId']) as string
-            const updatedGame = await prisma.game.update({
-                where: { id: gameId },
-                data: {
-                    bestPrice: newPrice,
-                    dateUpdated: new Date().toISOString()
-                }
-            }).catch(e => {
-                return res.status(500).send({ error: e.message });
-            })
-            return res.status(200).json(updatedGame)
-        } catch (err) {
-            return res.status(500).send({ error: 'There was an issue while updating the game.' })
-        }
+    const gameId = (req.query['gameId']) as string
+    try {
+        const updatedGame = await updateGame(gameId, url)
+        return res.status(200).json(updatedGame)
+    } catch (err) {
+        return res.status(500).send({ error: 'There was an issue while updating the game.' })
     }
 }
 
