@@ -3,23 +3,22 @@ import { ReactNode, useEffect, useRef } from "react"
 type ModalProps = {
     id?: string,
     children: ReactNode,
-    open: boolean,
+    show: boolean,
     onRequestClose: () => void,
     className: string
 }
 
-export const Modal: React.FC<ModalProps> = ({ id, children, open, onRequestClose, className }) => {
+export const Modal: React.FC<ModalProps> = ({ id, children, show, onRequestClose, className }) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
 
     useEffect(() => {
         const dialogNode = dialogRef.current
 
-        if (open) {
+        if (show) {
             dialogNode?.showModal()
-        } else {
-            dialogNode?.close()
         }
-    }, [open])
+        return () => dialogNode?.close()
+    }, [show])
 
     useEffect(() => {
         const dialogNode = dialogRef.current

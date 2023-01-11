@@ -6,11 +6,10 @@ import { Game } from "@prisma/client"
 import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
 import FlashMessage, { Flash } from "./flash-msg"
-import { fetcher } from "lib/utils"
 
 export const GameCard = (props: { game: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
-    const [modalOpen, setModalOpen] = useState(false)
+    const [modalShow, setModalShow] = useState(false)
     const { mutate } = useGames()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
@@ -49,15 +48,15 @@ export const GameCard = (props: { game: Game }) => {
             body: JSON.stringify({ userId: userId, name: props.game.name })
         })
         mutate()
-        setModalOpen(false)
+        setModalShow(false)
     }
 
-    const openModal = () => {
-        setModalOpen(!modalOpen)
+    const showModal = () => {
+        setModalShow(!modalShow)
     }
 
     const closeModal = () => {
-        setModalOpen(false)
+        setModalShow(false)
     }
 
     return (
@@ -82,12 +81,12 @@ export const GameCard = (props: { game: Game }) => {
             <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey">
                 {
                     session.status === 'authenticated' ?
-                    <button onClick={openModal}>
+                    <button onClick={showModal}>
                         <svg className="absolute top-0 right-0 h-6 w-6 text-red-600 hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="7" x2="7" y2="15" /> <line x1="7" y1="7" x2="15" y2="15" /></svg>
                     </button> :
                     <></>
                 }
-                <Modal open={modalOpen} onRequestClose={closeModal} className="w-80 h-48">
+                <Modal show={modalShow} onRequestClose={closeModal} className="w-80 h-48">
                     <p className="h-1/2">Are you sure you want to remove this game from the list?</p>
                     <div className="flex h-1/2">
                         <button onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>

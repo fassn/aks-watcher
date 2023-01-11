@@ -42,6 +42,10 @@ export default async function handler(
                 return res.status(500).send({ error: e })
             }
 
+            if (urls.length === 0) {
+                return res.status(400).send({ error: 'The games provided are already tracked.' })
+            }
+
             const newGames: Game[] = []
             for (const url of urls) {
                 await Promise.all([

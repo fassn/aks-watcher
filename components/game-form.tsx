@@ -1,6 +1,4 @@
-import { Game } from "@prisma/client"
 import { useGames } from "lib/hooks"
-import { useRouter } from "next/router"
 import { useState } from "react"
 import FlashMessage, { Flash } from "./flash-msg"
 
@@ -8,8 +6,11 @@ interface FormData {
     aksLinks: { value: string }
 }
 
-export const GameForm = () => {
-    const router = useRouter()
+type GameFormProps = {
+    closeModal: () => void
+}
+
+export const GameForm = ({ closeModal }: GameFormProps) => {
     const { mutate } = useGames()
     const [flash, setFlash] = useState<Flash>({})
     const FLASH_MESSAGE_DELAY = 5000
@@ -23,17 +24,25 @@ export const GameForm = () => {
             setFlash({ message: error, severity: 'error', delay: FLASH_MESSAGE_DELAY })
             setTimeout(() => setFlash({}), FLASH_MESSAGE_DELAY)
         } else {
+            setFlash({ message: 'Games are being added. Please wait.', severity: 'info', delay: FLASH_MESSAGE_DELAY })
             fetch('/api/games/store', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ urls: links })
             })
-            .then(res => res.json()
-            .then(() => { mutate() }))
+            .then(async (res) => {
+                if (res.status !== 200) {
+                    const error: string = (await res.json())?.error
+                    setFlash({ message: error, severity: 'error', delay: FLASH_MESSAGE_DELAY })
+                }
+                if (res.status === 200) {
+                    mutate()
+                    closeModal()
+                }
+            })
             .catch((e) => {
                 throw new Error(`There was an issue while storing the games ${e.message}`)
             })
-            router.push('/')
         }
 
     }
@@ -68,8 +77,8 @@ export const GameForm = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmit} method='post'>
-                <div className="flex flex-col h-auto bg-light-grey font-josephin outline outline-2 shadow-md shadow-deep-blue px-4 pt-10 pb-4">
+            <form onSubmit={handleSubmit} method='dialog'>
+                <div className="flex flex-col bg-cream font-josephin px-4 py-4">
                     <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
                         { flash.message }
                     </FlashMessage>
@@ -91,7 +100,12 @@ export const GameForm = () => {
                         ></textarea>
                     </div>
                     <div className="flex h-full">
-                        <button className="flex w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded" type='submit'>Add Game</button>
+                        <button
+                            type="submit"
+                            className="flex w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                        >
+                            Add Game
+                        </button>
                     </div>
                 </div>
             </form>

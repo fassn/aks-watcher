@@ -14,11 +14,14 @@ export const Layout = ({ children }: LayoutProps) => {
                 <link rel="icon" href="/favicon.ico" key='icon' />
             </Head>
 
-            <Header />
+            <div id='root'>
+                <Header />
 
-            <main className="pt-20 pb-32 bg-cream">
-                {children}
-            </main>
+                <main id="main" className="pt-20 pb-32 bg-cream">
+                    {children}
+                </main>
+            </div>
+
 
             <Footer />
         </>
