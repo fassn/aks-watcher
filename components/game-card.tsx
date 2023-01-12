@@ -60,7 +60,7 @@ export const GameCard = (props: { game: Game }) => {
     }
 
     return (
-        <div className="w-64 mx-5 my-10 shadow-md shadow-deep-blue">
+        <div className="w-64 mx-5 my-10 shadow-md shadow-deep-blue" data-cy="gamecard">
             <div className="relative">
                 <div className="absolute top-0 z-10">
                     <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
@@ -93,15 +93,15 @@ export const GameCard = (props: { game: Game }) => {
                     </div>
                 </Modal>
                 <div className="flex space-x-3">
-                    <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold">{ props.game.platform }</span>
+                    <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold" data-cy="game_platform">{ props.game.platform }</span>
                     <div>
                         <pre className="inline-block font-josephin">Best Price: </pre>
-                        <span className="font-semibold text-deep-blue">{ props.game.bestPrice }€</span>
+                        <span className="font-semibold text-deep-blue" data-cy="game_price">{ props.game.bestPrice }€</span>
                     </div>
                 </div>
                 <div className="flex h-full justify-center items-end text-sm">
                     <pre className="inline-block font-josephin">Last updated: </pre>
-                    <span className="font-semibold text-deep-blue">{ new Date(props.game.dateUpdated).toLocaleDateString(locale) }</span>
+                    <span className="font-semibold text-deep-blue" data-cy="game_update_date">{ new Date(props.game.dateUpdated).toLocaleDateString(locale) }</span>
                     {
                         session.status === 'authenticated' ?
                         <button onClick={updateGame} className="w-12">
@@ -112,7 +112,7 @@ export const GameCard = (props: { game: Game }) => {
                 </div>
             </div>
             <div className="flex justify-center items-center h-16 bg-deep-blue text-cream text-center uppercase text-xl leading-6">
-                <Link href={props.game.url}>
+                <Link href={props.game.url} data-cy="game_name">
                     { props.game.name }
                 </Link>
             </div>
