@@ -1,9 +1,9 @@
 import { signIn, signOut, useSession } from "next-auth/react"
 
-const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+const handleSubmit = (event: any) => {
     event.preventDefault()
-    const emailValue = (event.target as HTMLInputElement).value
-    signIn("email", { email: emailValue })
+    const target = event.target as typeof event.target & FormData
+    signIn("email", { email: target.email.value })
 }
 
 const SignIn = () => {
@@ -12,7 +12,7 @@ const SignIn = () => {
     if (session?.user) {
         return (
             <div>
-                <span className="text-cream">
+                <span className="text-cream" data-cy="signedin_email">
                     <strong>{ session.user.email }</strong>
                 </span>
                 <button onClick={() => signOut()} className='w-32' data-cy='signout'>
