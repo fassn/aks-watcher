@@ -1,8 +1,7 @@
-import NextAuth, { NextAuthOptions, Session } from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { PrismaClient, User } from "@prisma/client"
-import { JWT } from "next-auth/jwt"
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
