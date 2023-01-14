@@ -81,7 +81,7 @@ export const GameCard = (props: { game: Game }) => {
             <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey">
                 {
                     session.status === 'authenticated' ?
-                    <button onClick={showModal}>
+                    <button onClick={showModal} data-cy="game_delete_button">
                         <svg className="absolute top-0 right-0 h-6 w-6 text-red-600 hover:text-deep-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="15" y1="7" x2="7" y2="15" /> <line x1="7" y1="7" x2="15" y2="15" /></svg>
                     </button> :
                     <></>
@@ -104,7 +104,7 @@ export const GameCard = (props: { game: Game }) => {
                     <span className="font-semibold text-deep-blue" data-cy="game_update_date">{ new Date(props.game.dateUpdated).toLocaleDateString(locale) }</span>
                     {
                         session.status === 'authenticated' ?
-                        <button onClick={updateGame} className="w-12">
+                        <button onClick={updateGame} className="w-12" data-cy="game_update_button">
                             <svg className={`${isRefreshing ? 'animate-spin ' : ''} inline-block h-4 w-4 text-deep-blue`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />  <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" /></svg>
                         </button> :
                         <></>
