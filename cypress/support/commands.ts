@@ -33,7 +33,8 @@ declare global {
             //   dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
             //   visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
             sendTestEmail(): Chainable<JQuery<HTMLElement>>,
-            getLastEmail(): Chainable<JQuery<HTMLElement>>
+            getLastEmail(): Chainable<JQuery<HTMLElement>>,
+            login(): Chainable<void>
         }
     }
 }
@@ -69,6 +70,13 @@ Cypress.Commands.add('sendTestEmail', () => {
 //         }
 //     }
 // })
+
+Cypress.Commands.add('login', () => {
+    cy.session('testUser', () => {
+        cy.intercept('/api/auth/session', { fixture: 'session.json'}).as('session')
+        cy.setCookie('next-auth.session-token', '6aae236f-057d-4707-a1df-aef75791c135')
+    })
+})
 
 Cypress.Commands.add('getLastEmail', () => {
 

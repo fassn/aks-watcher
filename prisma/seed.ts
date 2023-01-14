@@ -2,13 +2,33 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-    const fassn = await prisma.user.upsert({
-        where: { email: 'christopher.fargere@gmail.com' },
+    const johndoe = await prisma.user.upsert({
+        where: { email: 'example@user.com' },
         update: {},
         create: {
-            email: 'christopher.fargere@gmail.com',
-            name: 'fassn',
+            email: 'example@user.com',
+            name: 'johndoe',
         },
+    })
+
+    const testUser = await prisma.user.upsert({
+        where: { email: 'christopher@test.com' },
+        update: {},
+        create: {
+            email: 'christopher@test.com',
+            name: 'TestUser',
+            emailVerified: '2022-01-01T00:00:00.000Z'
+        }
+    })
+
+    const testUserSession = await prisma.session.upsert({
+        where: { sessionToken: '6aae236f-057d-4707-a1df-aef75791c135' },
+        update: {},
+        create: {
+            sessionToken: '6aae236f-057d-4707-a1df-aef75791c135',
+            userId: testUser.id,
+            expires: '2099-01-01T00:00:00.000Z'
+        }
     })
 
     await prisma.exampleGame.createMany({
@@ -49,7 +69,7 @@ async function main() {
     await prisma.game.createMany({
         data: [
             {
-                userId: fassn.id,
+                userId: johndoe.id,
                 url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
                 name: 'DOOM Eternal',
                 cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/DOOMEternal-1.jpg',
@@ -59,7 +79,7 @@ async function main() {
                 dateUpdated: '2022-04-03T20:00:17.299Z'
             },
             {
-                userId: fassn.id,
+                userId: johndoe.id,
                 url: 'https://www.allkeyshop.com/blog/buy-fallout-4-cd-key-compare-prices/',
                 name: 'Fallout 4',
                 cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/Fallout4-1.jpg',
