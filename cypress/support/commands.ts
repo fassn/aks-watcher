@@ -55,6 +55,21 @@ Cypress.Commands.add('sendTestEmail', () => {
 
 })
 
+// import { PrismaClient } from "@prisma/client";
+// Cypress.Commands.add('updateExampleGames', () => {
+//     const prisma = new PrismaClient({ log: ['info'] })
+//     const today = new Date()
+//     console.log({today});
+
+//     async function checkDate() {
+//         const exampleGame = await prisma.exampleGame.findFirst()
+//         console.log({'example': exampleGame.dateUpdated});
+//         if (exampleGame.dateUpdated !== today) {
+//             cy.request('http://localhost:3000/api/games/update')
+//         }
+//     }
+// })
+
 Cypress.Commands.add('getLastEmail', () => {
 
     function requestEmail() {

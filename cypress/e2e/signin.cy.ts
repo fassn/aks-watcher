@@ -7,7 +7,7 @@ describe('Sign-in', () => {
         cy.visit('http://localhost:3000')
         cy.get('[data-cy="submit"]').click()
         cy.get('input:invalid').should('have.length', 1)
-        cy.get<HTMLInputElement>('[data-cy="email"]').then(($input) => {
+        cy.get<HTMLInputElement>('[data-cy="email"]').should(($input) => {
             expect($input[0].validationMessage).to.eq('Please fill out this field.')
         })
     })
@@ -17,7 +17,7 @@ describe('Sign-in', () => {
         cy.get('[data-cy="email"]').type('not an email', { force: true })
         cy.get('[data-cy="submit"]').click()
         cy.get('input:invalid').should('have.length', 1)
-        cy.get<HTMLInputElement>('[data-cy="email"]').then(($input) => {
+        cy.get<HTMLInputElement>('[data-cy="email"]').should(($input) => {
             expect($input[0].validationMessage).to.eq('Please include an \'@\' in the email address. \'notanemail\' is missing an \'@\'.')
         })
     })
@@ -30,20 +30,22 @@ describe('Sign-in', () => {
 
     it('should send an email containing a verification link', () => {
         cy.visit('http://localhost:3000')
-        cy.get('[data-cy="email"]').type(randomEmail).should('have.value', randomEmail) //assertion apres action, a changer
-        cy.get('[data-cy="submit"]').click() //assertion apres action, a changer
-        cy.contains('Check your email')
+        cy.get('[data-cy="email"]').type(randomEmail).as('typedEmail')
+        cy.get('@typedEmail').should('have.value', randomEmail)
+        cy.get('[data-cy="submit"]').click()
+        cy.get('h1').should('have.text', 'Check your email')
 
         cy.getLastEmail().then($body => {
             const linkHref = $body.find('a').attr('href')
-            expect(linkHref).to.contains('/api/auth/callback/email')
+            expect(linkHref).to.contain('/api/auth/callback/email')
             cy.visit(linkHref);
             cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
             cy.reload()
             cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
 
+            // clean the Mailtrap inbox
             const mailtrap = Cypress.env('mailtrap')
-            cy.request({ // clean the Mailtrap inbox
+            cy.request({
                 method: 'PATCH',
                 url: `https://mailtrap.io/api/accounts/${mailtrap.accountId}/inboxes/${mailtrap.inboxId}/clean`,
                 headers: {
