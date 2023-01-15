@@ -86,10 +86,10 @@ export const GameCard = (props: { game: Game }) => {
                     </button> :
                     <></>
                 }
-                <Modal show={modalShow} onRequestClose={closeModal} className="w-80 h-48">
+                <Modal id="delete_game_modal" show={modalShow} onRequestClose={closeModal} className="w-80 h-48">
                     <p className="h-1/2">Are you sure you want to remove this game from the list?</p>
                     <div className="flex h-1/2">
-                        <button onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>
+                        <button id='delete_submit' onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>
                     </div>
                 </Modal>
                 <div className="flex space-x-3">
