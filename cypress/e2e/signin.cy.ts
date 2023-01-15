@@ -38,7 +38,7 @@ describe('Sign-in', () => {
         cy.getLastEmail().then($body => {
             const linkHref = $body.find('a').attr('href')
             expect(linkHref).to.contain('/api/auth/callback/email')
-            cy.visit(linkHref);
+            cy.visit(linkHref!);
             cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
             cy.reload()
             cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
@@ -60,3 +60,5 @@ describe('Sign-in', () => {
         cy.sendTestEmail()
     })
 })
+
+export { }
