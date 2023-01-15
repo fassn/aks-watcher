@@ -38,7 +38,7 @@ const Home: NextPage = () => {
                                 <DeleteAll setFlash={setFlash} />
                             </div>
 
-                            <div className={"flex justify-evenly " + (games.length > 0 ? "flex-wrap" : "flex-col")}>
+                            <div id="games_container" className={"flex justify-evenly " + (games.length > 0 ? "flex-wrap" : "flex-col")}>
                                 {
                                     games.length > 0
                                         ? games.map((game: Game) => (

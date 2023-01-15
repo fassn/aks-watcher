@@ -25,7 +25,7 @@ export const Header = () => {
         if (session) {
             return (
                 <div className="flex w-full justify-end">
-                    <button onClick={openModal} className="flex justify-center items-center w-11 h-11">
+                    <button id='add_game_header' onClick={openModal} className="flex justify-center items-center w-11 h-11">
                         <svg className="h-6 w-6 text-cream"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/>
                         </svg>

@@ -3,7 +3,7 @@ import { useState } from "react"
 import FlashMessage, { Flash } from "./flash-msg"
 
 interface FormData {
-    aksLinks: { value: string }
+    aks_links: { value: string }
 }
 
 type GameFormProps = {
@@ -56,7 +56,7 @@ export const GameForm = ({ closeModal }: GameFormProps) => {
     const pattern = regexPatterns.join('|')
 
     const validateLinks = (target: EventTarget & FormData) => {
-        const links: string[] = target.aksLinks.value.trim().split('\n')
+        const links: string[] = target.aks_links.value.trim().split('\n')
         if (links.length === 0) {
             return { error: 'No links were found.'}
         }
@@ -77,21 +77,20 @@ export const GameForm = ({ closeModal }: GameFormProps) => {
 
     return (
         <>
-            <form onSubmit={handleSubmit} method='dialog'>
+            <form id="add_game_form" onSubmit={handleSubmit} method='dialog'>
                 <div className="flex flex-col bg-cream font-josephin px-4 py-4">
-                    <FlashMessage severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
+                    <FlashMessage id='add_game_flash' severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
                         { flash.message }
                     </FlashMessage>
-                    <div className="mb-3">
+                    <div id="add_game_form_desc" className="mb-3">
                         Add Games to be tracked:<br />
-                        {/* <i className="text-xs break-words">https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/</i> */}
                     </div>
                     <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="aksLinks">AllKeyShop Link(s):</label>
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="aks_links">AllKeyShop Link(s):</label>
                         <textarea
                             className="shadow appearance-none border border-deep-blue rounded w-full py-2 px-3 text-deep-blue mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                            id='aksLinks'
-                            name='aksLinks'
+                            id='aks_links'
+                            name='aks_links'
                             rows={10}
                             placeholder={
                                 `You can paste one or multiple links here, one per line.
@@ -101,6 +100,7 @@ export const GameForm = ({ closeModal }: GameFormProps) => {
                     </div>
                     <div className="flex h-full">
                         <button
+                            id="add_game_submit"
                             type="submit"
                             className="flex w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                         >

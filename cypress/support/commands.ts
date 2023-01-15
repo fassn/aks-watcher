@@ -34,7 +34,8 @@ declare global {
             //   visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
             sendTestEmail(): Chainable<JQuery<HTMLElement>>,
             getLastEmail(): Chainable<JQuery<HTMLElement>>,
-            login(): Chainable<void>
+            login(): Chainable<void>,
+            seedDatabase(): Chainable<void>
         }
     }
 }
@@ -71,9 +72,13 @@ Cypress.Commands.add('sendTestEmail', () => {
 //     }
 // })
 
+Cypress.Commands.add('seedDatabase', () => {
+    cy.exec('npx prisma db seed')
+})
+
 Cypress.Commands.add('login', () => {
     cy.session('testUser', () => {
-        cy.intercept('/api/auth/session', { fixture: 'session.json'}).as('session')
+        cy.intercept('/api/auth/session', { fixture: 'session.json' }).as('session')
         cy.setCookie('next-auth.session-token', '6aae236f-057d-4707-a1df-aef75791c135')
     })
 })

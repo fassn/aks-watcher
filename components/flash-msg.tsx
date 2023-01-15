@@ -8,6 +8,7 @@ export interface Flash {
 
 type FlashMessageProps = {
     children: ReactNode,
+    id?: string,
     severity: ('success'|'info'|'error'),
     delay: number,
 }
@@ -39,7 +40,7 @@ const FlashMessage: React.FC<FlashMessageProps> = (props) => {
 
     return (
         isVisible ?
-            <div className={className} role="alert">
+            <div id={props.id} className={className} role="alert">
                 {props.children}
             </div> :
         <></>
