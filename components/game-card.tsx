@@ -3,9 +3,9 @@ import Link from "next/link"
 import { useState } from "react"
 import { useGames } from "lib/hooks"
 import { Game } from "@prisma/client"
-import { Modal } from "./modal"
 import { useSession } from "next-auth/react"
 import FlashMessage, { Flash } from "./flash-msg"
+import ReactModal from "react-modal"
 
 export const GameCard = (props: { game: Game }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
@@ -86,12 +86,20 @@ export const GameCard = (props: { game: Game }) => {
                     </button> :
                     <></>
                 }
-                <Modal id="delete_game_modal" show={modalShow} onRequestClose={closeModal} className="w-80 h-48">
-                    <p className="h-1/2">Are you sure you want to remove this game from the list?</p>
-                    <div className="flex h-1/2">
-                        <button id='delete_submit' onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>
+                <ReactModal
+                    id="delete_game_modal"
+                    className='absolute top-1/3 left-1/2 -translate-x-1/2 overflow-auto'
+                    overlayClassName='fixed inset-0 backdrop-blur-[5px]'
+                    isOpen={modalShow}
+                    onRequestClose={closeModal}
+                >
+                    <div className="flex flex-col w-80 h-48 bg-white p-4">
+                        <p className="h-1/2 text-center">Are you sure you want to remove this game from the list?</p>
+                        <div className="flex h-1/2">
+                            <button id='delete_submit' onClick={deleteGame} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>
+                        </div>
                     </div>
-                </Modal>
+                </ReactModal>
                 <div className="flex space-x-3">
                     <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold" data-cy="game_platform">{ props.game.platform }</span>
                     <div>
