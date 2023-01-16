@@ -2,7 +2,10 @@ This is a small app allowing the user to add and track the best price on its gam
 
 ## Getting Started
 
-1. npm i
+1. Install dependencies
+```
+npm i
+```
 
 2. Copy the .env.example file as .env.local:
 
