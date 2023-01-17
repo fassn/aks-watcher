@@ -30,14 +30,14 @@ export default async function handler(
             return res.status(405).send({ error: 'Request needs to be POST.' })
         }
 
-        const urls: string[] = req.body.urls
+        let urls: string[] = req.body.urls
         if (urls.length === 0) {
             return res.status(400).send({ error: 'There is no provided link.' })
         }
 
         if (urls) {
             try {
-                await filterGamesToCreate(urls)
+                urls = await filterGamesToCreate(urls)
             } catch (e) {
                 return res.status(500).send({ error: e })
             }
@@ -70,7 +70,8 @@ export default async function handler(
         }
     }
 
-    async function filterGamesToCreate(urls: string[]) {
+    async function filterGamesToCreate(gamesUrls: string[]) {
+        const urls = [... new Set(gamesUrls)] // deduplicate urls
         const storedGames = await prisma.game.findMany({
             where: {
                 userId: userId,
@@ -83,6 +84,7 @@ export default async function handler(
                 urls.splice(urls.indexOf(game.url), 1)
             }
         }
+        return urls
     }
 
     function getContent(url: string, data: string): ScrapedContent {

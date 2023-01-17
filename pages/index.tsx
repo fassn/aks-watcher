@@ -31,7 +31,7 @@ const Home: NextPage = () => {
                                 </div>
                                 <RefreshAll setFlash={setFlash}/>
                                 <div className="flex min-w-fit">
-                                    <FlashMessage severity={(flash.severity) as ('success' | 'info' | 'error')} delay={flash.delay ?? 5000}>
+                                    <FlashMessage id='main_flash' severity={(flash.severity) as ('success' | 'info' | 'error')} delay={flash.delay ?? 5000}>
                                         {flash.message}
                                     </FlashMessage>
                                 </div>

@@ -41,6 +41,7 @@ cypress.env.json
 
 # cypress
 cypress/videos/*
+cypress/screenshots/*
 
 data/
 token
