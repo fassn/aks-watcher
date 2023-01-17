@@ -1,54 +1,104 @@
 {
     "games": [
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-cyberpunk-2077-cd-key-compare-prices/",
             "name": "Cyberpunk 2077",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Cyberpunk 2077.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/",
             "name": "Desperados 3",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Desperados 3.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-dune-spice-wars-cd-key-compare-prices/",
             "name": "Dune Spice Wars",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Dune Spice Wars.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-dying-light-cd-key-compare-prices/",
             "name": "Dying Light",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Dying Light.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-hitman-3-cd-key-compare-prices/",
             "name": "Hitman 3",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Hitman 3.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-horizon-zero-dawn-cd-key-compare-prices/",
             "name": "Horizon Zero Dawn",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Horizon Zero Dawn.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-inscryption-cd-key-compare-prices/",
             "name": "Inscryption",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Inscryption.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-myst-3-exile-cd-key-compare-prices/",
             "name": "Myst 3 Exile",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Myst 3 Exile.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-red-dead-redemption-2-cd-key-compare-prices/",
             "name": "Red Dead Redemption 2",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Red Dead Redemption 2.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         },
         {
+            "userId": "clcz4aeku0002d6i04xfe5mp8",
             "url": "https://www.allkeyshop.com/blog/buy-starcraft-2-legacy-of-the-void-cd-key-compare-prices/",
             "name": "Starcraft 2 Legacy Of The Void",
-            "platform": "PC"
+            "platform": "PC",
+            "bestPrice": 10,
+            "cover": "testing/covers/Starcraft 2 Legacy Of The Void.jpg",
+            "dateCreated": "2022-01-01T00:00:00.000Z",
+            "dateUpdated": "2022-01-01T00:00:00.000Z"
         }
     ]
 }

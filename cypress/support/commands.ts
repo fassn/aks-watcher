@@ -35,42 +35,15 @@ declare global {
             sendTestEmail(): Chainable<JQuery<HTMLElement>>,
             getLastEmail(): Chainable<JQuery<HTMLElement>>,
             login(): Chainable<void>,
-            seedDatabase(): Chainable<void>
+            seedDatabase(): Chainable<void>,
+            createGame(url: string): Chainable<Cypress.Response<any>>,
         }
     }
 }
-const mailtrap = Cypress.env('mailtrap')
-Cypress.Commands.add('sendTestEmail', () => {
-    return cy.fixture('testEmail').then((json) => {
-        return cy.request<HTMLElement>({
-            method: 'POST',
-            url: `https://sandbox.api.mailtrap.io/api/send/${mailtrap.inboxId}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Api-Token': mailtrap.apiToken,
-                'Authorization': `Bearer ${mailtrap.apiToken}`,
-                'Access-Control-Allow-Origin': 'no-cors'
-            },
-            body: json.body
-        }).then((res) => res.body)
-    })
 
+Cypress.Commands.add('createGame', (url: string) => {
+    return cy.request('POST', '/api/games/store', { urls: [url]})
 })
-
-// import { PrismaClient } from "@prisma/client";
-// Cypress.Commands.add('updateExampleGames', () => {
-//     const prisma = new PrismaClient({ log: ['info'] })
-//     const today = new Date()
-//     console.log({today});
-
-//     async function checkDate() {
-//         const exampleGame = await prisma.exampleGame.findFirst()
-//         console.log({'example': exampleGame.dateUpdated});
-//         if (exampleGame.dateUpdated !== today) {
-//             cy.request('http://localhost:3000/api/games/update')
-//         }
-//     }
-// })
 
 Cypress.Commands.add('seedDatabase', () => {
     cy.exec('npx prisma db seed')
@@ -114,7 +87,24 @@ Cypress.Commands.add('getLastEmail', () => {
         })
     }
 
-    return requestEmail();
+    return requestEmail()
 });
+
+const mailtrap = Cypress.env('mailtrap')
+Cypress.Commands.add('sendTestEmail', () => {
+    return cy.fixture('testEmail').then((json) => {
+        return cy.request<HTMLElement>({
+            method: 'POST',
+            url: `https://sandbox.api.mailtrap.io/api/send/${mailtrap.inboxId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Api-Token': mailtrap.apiToken,
+                'Authorization': `Bearer ${mailtrap.apiToken}`,
+                'Access-Control-Allow-Origin': 'no-cors'
+            },
+            body: json.body
+        }).then((res) => res.body)
+    })
+})
 
 export { }

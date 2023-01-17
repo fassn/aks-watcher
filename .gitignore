@@ -39,5 +39,8 @@ cypress.env.json
 # typescript
 *.tsbuildinfo
 
+# cypress
+cypress/videos/*
+
 data/
 token
