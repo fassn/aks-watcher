@@ -32,6 +32,7 @@ export const Header = () => {
                     </button>
                         <ReactModal
                             className='absolute top-1/3 overflow-auto left-[40%] w-1/5 rounded p-5'
+                            overlayClassName='fixed inset-0 backdrop-blur-[5px]'
                             isOpen={modalShow}
                             onRequestClose={closeModal}
                         >
