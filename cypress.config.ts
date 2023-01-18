@@ -52,6 +52,7 @@ export default defineConfig({
     e2e: {
         baseUrl: 'http://localhost:3000',
         setupNodeEvents(on, config) {
+            require('@cypress/code-coverage/task')(on, config)
             // implement node event listeners here
             on('task', {
                 antedateGame,
@@ -71,7 +72,7 @@ export default defineConfig({
             //         browsers: config.browsers.concat(browser),
             //     }
             // })
-
+            return config
         }
     },
 })

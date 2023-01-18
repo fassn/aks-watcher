@@ -248,7 +248,7 @@ describe('Manage Games', () => {
         .should('have.text', '01/01/2022')
     })
 
-    it.only('refreshes all games', () => {
+    it('refreshes all games', () => {
         cy.task('createGames', 2)
         cy.visit('http://localhost:3000')
         const today = new Date().toLocaleDateString(Cypress.env('NEXT_PUBLIC_LOCALE'))
