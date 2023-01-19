@@ -44,7 +44,7 @@ export default async function handler(
 }
 
 const getGamesToUpdate = (games: Game[]) => {
-    const minutesBeforeStale = process.env.NEXT_PUBLIC_MINUTES_BEFORE_STALE
+    const minutesBeforeStale = 60
     const today = moment()
     let gamesToUpdate: Game[] = []
 

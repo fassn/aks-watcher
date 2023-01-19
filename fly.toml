@@ -8,7 +8,6 @@ processes = []
 [build]
   [build.args]
     NEXT_PUBLIC_LOCALE = "fr-FR"
-    NEXT_PUBLIC_MINUTES_BEFORE_STALE = 60
     NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES = 3000
 
 [deploy]

@@ -43,5 +43,8 @@ cypress.env.json
 cypress/videos/*
 cypress/screenshots/*
 
+# code coverage
+.nyc_output
+
 data/
 token

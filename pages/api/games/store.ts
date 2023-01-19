@@ -20,11 +20,11 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const session = await unstable_getServerSession(req, res, authOptions)
-    const { id: userId, email: userEmail } = session?.user
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
+    const { id: userId, email: userEmail } = session?.user
     if (session) {
         if (req.method !== 'POST') {
             return res.status(405).send({ error: 'Request needs to be POST.' })

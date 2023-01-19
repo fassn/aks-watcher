@@ -27,7 +27,7 @@ export const GameCard = (props: { game: Game }) => {
         const res = await fetch(`/api/games/update/${props.game.id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: props.game.url, lastUpdated: props.game.dateUpdated, userId: userId })
+            body: JSON.stringify({ userId: userId })
         })
         if(res.status !== 200) {
             const error = await res.json().then(res => res.error)

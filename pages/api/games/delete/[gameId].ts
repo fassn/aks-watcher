@@ -7,20 +7,20 @@ import { destroyImage } from "lib/cloudinary";
 export default async function handler (
     req: NextApiRequest,
     res: NextApiResponse
-    ) {
+) {
+    const session = await unstable_getServerSession(req, res, authOptions);
+    if (!session) {
+        return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
+    }
+
     if (req.method !== 'DELETE') {
-        return res.status(405).send('Request must be DELETE.')
+        return res.status(405).send({ error: 'Request must be DELETE.' })
     }
 
     const { userId, name } = req.body
-    const session = await unstable_getServerSession(req, res, authOptions);
-    if (!session) {
-        return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
-    }
-
     const { id, email } = session?.user
     if (id !== userId) {
-        return res.status(403).send({ error: 'You are not allowed to update this game.' })
+        return res.status(403).send({ error: 'You are not allowed to delete this game.' })
     }
 
     const gameId = (req.query['gameId'] as string)

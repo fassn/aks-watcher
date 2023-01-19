@@ -24,7 +24,35 @@ import fs from 'fs'
 //     })
 // }
 
-async function createGames(count: number) {
+async function getGames(userId: string = 'clcz4aeku0002d6i04xfe5mp8') {
+    const prisma = getPrismaInstance()
+    const games = await prisma.game.findMany({
+        where: { userId: userId }
+    })
+
+    return games
+}
+
+async function createUser(email: string = 'anotheruser@test.com') {
+    const prisma = getPrismaInstance()
+    const user = await prisma.user.upsert({
+        where: { email: email },
+        update: {},
+        create: {
+            email: email,
+            emailVerified: new Date()
+        }
+    })
+    return user
+}
+
+type createGamesArgs = {
+    count: number
+    userId?: string
+}
+async function createGames(args: createGamesArgs) {
+    const { count, userId = 'clcz4aeku0002d6i04xfe5mp8' } = args
+
     if (count < 1 || count > 10) {
         throw new Error('Please input a number between 1 and 10')
     }
@@ -32,12 +60,26 @@ async function createGames(count: number) {
     const games: Game[] = getGamesFixture()
 
     const prisma = getPrismaInstance()
+    let createdGames: Game[] = []
     for (let i = 0; i < count; i++) {
+        const gamesData = { ...games[i], userId: userId }
         const game = await prisma.game.create({
-            data: games[i]
+            data: gamesData
         })
+        createdGames.push(game)
     }
-    return null
+    return createdGames
+}
+
+async function updateGame(args: Partial<Game>) {
+    if (!args.id) {
+        throw new Error('Please provide at least the game ID to update.')
+    }
+    const prisma = getPrismaInstance()
+    return await prisma.game.update({
+        where: { id: args.id },
+        data: args
+    })
 }
 
 async function antedateGame(gameId: string) {
@@ -55,8 +97,11 @@ export default defineConfig({
             require('@cypress/code-coverage/task')(on, config)
             // implement node event listeners here
             on('task', {
+                getGames,
+                createGames,
                 antedateGame,
-                createGames
+                updateGame,
+                createUser
             })
 
             // Can be used to replace electron, once managing to add another browser...
