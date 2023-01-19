@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Game, User } from "@prisma/client";
 
 describe('tests /api/games/update endpoint', () => {
     beforeEach(() => {
@@ -30,7 +30,7 @@ describe('tests /api/games/update endpoint', () => {
 
     it('requires the user to be the owner of the games', () => {
         cy.login()
-        cy.task('createUser').then((user: User) => {
+        cy.task<User>('createUser').then(user => {
             cy.request({
                 url: `api/games/update`,
                 method: 'POST',
@@ -57,13 +57,13 @@ describe('tests /api/games/update endpoint', () => {
     })
 
     it('requires the games to have been last updated more than an hour ago', () => {
-        cy.task('createGames', { count: 3 }).then(games => {
+        cy.task<Game[]>('createGames', { count: 3 }).then(games => {
             cy.task('updateGame', { id: games[0].id, dateUpdated: new Date() })
             cy.task('updateGame', { id: games[1].id, dateUpdated: new Date() })
             cy.task('updateGame', { id: games[2].id, dateUpdated: new Date() })
         })
         cy.login()
-        cy.task('getGames').then(games => {
+        cy.task<Game[]>('getGames').then(games => {
             cy.request({
                 url: `api/games/update`,
                 method: 'POST',
@@ -80,7 +80,7 @@ describe('tests /api/games/update endpoint', () => {
     it('updates the games', () => {
         cy.task('createGames', { count: 3 })
         cy.login()
-        cy.task('getGames').then(games => {
+        cy.task<Game[]>('getGames').then(games => {
             cy.request({
                 url: `api/games/update`,
                 method: 'POST',
