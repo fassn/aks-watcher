@@ -8,7 +8,6 @@ describe('tests /api/games/delete/[gameId] endpoint', () => {
     it('requires to be logged in', () => {
         cy.task('createGames', { count: 1 })
         cy.task('getGames').then(games => {
-            console.log({games});
             cy.request({
                 url: `api/games/delete/${games[0].id}`,
                 method: 'DELETE',

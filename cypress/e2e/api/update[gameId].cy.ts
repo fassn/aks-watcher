@@ -8,7 +8,6 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
     it('requires to be logged in', () => {
         cy.task('createGames', { count: 1 })
         cy.task('getGames').then(games => {
-            console.log({games});
             cy.request({
                 url: `api/games/update/${games[0].id}`,
                 method: 'POST',
@@ -62,7 +61,6 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
     //             body: { userId: 'clcz4aeku0002d6i04xfe5mp8' },
     //             failOnStatusCode: false
     //         }).then(res => {
-    //             console.log({res});
     //             expect(res.status).to.equal(400)
     //             expect(res.body).to.deep.equal({ error: 'No game ID was provided in the request.' })
     //         })
