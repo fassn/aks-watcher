@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Game, User } from "@prisma/client";
 
 describe('tests /api/games/update/[gameId] endpoint', () => {
     beforeEach(() => {
@@ -7,7 +7,7 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
 
     it('requires to be logged in', () => {
         cy.task('createGames', { count: 1 })
-        cy.task('getGames').then(games => {
+        cy.task<Game[]>('getGames').then(games => {
             cy.request({
                 url: `api/games/update/${games[0].id}`,
                 method: 'POST',
@@ -22,7 +22,7 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
     it('requires to use a POST request', () => {
         cy.task('createGames', { count: 1 })
         cy.login()
-        cy.task('getGames').then(games => {
+        cy.task<Game[]>('getGames').then(games => {
             cy.request({
                 url: `api/games/update/${games[0].id}`,
                 method: 'GET',
@@ -36,8 +36,8 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
 
     it('requires the user to be the owner of the game', () => {
         cy.login()
-        cy.task('createUser').then((user: User) => {
-            cy.task('createGames', { count: 1, userId: user.id }).then(games => {
+        cy.task<User>('createUser').then((user: User) => {
+            cy.task<Game[]>('createGames', { count: 1, userId: user.id }).then(games => {
                 cy.request({
                     url: `api/games/update/${games[0].id}`,
                     method: 'POST',
@@ -82,11 +82,11 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
     })
 
     it('requires the game to have been last updated more than an hour ago', () => {
-        cy.task('createGames', { count: 1 }).then(games => {
+        cy.task<Game[]>('createGames', { count: 1 }).then(games => {
             cy.task('updateGame', { id: games[0].id, dateUpdated: new Date() })
         })
         cy.login()
-        cy.task('getGames').then(games => {
+        cy.task<Game[]>('getGames').then(games => {
             cy.request({
                 url: `api/games/update/${games[0].id}`,
                 method: 'POST',
@@ -102,7 +102,7 @@ describe('tests /api/games/update/[gameId] endpoint', () => {
     it('updates a game', () => {
         cy.task('createGames', { count: 1 })
         cy.login()
-        cy.task('getGames').then(games => {
+        cy.task<Game[]>('getGames').then(games => {
             cy.request({
                 url: `api/games/update/${games[0].id}`,
                 method: 'POST',

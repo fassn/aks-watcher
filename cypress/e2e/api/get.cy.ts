@@ -1,3 +1,5 @@
+import { Game } from "@prisma/client"
+
 describe('tests /api/games/get endpoint', () => {
     beforeEach(() => {
         cy.seedDatabase()
@@ -8,7 +10,7 @@ describe('tests /api/games/get endpoint', () => {
             url: 'api/games/get',
         }).then(res => {
             expect(res.status).to.equal(200)
-            const exampleGames = res.body
+            const exampleGames: Game[] = res.body
             expect(exampleGames).to.have.length(3)
             exampleGames.forEach(game => {
                 expect(game).to.have.keys(['id', 'userId', 'url', 'name', 'platform', 'cover', 'bestPrice', 'dateCreated', 'dateUpdated'])
@@ -23,7 +25,7 @@ describe('tests /api/games/get endpoint', () => {
             url: 'api/games/get',
         }).then(res => {
             expect(res.status).to.equal(200)
-            const games = res.body
+            const games: Game[] = res.body
             expect(games).to.have.length(2)
             games.forEach(game => {
                 expect(game).to.have.keys(['id', 'userId', 'url', 'name', 'platform', 'cover', 'bestPrice', 'dateCreated', 'dateUpdated'])
