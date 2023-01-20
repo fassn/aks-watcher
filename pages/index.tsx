@@ -2,20 +2,15 @@ import type { NextPage } from "next";
 import { Game } from "@prisma/client";
 import styles from "../styles/Home.module.css"
 import { useGames } from "lib/hooks";
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
-import { SortGames } from "components/sort-games";
-import { RefreshAll } from "components/refresh-all";
-import { DeleteAll } from "components/delete-all";
-import FlashMessage, { Flash } from "components/flash-msg";
+import { GamesBar } from "components/games-bar";
 
 const Home: NextPage = () => {
     const { data: session } = useSession()
     const { games, isError, isLoading } = useGames()
-    const [flash, setFlash] = useState<Flash>({})
 
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
@@ -25,18 +20,7 @@ const Home: NextPage = () => {
                 {
                     session ?
                         <>
-                            <div className="flex border-solid border-deep-blue border-b-2 py-2">
-                                <div className="flex font-josephin">
-                                    <SortGames />
-                                </div>
-                                <RefreshAll setFlash={setFlash}/>
-                                <div className="flex min-w-fit">
-                                    <FlashMessage id='main_flash' severity={(flash.severity) as ('success' | 'info' | 'error')} delay={flash.delay ?? 5000}>
-                                        {flash.message}
-                                    </FlashMessage>
-                                </div>
-                                <DeleteAll setFlash={setFlash} />
-                            </div>
+                            <GamesBar />
 
                             <div id="games_container" className={"flex justify-evenly " + (games.length > 0 ? "flex-wrap" : "flex-col")}>
                                 {
