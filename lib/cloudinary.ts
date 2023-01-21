@@ -1,4 +1,4 @@
-import { AdminAndResourceOptions, UploadApiErrorResponse, UploadApiOptions, UploadApiResponse, v2 as cloudinary } from 'cloudinary'
+import { AdminAndResourceOptions, UploadApiOptions, UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,

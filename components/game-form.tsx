@@ -56,8 +56,8 @@ export const GameForm = ({ closeModal }: GameFormProps) => {
     const pattern = regexPatterns.join('|')
 
     const validateLinks = (target: EventTarget & FormData) => {
-        const links: string[] = target.aks_links.value.trim().split('\n')
-        if (links.length === 0) {
+        const links: string[] = target.aks_links.value.trim().split(/\s/)
+        if (links[0] === '') {
             return { error: 'No links were found.'}
         }
         if (links.length > 10) {

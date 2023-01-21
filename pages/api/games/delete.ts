@@ -9,35 +9,38 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    if (req.method !== 'POST') {
-        return res.status(405).send('Request must be POST.')
-    }
-
-    const { userId } = req.body
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
 
+    if (req.method !== 'POST') {
+        return res.status(405).send({ error: 'Request must be POST.' })
+    }
+
     if (session) {
+        const { userId, games }: { userId: string, games: Game[] } = req.body
         const { id, email } = session?.user
 
         if (id !== userId) {
             return res.status(403).send({ error: 'You are not allowed to delete the games.' })
         }
 
-        const games: Game[] = req.body.games
+        if(!games) {
+            console.warn('Games were not provided in the request. Cover images won\'t be deleted from cloudinary.');
+        }
 
         // delete cover picture from cloudinary
-        let public_ids = []
-        for (const game of games) {
-            public_ids.push(`${email}/${game.name}`)
+        if (games.length > 0) {
+            let public_ids = []
+            for (const game of games) {
+                public_ids.push(`${email}/${game.name}`)
+            }
+            await destroyImages(public_ids)
         }
-        await destroyImages(public_ids)
 
-        const gamesIds = games.map((game: Game) => game.id)
         const deletedGames = await prisma.game.deleteMany({
-            where: { id: { in: gamesIds} }
+            where: { userId: id }
         })
 
         return res.status(200).json(deletedGames)

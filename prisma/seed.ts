@@ -25,6 +25,7 @@ async function main() {
         where: { email: 'christopher@test.com' },
         update: {},
         create: {
+            id: 'clcz4aeku0002d6i04xfe5mp8',
             email: 'christopher@test.com',
             name: 'TestUser',
             emailVerified: '2022-01-01T00:00:00.000Z'

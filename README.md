@@ -12,7 +12,6 @@ npm i
 ```
 BASE_URL=http://localhost:3000
 NEXT_PUBLIC_LOCALE=fr-FR
-NEXT_PUBLIC_MINUTES_BEFORE_STALE=60 // minimum time in minutes before being able to update the games again
 NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES=3000 // time in ms between 2 queries to Allkeyshop.com
 
 DATABASE_URL=postgresql://{user}:{password}@localhost:5432/{database}
