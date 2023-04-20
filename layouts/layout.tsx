@@ -17,7 +17,7 @@ export const Layout = ({ children }: LayoutProps) => {
             <div id='root'>
                 <Header />
 
-                <main id="main" className="h-screen pt-20 pb-32 bg-cream dark:bg-deep-blue">
+                <main id="main" className="min-h-screen h-full pt-20 pb-32 bg-cream dark:bg-deep-blue">
                     {children}
                 </main>
             </div>
