@@ -56,8 +56,8 @@ export const SortGames = () => {
 
     return (
         <>
-            <label htmlFor="sort_games">Sort </label>
-            <select value={sortValue} onChange={onChange} id="sort_games">
+            <label htmlFor="sort_games" className="dark:text-light-grey">Sort </label>
+            <select value={sortValue} onChange={onChange} id="sort_games" className="ml-2">
                 <option value='game_asc'>Game (a-z)</option>
                 <option value='game_desc'>Game (z-a)</option>
                 <option value='price_asc'>Price (smallest)</option>

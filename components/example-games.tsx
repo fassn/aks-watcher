@@ -4,10 +4,10 @@ import { GameCard } from "./game-card"
 export const ExampleGames = (props: { games: Game[] }) => {
     return (
         <div className="text-center text-deep-blue leading-loose">
-            <p className="text-lg mb-4 italic" data-cy="short_description">The AKS Price Tracker uses the links from a game price comparison page on the <a href="https://www.allkeyshop.com">AllKeyShop</a> website.<br />
+            <p className="text-lg dark:text-light-grey mb-4 italic" data-cy="short_description">The AKS Price Tracker uses the links from a game price comparison page on the <a href="https://www.allkeyshop.com">AllKeyShop</a> website.<br />
                 For example the <a href="https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/">game page for Doom Eternal</a> is https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/.
             </p>
-            <div className="justify-center text-xl">
+            <div className="justify-center text-xl dark:text-light-grey">
                 <h1 className="underline text-4xl">How to use</h1>
                 <ol className="list-decimal text-lg text-left inline-block my-10" data-cy="how_to_use_instructions">
                     <li>Sign-in using your email in the header field.</li>
@@ -17,7 +17,7 @@ export const ExampleGames = (props: { games: Game[] }) => {
                     <li>Profit!</li>
                 </ol>
             </div>
-            <h2 className="underline text-3xl">Example of tracked games:</h2>
+            <h2 className="underline text-3xl dark:text-light-grey">Example of tracked games:</h2>
             <div className="flex justify-evenly flex-wrap" data-cy="example_games">
                 {
                     props.games.map((exampleGame: Game) => (

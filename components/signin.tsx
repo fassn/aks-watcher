@@ -12,7 +12,7 @@ const SignIn = () => {
     if (session?.user) {
         return (
             <div>
-                <span className="text-cream" data-cy="signedin_email">
+                <span className="text-cream dark:text-deep-blue" data-cy="signedin_email">
                     <strong>{ session.user.email }</strong>
                 </span>
                 <button onClick={() => signOut()} className='w-32' data-cy='signout'>
@@ -28,7 +28,7 @@ const SignIn = () => {
                     id='email'
                     name='email'
                     placeholder='email@example.com'
-                    className="shadow appearance-none border border-deep-blue rounded text-center text-deep-blue"
+                    className="shadow appearance-none border border-deep-blue rounded text-center text-deep-blue dark:text-light-grey"
                     data-cy='email'
                     required
                 />
