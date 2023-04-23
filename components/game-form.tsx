@@ -78,7 +78,7 @@ export const GameForm = ({ closeModal }: GameFormProps) => {
     return (
         <>
             <form id="add_game_form" onSubmit={handleSubmit} method='dialog'>
-                <div className="flex flex-col bg-cream font-josephin px-4 py-4">
+                <div className="flex flex-col bg-slate-300 font-josephin px-4 py-4">
                     <FlashMessage id='add_game_flash' severity={(flash.severity) as ('success'|'error')} delay={flash.delay ?? 5000}>
                         { flash.message }
                     </FlashMessage>

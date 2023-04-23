@@ -78,7 +78,7 @@ export const GameCard = (props: { game: Game }) => {
                     />
                 </div>
             </Link>
-            <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey dark:bg-cream">
+            <div className="flex flex-col relative h-40 px-4 py-6 font-josephin bg-light-grey dark:bg-slate-300">
                 {
                     session.status === 'authenticated' ?
                     <button onClick={showModal} data-cy="game_delete_button">
@@ -119,7 +119,7 @@ export const GameCard = (props: { game: Game }) => {
                     }
                 </div>
             </div>
-            <div className="flex justify-center items-center h-16 bg-deep-blue dark:bg-cream dark:border-t-[1px] dark:border-t-deep-blue dark:border-opacity-30 text-cream dark:text-deep-blue text-center uppercase text-xl leading-6">
+            <div className="flex justify-center items-center h-16 bg-deep-blue dark:bg-slate-300 dark:border-t-[1px] dark:border-t-deep-blue dark:border-opacity-30 text-cream dark:text-deep-blue text-center text uppercase text-xl leading-6">
                 <Link href={props.game.url} data-cy="game_name">
                     { props.game.name }
                 </Link>
