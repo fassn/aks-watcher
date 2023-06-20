@@ -11,8 +11,11 @@ export default async function handler(
 
     /** Unlogged User */
     if (!session) {
-        const exampleGames = await prisma.exampleGame.findMany({
-            where: { userId: undefined }
+        const exampleGames = await prisma.game.findMany({
+            where: { userId: null },
+            include: {
+                prices: true
+            }
         })
         return res.status(200).json(exampleGames)
     }

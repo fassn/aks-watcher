@@ -42,42 +42,63 @@ async function main() {
         }
     })
 
-    const exampleGames = await prisma.exampleGame.findMany()
+    const exampleGames = await prisma.game.findMany({
+        where: {
+            userId: undefined
+        }
+    })
 
     if (exampleGames.length === 0) {
-        await prisma.exampleGame.createMany({
-            data: [
-                {
-                    userId: undefined,
-                    url: 'https://www.allkeyshop.com/blog/buy-cyberpunk-2077-cd-key-compare-prices/',
-                    name: 'Cyberpunk 2077',
-                    cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1672764493/example_games/Cyberpunk%202077.jpg',
-                    platform: 'PC',
-                    bestPrice: 21.60,
-                    dateCreated: '2023-01-06T20:00:00.000Z',
-                    dateUpdated: '2023-01-06T20:00:00.000Z'
+        await prisma.game.create({
+            data: {
+                userId: null,
+                url: 'https://www.allkeyshop.com/blog/buy-cyberpunk-2077-cd-key-compare-prices/',
+                name: 'Cyberpunk 2077',
+                cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1672764493/example_games/Cyberpunk%202077.jpg',
+                platform: 'PC',
+                prices: {
+                    create: {
+                        bestPrice: 21.60,
+                        date: '2023-01-06T20:00:00.000Z'
+                    }
                 },
-                {
-                    userId: undefined,
-                    url: 'https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/',
-                    name: 'Desperados 3',
-                    cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1672764490/example_games/Desperados%203.jpg',
-                    platform: 'PC',
-                    bestPrice: 3.56,
-                    dateCreated: '2023-01-06T20:00:00.000Z',
-                    dateUpdated: '2023-01-06T20:00:00.000Z'
+                dateCreated: '2023-01-06T20:00:00.000Z',
+                dateUpdated: '2023-01-06T20:00:00.000Z'
+            }
+        })
+        await prisma.game.create({
+            data: {
+                userId: null,
+                url: 'https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/',
+                name: 'Desperados 3',
+                cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1672764490/example_games/Desperados%203.jpg',
+                platform: 'PC',
+                prices: {
+                    create: {
+                        bestPrice: 3.56,
+                        date: '2023-01-06T20:00:00.000Z'
+                    }
                 },
-                {
-                    userId: undefined,
-                    url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
-                    name: 'Doom Eternal',
-                    cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1673021626/example_games/DOOM%20Eternal.jpg',
-                    platform: 'PC',
-                    bestPrice: 5.28,
-                    dateCreated: '2023-01-06T20:00:00.000Z',
-                    dateUpdated: '2023-01-06T20:00:00.000Z'
+                dateCreated: '2023-01-06T20:00:00.000Z',
+                dateUpdated: '2023-01-06T20:00:00.000Z'
+            }
+        })
+        await prisma.game.create({
+            data: {
+                userId: null,
+                url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
+                name: 'Doom Eternal',
+                cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1673021626/example_games/DOOM%20Eternal.jpg',
+                platform: 'PC',
+                prices: {
+                    create: {
+                        bestPrice: 5.28,
+                        date: '2023-01-06T20:00:00.000Z'
+                    }
                 },
-            ]
+                dateCreated: '2023-01-06T20:00:00.000Z',
+                dateUpdated: '2023-01-06T20:00:00.000Z'
+            }
         })
     }
 

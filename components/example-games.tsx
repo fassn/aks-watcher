@@ -1,7 +1,7 @@
-import { Game } from "@prisma/client"
 import { GameCard } from "./game-card"
+import { GameWithPrices } from "types/game-with-prices"
 
-export const ExampleGames = (props: { games: Game[] }) => {
+export const ExampleGames = (props: { games: GameWithPrices[] }) => {
     return (
         <div className="text-center text-deep-blue leading-loose">
             <p className="text-lg dark:text-light-grey mb-4 italic" data-cy="short_description">The AKS Price Tracker uses the links from a game price comparison page on the <a href="https://www.allkeyshop.com">AllKeyShop</a> website.<br />
@@ -20,7 +20,7 @@ export const ExampleGames = (props: { games: Game[] }) => {
             <h2 className="underline text-3xl dark:text-light-grey">Example of tracked games:</h2>
             <div className="flex justify-evenly flex-wrap" data-cy="example_games">
                 {
-                    props.games.map((exampleGame: Game) => (
+                    props.games.map((exampleGame: GameWithPrices) => (
                         <GameCard key={exampleGame.id} game={exampleGame} />
                     ))
                 }

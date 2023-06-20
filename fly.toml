@@ -1,6 +1,7 @@
 # fly.toml file generated for aks-watcher on 2023-01-02T13:48:22+01:00
 
 app = "aks-watcher"
+primary_region = "cdg"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
@@ -8,7 +9,7 @@ processes = []
 [build]
   [build.args]
     NEXT_PUBLIC_LOCALE = "fr-FR"
-    NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES = 3000
+    NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES = "3000"
 
 [deploy]
   release_command = "npx prisma migrate deploy"

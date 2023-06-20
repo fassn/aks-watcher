@@ -36,14 +36,14 @@ model VerificationToken {
 
 model Game {
     id          String  @id @default(cuid())
-    userId      String
+    userId      String?
     url         String
     cover       String
     name        String
     platform    Platform
     dateCreated DateTime
     dateUpdated DateTime
-    user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
     prices      Price[]
 }
 
@@ -54,18 +54,6 @@ model Price {
     date        DateTime
 
     game        Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
-}
-
-model ExampleGame {
-    id          String  @id @default(cuid())
-    userId      String?
-    url         String
-    cover       String
-    name        String
-    platform    Platform
-    bestPrice   Float
-    dateCreated DateTime
-    dateUpdated DateTime
 }
 
 enum Platform {
