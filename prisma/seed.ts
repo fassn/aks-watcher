@@ -86,29 +86,39 @@ async function main() {
     })
 
     if (johndoeGames.length === 0) {
-        await prisma.game.createMany({
-            data: [
-                {
-                    userId: johndoe.id,
-                    url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
-                    name: 'DOOM Eternal',
-                    cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/DOOMEternal-1.jpg',
-                    platform: 'PC',
-                    bestPrice: 12.82,
-                    dateCreated: '2022-04-03T20:00:17.299Z',
-                    dateUpdated: '2022-04-03T20:00:17.299Z'
+        await prisma.game.create({
+            data: {
+                userId: johndoe.id,
+                url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
+                name: 'DOOM Eternal',
+                cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/DOOMEternal-1.jpg',
+                platform: 'PC',
+                prices: {
+                    create: {
+                        bestPrice: 12.82,
+                        date: '2022-04-03T20:00:17.299Z'
+                    }
                 },
-                {
-                    userId: johndoe.id,
-                    url: 'https://www.allkeyshop.com/blog/buy-fallout-4-cd-key-compare-prices/',
-                    name: 'Fallout 4',
-                    cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/Fallout4-1.jpg',
-                    platform: 'PC',
-                    bestPrice: 3.64,
-                    dateCreated: '2022-04-03T20:00:28.433Z',
-                    dateUpdated: '2022-04-03T20:00:28.433Z'
-                }
-            ]
+                dateCreated: '2022-04-03T20:00:17.299Z',
+                dateUpdated: '2022-04-03T20:00:17.299Z'
+            }
+        })
+        await prisma.game.create({
+            data: {
+                userId: johndoe.id,
+                url: 'https://www.allkeyshop.com/blog/buy-fallout-4-cd-key-compare-prices/',
+                name: 'Fallout 4',
+                cover: 'https://www.allkeyshop.com/blog/wp-content/uploads/Fallout4-1.jpg',
+                platform: 'PC',
+                prices: {
+                    create: {
+                        bestPrice: 3.64,
+                        date: '2022-04-03T20:00:17.299Z'
+                    }
+                },
+                dateCreated: '2022-04-03T20:00:17.299Z',
+                dateUpdated: '2022-04-03T20:00:17.299Z'
+            }
         })
     }
 }

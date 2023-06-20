@@ -41,14 +41,23 @@ model Game {
     cover       String
     name        String
     platform    Platform
-    bestPrice   Float
     dateCreated DateTime
     dateUpdated DateTime
     user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    prices      Price[]
+}
+
+model Price {
+    id          String  @id @default(cuid())
+    gameId      String
+    bestPrice   Float
+    date        DateTime
+
+    game        Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
 }
 
 model ExampleGame {
-    id          String @id @default(cuid())
+    id          String  @id @default(cuid())
     userId      String?
     url         String
     cover       String

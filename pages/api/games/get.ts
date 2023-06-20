@@ -23,8 +23,12 @@ export default async function handler(
 
         const games = await prisma.game.findMany({
             where: { userId: userId },
+            include: {
+                prices: true
+            },
             orderBy: { name: 'asc' }
         })
+
         return res.status(200).json(games)
     }
 }

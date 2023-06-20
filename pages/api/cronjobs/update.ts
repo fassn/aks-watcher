@@ -10,9 +10,10 @@ export default CronJob(
         const gameTable = await prisma.game
         await updateTable(gameTable);
 
+        // TODO update exampleGames using the old bestPrice field instead of prices table
         // update example games from the homepage
-        const exampleGameTable = await prisma.exampleGame
-        await updateTable(exampleGameTable);
+        // const exampleGameTable = await prisma.exampleGame
+        // await updateTable(exampleGameTable);
     }
 );
 

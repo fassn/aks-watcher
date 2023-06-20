@@ -1,10 +1,10 @@
 import useSWR, { KeyedMutator } from 'swr'
 import { fetcher } from 'lib/utils'
-import { Game } from '@prisma/client'
 import { DependencyList, EffectCallback, useEffect, useRef } from 'react'
+import { GameWithPrices } from 'types/game-with-prices'
 
 interface IUseGames {
-    games: Game[] | undefined,
+    games: GameWithPrices[] | undefined,
     isLoading: boolean,
     isError: Error | undefined,
     isValidating: boolean,
@@ -12,7 +12,7 @@ interface IUseGames {
 }
 
 export function useGames() {
-    const { data, error, isLoading, isValidating, mutate } = useSWR<Game[], Error>('/api/games/get', fetcher, {
+    const { data, error, isLoading, isValidating, mutate } = useSWR<GameWithPrices[], Error>('/api/games/get', fetcher, {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         suspense: true,

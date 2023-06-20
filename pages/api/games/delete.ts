@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
-import { Game, Prisma } from "@prisma/client";
+import { Game } from "@prisma/client";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { destroyImages } from "lib/cloudinary";
@@ -31,7 +31,7 @@ export default async function handler(
         }
 
         // delete cover picture from cloudinary
-        if (games.length > 0) {
+        if (games) {
             let public_ids = []
             for (const game of games) {
                 public_ids.push(`${email}/${game.name}`)

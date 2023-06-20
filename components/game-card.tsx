@@ -2,12 +2,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { useGames } from "lib/hooks"
-import { Game } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import FlashMessage, { Flash } from "./flash-msg"
 import ReactModal from "react-modal"
+import { GameWithPrices } from "types/game-with-prices"
 
-export const GameCard = (props: { game: Game }) => {
+export const GameCard = (props: { game: GameWithPrices }) => {
     const locale = process.env.NEXT_PUBLIC_LOCALE
     const [modalShow, setModalShow] = useState(false)
     const { mutate } = useGames()
@@ -104,7 +104,7 @@ export const GameCard = (props: { game: Game }) => {
                     <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold" data-cy="game_platform">{ props.game.platform }</span>
                     <div>
                         <pre className="inline-block font-josephin">Best Price: </pre>
-                        <span className="font-semibold text-deep-blue" data-cy="game_price">{ props.game.bestPrice }€</span>
+                        <span className="font-semibold text-deep-blue" data-cy="game_price">{ props.game.prices.reduce((a, b) => (a.date > b.date ? a : b)).bestPrice }€</span>
                     </div>
                 </div>
                 <div className="flex h-full justify-center items-end text-sm">

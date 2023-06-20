@@ -137,6 +137,8 @@ export default async function handler(
 
     type CoverUrl = string
     async function storeToDatabase(url: string, content: { url: string; cover: string; name: string; platform: Platform; bestPrice: number }, coverUrl: string) {
+        const date = new Date().toISOString()
+
         return await prisma.game.create({
             data: {
                 userId: userId,
@@ -144,9 +146,14 @@ export default async function handler(
                 name: content.name,
                 cover: coverUrl,
                 platform: content.platform,
-                bestPrice: content.bestPrice,
-                dateCreated: new Date().toISOString(),
-                dateUpdated: new Date().toISOString(),
+                prices: {
+                    create: {
+                        bestPrice: content.bestPrice,
+                        date: date,
+                    }
+                },
+                dateCreated: date,
+                dateUpdated: date,
             }
         })
     }

@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { Game } from "@prisma/client";
 import styles from "../styles/Home.module.css"
 import { useGames } from "lib/hooks";
 import { useSession } from "next-auth/react";
@@ -8,6 +7,7 @@ import { GameCard } from "../components/game-card";
 import { AddGameCard } from "../components/add-game-card"
 import { GamesBar } from "components/games-bar";
 import { ExampleGames } from "components/example-games";
+import { GameWithPrices } from "types/game-with-prices";
 
 const Home: NextPage = () => {
     const { data: session } = useSession()
@@ -25,7 +25,7 @@ const Home: NextPage = () => {
                         <div id="games_container" className={"flex justify-evenly " + (games.length > 0 ? "flex-wrap" : "flex-col")}>
                             {
                                 games.length > 0
-                                    ? games.map((game: Game) => (
+                                    ? games.map((game: GameWithPrices) => (
                                         <GameCard key={game.id} game={game} />
                                     ))
                                     : <div className="flex h-full justify-center items-center">

@@ -10,11 +10,17 @@ export const updateGame = async (gameId: string, gameUrl: string): Promise<Game>
             if (newPrice === null) {
                 throw new Error(`Could not get the new price for the game with id ${gameId}`)
             }
+            const updatedDate = new Date().toISOString()
             const updatedGame: Game = await prisma.game.update({
                 where: { id: gameId },
                 data: {
-                    bestPrice: newPrice,
-                    dateUpdated: new Date().toISOString()
+                    prices: {
+                        create: {
+                            bestPrice: newPrice,
+                            date: updatedDate
+                        }
+                    },
+                    dateUpdated: updatedDate
                 }
             }).catch(e => {
                 throw new Error(e.message)
