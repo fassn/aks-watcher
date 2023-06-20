@@ -44,14 +44,14 @@ async function main() {
 
     const exampleGames = await prisma.game.findMany({
         where: {
-            userId: undefined
+            userId: null
         }
     })
 
     if (exampleGames.length === 0) {
         await prisma.game.create({
             data: {
-                userId: null,
+                userId: undefined,
                 url: 'https://www.allkeyshop.com/blog/buy-cyberpunk-2077-cd-key-compare-prices/',
                 name: 'Cyberpunk 2077',
                 cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1672764493/example_games/Cyberpunk%202077.jpg',
@@ -68,7 +68,7 @@ async function main() {
         })
         await prisma.game.create({
             data: {
-                userId: null,
+                userId: undefined,
                 url: 'https://www.allkeyshop.com/blog/buy-desperados-3-cd-key-compare-prices/',
                 name: 'Desperados 3',
                 cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1672764490/example_games/Desperados%203.jpg',
@@ -85,7 +85,7 @@ async function main() {
         })
         await prisma.game.create({
             data: {
-                userId: null,
+                userId: undefined,
                 url: 'https://www.allkeyshop.com/blog/buy-doom-eternal-cd-key-compare-prices/',
                 name: 'Doom Eternal',
                 cover: 'https://res.cloudinary.com/dis8knofp/image/upload/v1673021626/example_games/DOOM%20Eternal.jpg',

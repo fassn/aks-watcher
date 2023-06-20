@@ -32,12 +32,11 @@ CREATE TABLE "VerificationToken" (
 -- CreateTable
 CREATE TABLE "Game" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" TEXT,
     "url" TEXT NOT NULL,
     "cover" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "platform" "Platform" NOT NULL,
-    "bestPrice" DOUBLE PRECISION NOT NULL,
     "dateCreated" TIMESTAMP(3) NOT NULL,
     "dateUpdated" TIMESTAMP(3) NOT NULL,
 
@@ -45,18 +44,13 @@ CREATE TABLE "Game" (
 );
 
 -- CreateTable
-CREATE TABLE "ExampleGame" (
+CREATE TABLE "Price" (
     "id" TEXT NOT NULL,
-    "userId" TEXT,
-    "url" TEXT NOT NULL,
-    "cover" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "platform" "Platform" NOT NULL,
+    "gameId" TEXT NOT NULL,
     "bestPrice" DOUBLE PRECISION NOT NULL,
-    "dateCreated" TIMESTAMP(3) NOT NULL,
-    "dateUpdated" TIMESTAMP(3) NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "ExampleGame_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Price_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -71,14 +65,12 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 -- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Game_url_key" ON "Game"("url");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ExampleGame_url_key" ON "ExampleGame"("url");
-
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Game" ADD CONSTRAINT "Game_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Price" ADD CONSTRAINT "Price_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
