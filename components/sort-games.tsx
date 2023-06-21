@@ -1,6 +1,6 @@
-import { Game } from "@prisma/client"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { useEffectAfterMount, useGames } from "lib/hooks"
+import { GameWithPrices } from "types/game-with-prices"
 
 type SortValue = ('game_asc' | 'game_desc' | 'price_asc' | 'price_desc')
 
@@ -16,30 +16,34 @@ export const SortGames = () => {
         if (games) {
             switch (sortValue) {
                 case 'game_asc':
-                    games.sort((a: Game, b: Game) => {
+                    games.sort((a: GameWithPrices, b: GameWithPrices) => {
                         if (a.name < b.name) return -1
                         if (a.name > b.name) return 1
                         return 0
                     })
                     break;
                 case 'game_desc':
-                    games.sort((a: Game, b: Game) => {
+                    games.sort((a: GameWithPrices, b: GameWithPrices) => {
                         if (a.name < b.name) return 1
                         if (a.name > b.name) return -1
                         return 0
                     })
                     break;
                 case 'price_asc':
-                    games.sort((a: Game, b: Game) => {
-                        if (a.bestPrice < b.bestPrice) return -1
-                        if (a.bestPrice > b.bestPrice) return 1
+                    games.sort((a: GameWithPrices, b: GameWithPrices) => {
+                        const aPrice = a.prices.at(-1)?.bestPrice ?? 0
+                        const bPrice = b.prices.at(-1)?.bestPrice ?? 0
+                        if (aPrice < bPrice) return -1
+                        if (aPrice > bPrice) return 1
                         return 0
                     })
                     break;
                 case 'price_desc':
-                    games.sort((a: Game, b: Game) => {
-                        if (a.bestPrice < b.bestPrice) return 1
-                        if (a.bestPrice > b.bestPrice) return -1
+                    games.sort((a: GameWithPrices, b: GameWithPrices) => {
+                        const aPrice = a.prices.at(-1)?.bestPrice ?? 0
+                        const bPrice = b.prices.at(-1)?.bestPrice ?? 0
+                        if (aPrice < bPrice) return 1
+                        if (aPrice > bPrice) return -1
                         return 0
                     })
                     break;
