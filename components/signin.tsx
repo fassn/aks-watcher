@@ -28,7 +28,7 @@ const SignIn = () => {
                     id='email'
                     name='email'
                     placeholder='email@example.com'
-                    className="shadow appearance-none border border-deep-blue rounded text-center text-deep-blue dark:text-light-grey"
+                    className="shadow appearance-none border border-deep-blue rounded text-center text-deep-blue"
                     data-cy='email'
                     required
                 />
