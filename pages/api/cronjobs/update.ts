@@ -13,18 +13,28 @@ export default CronJob(
 );
 
 async function updateTable(prismaTable: any) {
-    const games = await prismaTable.findMany()
+    const games = await prismaTable.findMany({
+        include: {
+            prices: true
+        }
+    })
     for (const game of games) {
         await Promise.all([
             fetch(game.url)
                 .then(res => res.text())
                 .then(async (contents) => {
+                    const updatedDate = new Date().toISOString()
                     const newPrice = getPrice(contents);
                     await prismaTable.update({
                         where: { id: game.id },
                         data: {
-                            bestPrice: newPrice,
-                            dateUpdated: new Date().toISOString()
+                            prices: {
+                                create: {
+                                    bestPrice: newPrice,
+                                    date: updatedDate
+                                }
+                            },
+                            dateUpdated: updatedDate
                         }
                     }).catch((e: Error) => {
                         throw new Error(e.message);
