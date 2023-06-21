@@ -100,11 +100,21 @@ export const GameCard = (props: { game: GameWithPrices }) => {
                         </div>
                     </div>
                 </ReactModal>
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 mt-3">
                     <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold" data-cy="game_platform">{ props.game.platform }</span>
-                    <div>
+                    <div className="flex">
                         <pre className="inline-block font-josephin">Best Price: </pre>
                         <span className="font-semibold text-deep-blue" data-cy="game_price">{ props.game.prices.reduce((a, b) => (a.date > b.date ? a : b)).bestPrice }€</span>
+                        <button className="ml-2" title="Price evolution">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" width="18" height="18" viewBox="0 0 256 256" xmlSpace="preserve">
+                                <g stroke="none" strokeWidth="1" strokeDasharray="none" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" fill="#284b63" fillRule="nonzero" opacity="1" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+                                    <rect x="6.14" y="2.02" rx="0" ry="0" width="8.09" height="85.95" stroke="none" strokeWidth="1" strokeDasharray="none" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" fill="#284b63" fillRule="nonzero" opacity="1" transform=" matrix(1 0 0 1 0 0) "/>
+                                    <rect x="0" y="73.74" rx="0" ry="0" width="90" height="8.09" stroke="none" strokeWidth="1" strokeDasharray="none" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" fill="#284b63" fillRule="nonzero" opacity="1" transform=" matrix(1 0 0 1 0 0) "/>
+                                    <polygon points="83.09,58.64 68.82,44.37 54.03,57.23 16.67,19.87 22.39,14.15 54.42,46.17 69.21,33.31 88.81,52.92 " stroke="none" strokeWidth="1" strokeDasharray="none" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" fill="#284b63" fillRule="nonzero" opacity="1" transform="  matrix(1 0 0 1 0 0) "/>
+                                    <polygon points="90,59.82 72.67,59.82 90,42.49 " stroke="none" strokeWidth="1" strokeDasharray="none" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" fill="rgb(0,0,0)" fillRule="nonzero" opacity="1" transform="  matrix(1 0 0 1 0 0) "/>
+                                </g>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 <div className="flex h-full justify-center items-end text-sm">
