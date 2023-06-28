@@ -1,49 +1,25 @@
 import { CronJob } from "quirrel/next";
 import prisma from "lib/prisma";
-import { getPrice, timeout } from "../utils";
+import { timeout, updateGame } from "../utils";
 
 
 export default CronJob(
     "api/cronjobs/update",
     ["0 10 * * *", "Europe/Paris"], // (see https://crontab.guru/)
     async () => {
-        const gameTable = await prisma.game
-        await updateTable(gameTable);
+        const games = await prisma.game.findMany({
+            where: {
+                userId: { not: null }
+            },
+            include: {
+                prices: true
+            }
+        })
+        for (const game of games) {
+            await Promise.all([
+                await updateGame(game.id, game.url),
+                timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
+            ]);
+        }
     }
 );
-
-async function updateTable(prismaTable: any) {
-    const games = await prismaTable.findMany({
-        include: {
-            prices: true
-        }
-    })
-    for (const game of games) {
-        await Promise.all([
-            fetch(game.url)
-                .then(res => res.text())
-                .then(async (contents) => {
-                    const updatedDate = new Date().toISOString()
-                    const newPrice = getPrice(contents);
-                    await prismaTable.update({
-                        where: { id: game.id },
-                        data: {
-                            prices: {
-                                create: {
-                                    bestPrice: newPrice,
-                                    date: updatedDate
-                                }
-                            },
-                            dateUpdated: updatedDate
-                        }
-                    }).catch((e: Error) => {
-                        throw new Error(e.message);
-                    });
-                })
-                .catch(() => {
-                    throw new Error(`There was an issue while updating ${game.name}.`);
-                }),
-            timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
-        ]);
-    }
-}

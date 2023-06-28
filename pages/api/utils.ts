@@ -33,9 +33,11 @@ export const updateGame = async (gameId: string, gameUrl: string): Promise<Game>
 }
 
 export const getPrice = (contents: string) => {
-    const $ = cheerio.load(contents)
+    let $ = cheerio.load(contents)
+    const price = $('.content').find('meta[data-itemprop=lowPrice]').attr('content') || null
+    $ = null! // hopefully garbage-collected
 
-    return Number($('.content').find('meta[data-itemprop=lowPrice]').attr('content') || null)
+    return Number(price)
 }
 
 export const timeout = (ms: number) => {
