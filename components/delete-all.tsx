@@ -68,7 +68,7 @@ export const DeleteAll = ({ setFlash }: DeleteAllProps) => {
                 isOpen={modalShow}
                 onRequestClose={closeModal}
             >
-                <div className="flex flex-col w-80 h-48 bg-white p-4">
+                <div className="flex flex-col w-80 h-48 p-4 bg-white dark:bg-slate-300">
                     <p className="h-1/2 text-center">Are you sure you want to remove all your games?</p>
                     <div className="flex h-1/2">
                         <button id='delete_all_submit' onClick={onClick} className="flex-none w-full justify-center self-end bg-deep-blue text-cream font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded">Confirm</button>

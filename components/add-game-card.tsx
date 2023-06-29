@@ -22,7 +22,7 @@ export const AddGameCard = () => {
                     </svg>
                 </button>
                     <ReactModal
-                        className='absolute top-1/3 overflow-auto left-[40%] w-1/5 rounded p-5'
+                        className='absolute top-1/3 overflow-auto left-[40%] w-1/5 p-5 rounded'
                         overlayClassName='fixed inset-0 backdrop-blur-[5px]'
                         isOpen={modalShow}
                         onRequestClose={closeModal}
