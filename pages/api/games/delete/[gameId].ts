@@ -17,7 +17,7 @@ export default async function handler (
         return res.status(405).send({ error: 'Request must be DELETE.' })
     }
 
-    const { userId, name } = req.body
+    const { userId, name } = req.query
     const { id, email } = session?.user
     if (id !== userId) {
         return res.status(403).send({ error: 'You are not allowed to delete this game.' })
