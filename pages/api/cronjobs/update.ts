@@ -2,7 +2,6 @@ import { CronJob } from "quirrel/next";
 import prisma from "lib/prisma";
 import { timeout, updateGame } from "../utils";
 
-
 export default CronJob(
     "api/cronjobs/update",
     ["0 10 * * *", "Europe/Paris"], // (see https://crontab.guru/)
@@ -14,7 +13,7 @@ export default CronJob(
             include: {
                 prices: true
             }
-        })
+        }).then(games => games.map(game => ({ id: game.id, url: game.url })))
         for (const game of games) {
             await Promise.all([
                 await updateGame(game.id, game.url),
