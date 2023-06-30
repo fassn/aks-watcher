@@ -37,7 +37,7 @@ export default async function handler(
         }
 
         if (gamesToUpdate.length > 0) {
-            await update.enqueue(gamesToUpdate, { id: userId })
+            await update.enqueue(gamesToUpdate.map(game => ({ id: game.id, url: game.url })), { id: userId })
             .then((jobPayload) => res.status(200).json(jobPayload))
             .catch((e) => {
                 return res.status(500).send({ error: `There was an issue with the update queue: ${e.message}`})
