@@ -33,7 +33,7 @@ export default async function handler(
     if (!game) {
         return res.status(400).send({ error: 'The game doesnt exist.' })
     }
-    const lastUpdated = game.dateUpdated.toString()
+    const lastUpdated = game.dateUpdated.toISOString()
     if (!isUpdatable(lastUpdated)) {
         return res.status(400).send({ error: 'This game has already been updated in the last 60 minutes.' })
     }
