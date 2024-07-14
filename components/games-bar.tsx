@@ -12,7 +12,7 @@ export const GamesBar = () => {
             <div className="flex font-josephin">
                 <SortGames />
             </div>
-            <RefreshAll setFlash={setFlash}/>
+            {/* <RefreshAll setFlash={setFlash}/> */}
             <div className="flex min-w-fit">
                 <FlashMessage id='main_flash' severity={(flash.severity) as ('success' | 'info' | 'error')} delay={flash.delay ?? 5000}>
                     {flash.message}

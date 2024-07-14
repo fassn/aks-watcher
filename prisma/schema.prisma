@@ -36,6 +36,7 @@ model VerificationToken {
 
 model Game {
     id          String  @id @default(cuid())
+    aksId       String?
     userId      String?
     url         String
     cover       String

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { unstable_getServerSession } from "next-auth"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 import moment from "moment"
-import { updateGame } from "pages/api/utils"
+import { updatePrice } from "pages/api/shared"
 import prisma from "lib/prisma"
 
 export default async function handler(
@@ -39,7 +39,7 @@ export default async function handler(
     }
 
     try {
-        const updatedGame = await updateGame(gameId, game.url)
+        const updatedGame = await updatePrice(game)
         return res.status(200).json(updatedGame)
     } catch (err) {
         return res.status(500).send({ error: 'There was an issue while updating the game.' })

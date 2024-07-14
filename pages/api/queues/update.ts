@@ -1,6 +1,6 @@
 import { Game } from "@prisma/client";
 import { Queue } from "quirrel/next";
-import { timeout, updateGame } from "../utils";
+import { timeout, updateGame } from "../shared";
 
 export default Queue('api/queues/update', async (games: { id: string, url: string }[]) => {
     for (const game of games) {
