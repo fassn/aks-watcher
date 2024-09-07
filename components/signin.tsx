@@ -33,7 +33,7 @@ const SignIn = () => {
                     required
                 />
                 <button type='submit'
-                    className="w-20 justify-center bg-deep-blue text-cream font-semibold"
+                    className="w-20 m-4 justify-center bg-deep-blue text-cream font-semibold"
                     data-cy='submit'
                 >
                     Sign In

@@ -72,7 +72,7 @@ export const GameCard = (props: { game: GameWithPrices }) => {
                     <span className="w-16 h-fit rounded-lg bg-deep-blue text-center text-cream font-semibold" data-cy="game_platform">{props.game.platform}</span>
                     <div className="flex">
                         <pre className="inline-block font-josephin">Best Price: </pre>
-                        <span className="font-semibold text-deep-blue" data-cy="game_price">{props.game.prices.reduce((a, b) => (a.date > b.date ? a : b)).bestPrice}€</span>
+                        <span className="font-semibold text-deep-blue" data-cy="game_price">{props.game.prices.reduce((a, b) => (a.date > b.date ? a : b)).bestPrice.toFixed(2)}€</span>
 
                         <DynamicGamePriceHistory game={props.game} />
                     </div>
