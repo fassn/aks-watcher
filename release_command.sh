@@ -8,11 +8,11 @@
 set -ex
 
 # Setup 512MB of space for swap and set permissions and turn on swapmode
-fallocate -l 512M /swapfile
-chmod 0600 /swapfile
-mkswap /swapfile
-echo 10 > /proc/sys/vm/swappiness
-swapon /swapfile
+# fallocate -l 512M /swapfile
+# chmod 0600 /swapfile
+# mkswap /swapfile
+# echo 10 > /proc/sys/vm/swappiness
+# swapon /swapfile
 
 # Run migrations
 # npx prisma migrate reset --force
@@ -20,11 +20,11 @@ npx prisma migrate deploy
 # npx prisma db seed
 
 # use this when registering cronjobs for quirrel
-npx quirrel ci
+# npx quirrel ci
 
 # Turn off swap mode and remove swap directory
-swapoff /swapfile
-rm /swapfile
+# swapoff /swapfile
+# rm /swapfile
 
 # Finally start the app
 # yarn start
