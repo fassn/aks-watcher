@@ -3,7 +3,6 @@ import { Game } from "@prisma/client";
 import moment from "moment";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import update from "../queues/update";
 
 export default async function handler(
     req: NextApiRequest,
@@ -36,13 +35,6 @@ export default async function handler(
             Have you already updated the games in the last hour?'} )
         }
 
-        if (gamesToUpdate.length > 0) {
-            await update.enqueue(gamesToUpdate, { id: userId })
-            .then((jobPayload) => res.status(200).json(jobPayload))
-            .catch((e) => {
-                return res.status(500).send({ error: `There was an issue with the update queue: ${e.message}`})
-            })
-        }
     }
 }
 
