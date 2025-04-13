@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:18.20-alpine3.19 AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -47,7 +47,7 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV="production"
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -69,7 +69,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
