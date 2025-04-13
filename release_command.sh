@@ -19,9 +19,6 @@ set -ex
 npx prisma migrate deploy
 # npx prisma db seed
 
-# use this when registering cronjobs for quirrel
-# npx quirrel ci
-
 # Turn off swap mode and remove swap directory
 # swapoff /swapfile
 # rm /swapfile

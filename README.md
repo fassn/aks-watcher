@@ -25,11 +25,6 @@ EMAIL_FROM=noreply@example.com
 CLOUD_NAME=
 API_KEY=
 API_SECRET=
-
-# Quirrel credentials
-QUIRREL_API_URL= // your Quirrel instance's public URL
-QUIRREL_TOKEN={paste_quirrel_token_here}
-QUIRREL_BASE_URL= // your app's URL
 ```
 
 3. Copy the prisma/.env.example file as .env
@@ -44,5 +39,3 @@ npm run dev
 # or
 yarn dev
 ```
-
-This will also run quirrel alongside with it. Quirrel is needed to manage queues.
