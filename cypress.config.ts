@@ -1,6 +1,7 @@
 import { Game, PrismaClient } from "@prisma/client";
 import { defineConfig } from "cypress";
 import fs from 'fs'
+import * as nodemailer from 'nodemailer'
 
 // Some TS errors when using execa in this function...
 // const findBrowser = () => {
@@ -97,6 +98,50 @@ async function antedateGame(gameId: string) {
     })
 }
 
+type MailboxContact = {
+    email: string
+    name?: string
+}
+
+type SendTestEmailArgs = {
+    to?: MailboxContact[]
+    cc?: MailboxContact[]
+    bcc?: MailboxContact[]
+    from?: MailboxContact
+    subject?: string
+    text?: string
+    html?: string
+}
+
+const contactsToList = (contacts?: MailboxContact[]) => {
+    if (!contacts || contacts.length === 0) return undefined
+    return contacts.map((contact) => contact.name ? `${contact.name} <${contact.email}>` : contact.email).join(', ')
+}
+
+async function sendTestEmail(payload: SendTestEmailArgs = {}) {
+    const transporter = nodemailer.createTransport({
+        host: 'localhost',
+        port: 1025,
+        secure: false,
+    })
+
+    const fromAddress = payload.from
+        ? (payload.from.name ? `${payload.from.name} <${payload.from.email}>` : payload.from.email)
+        : 'noreply@aks-watcher.local'
+
+    await transporter.sendMail({
+        from: fromAddress,
+        to: contactsToList(payload.to) || 'test@example.com',
+        cc: contactsToList(payload.cc),
+        bcc: contactsToList(payload.bcc),
+        subject: payload.subject || 'Cypress test email',
+        text: payload.text || '',
+        html: payload.html || '',
+    })
+
+    return true
+}
+
 export default defineConfig({
     allowCypressEnv: false,
     e2e: {
@@ -112,7 +157,8 @@ export default defineConfig({
                 createGames,
                 antedateGame,
                 updateGame,
-                createUser
+                createUser,
+                sendTestEmail,
             })
 
             // Can be used to replace electron, once managing to add another browser...

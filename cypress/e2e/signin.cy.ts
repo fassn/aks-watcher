@@ -54,8 +54,18 @@ describe('Sign-in', () => {
         })
     })
 
-    it.skip('sends test email', () => {
-        cy.sendTestEmail()
+    it('sends test email', () => {
+        cy.env(['mailcatcher']).its('mailcatcher').then((mailcatcher) => {
+            const mailcatcherApiUrl = mailcatcher?.apiUrl || 'http://localhost:8025'
+            cy.request({
+                method: 'DELETE',
+                url: `${mailcatcherApiUrl}/api/v1/messages`,
+            })
+        })
+
+        cy.sendTestEmail().then(($body) => {
+            expect($body.text()).to.contain('Congratulations on your order no. 1234')
+        })
     })
 })
 

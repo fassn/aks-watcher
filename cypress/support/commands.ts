@@ -80,7 +80,9 @@ Cypress.Commands.add('getLastEmail', () => {
                         return Cypress.$(`<div><a href="${verificationLink}">${verificationLink}</a></div>`)
                     }
                     if (decodedBody) {
-                        return Cypress.$(decodedBody)
+                        const wrappedBody = Cypress.$('<div />')
+                        wrappedBody.text(decodedBody)
+                        return wrappedBody
                     }
 
                     cy.wait(1000)
@@ -94,8 +96,11 @@ Cypress.Commands.add('getLastEmail', () => {
 });
 
 Cypress.Commands.add('sendTestEmail', () => {
-    cy.log('sendTestEmail not used with local mail catcher setup')
-    return cy.wrap(Cypress.$('<div />'))
+    return cy.fixture('testEmail').then((json) => {
+        return cy.task('sendTestEmail', json.body).then(() => {
+            return cy.getLastEmail()
+        })
+    })
 })
 
 export { }
