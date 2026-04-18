@@ -52,7 +52,7 @@ export const GamePriceHistory = ({ game }: { game: GameWithPrices }) => {
         setModalShow(false)
     }
 
-    const options: ChartOptions = {
+    const options: ChartOptions<"line"> = {
         responsive: true,
         plugins: {
             legend: {
