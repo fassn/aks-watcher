@@ -62,9 +62,16 @@ async function createGames(args: createGamesArgs) {
     const prisma = getPrismaInstance()
     let createdGames: Game[] = []
     for (let i = 0; i < count; i++) {
-        const gamesData = { ...games[i], userId: userId }
+        const { bestPrice, ...gameFields } = games[i] as any
+        const gamesData = { ...gameFields, userId: userId }
+        delete gamesData.id
         const game = await prisma.game.create({
-            data: gamesData
+            data: {
+                ...gamesData,
+                prices: bestPrice != null ? {
+                    create: { bestPrice, date: gamesData.dateCreated }
+                } : undefined
+            }
         })
         createdGames.push(game)
     }
