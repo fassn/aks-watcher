@@ -35,7 +35,7 @@ describe('Manage Games', () => {
     it('updates a game', () => {
         cy.task('createGames', { count: 1 })
         cy.visit('http://localhost:3000')
-        const today = new Date().toLocaleDateString(Cypress.env('NEXT_PUBLIC_LOCALE'))
+        const today = new Date().toLocaleDateString(Cypress.expose('NEXT_PUBLIC_LOCALE'))
 
         cy.get('[data-cy="gamecard"]').first().as('game')
 
@@ -221,7 +221,7 @@ describe('Manage Games', () => {
     it('adds two games then updates one', () => {
         cy.task('createGames', { count: 2 })
         cy.visit('http://localhost:3000')
-        const today = new Date().toLocaleDateString(Cypress.env('NEXT_PUBLIC_LOCALE'))
+        const today = new Date().toLocaleDateString(Cypress.expose('NEXT_PUBLIC_LOCALE'))
 
         cy.get('[data-cy="gamecard"]').first().as('firstGame')
         cy.get('[data-cy="gamecard"]').first().next().as('secondGame')
@@ -251,7 +251,7 @@ describe('Manage Games', () => {
     it('refreshes all games', () => {
         cy.task('createGames', { count: 2 })
         cy.visit('http://localhost:3000')
-        const today = new Date().toLocaleDateString(Cypress.env('NEXT_PUBLIC_LOCALE'))
+        const today = new Date().toLocaleDateString(Cypress.expose('NEXT_PUBLIC_LOCALE'))
 
         cy.get('[data-cy="gamecard"]').first().as('firstGame')
         cy.get('[data-cy="gamecard"]').first().next().as('secondGame')

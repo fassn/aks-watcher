@@ -98,8 +98,12 @@ async function antedateGame(gameId: string) {
 }
 
 export default defineConfig({
+    allowCypressEnv: false,
     e2e: {
         baseUrl: 'http://localhost:3000',
+        expose: {
+            NEXT_PUBLIC_LOCALE: process.env.NEXT_PUBLIC_LOCALE || 'fr-FR',
+        },
         setupNodeEvents(on, config) {
             require('@cypress/code-coverage/task')(on, config)
             // implement node event listeners here

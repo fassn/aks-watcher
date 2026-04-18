@@ -44,14 +44,15 @@ describe('Sign-in', () => {
             cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
 
             // clean the Mailtrap inbox
-            const mailtrap = Cypress.env('mailtrap')
-            cy.request({
-                method: 'PATCH',
-                url: `https://mailtrap.io/api/accounts/${mailtrap.accountId}/inboxes/${mailtrap.inboxId}/clean`,
-                headers: {
-                    'Api-Token': mailtrap.apiToken,
-                    'Authorization': `Bearer ${mailtrap.apiToken}`,
-                }
+            cy.env(['mailtrap']).its('mailtrap').then((mailtrap) => {
+                cy.request({
+                    method: 'PATCH',
+                    url: `https://mailtrap.io/api/accounts/${mailtrap.accountId}/inboxes/${mailtrap.inboxId}/clean`,
+                    headers: {
+                        'Api-Token': mailtrap.apiToken,
+                        'Authorization': `Bearer ${mailtrap.apiToken}`,
+                    }
+                })
             })
         })
     })
