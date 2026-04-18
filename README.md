@@ -19,7 +19,7 @@ BASE_URL=http://localhost:3000
 NEXT_PUBLIC_LOCALE=fr-FR
 NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES=3000 // time in ms between 2 queries to Allkeyshop.com
 
-DATABASE_URL=postgresql://aks:aks@localhost:5432/aks_watcher
+DATABASE_URL=postgresql://aks:aks@localhost:5433/aks_watcher
 
 NEXTAUTH_SECRET= // run openssl rand -base64 32 to generate a random hash
 NEXTAUTH_URL=http://localhost:3000
@@ -32,10 +32,10 @@ API_KEY=
 API_SECRET=
 ```
 
-4. Copy `prisma/.env.example` as `prisma/.env`:
+4. Copy `prisma/.env.example` values into your root `.env`:
 ```
-DATABASE_URL=postgresql://aks:aks@localhost:5432/aks_watcher
-SHADOW_DATABASE_URL=postgresql://aks:aks@localhost:5432/aks_watcher_shadow
+DATABASE_URL=postgresql://aks:aks@localhost:5433/aks_watcher
+SHADOW_DATABASE_URL=postgresql://aks:aks@localhost:5433/aks_watcher_shadow
 ```
 
 5. Run Prisma migrations and seed:

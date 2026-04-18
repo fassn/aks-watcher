@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: aks
       POSTGRES_DB: aks_watcher
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker/init-shadow-db.sql:/docker-entrypoint-initdb.d/init-shadow-db.sql:ro
