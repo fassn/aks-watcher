@@ -8,7 +8,7 @@ type ModalProps = {
     className: string
 }
 
-export const Modal: React.FC<ModalProps> = ({ id, children, show, onRequestClose, className }) => {
+export const Modal = ({ id, children, show, onRequestClose, className }: ModalProps) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
 
     useEffect(() => {

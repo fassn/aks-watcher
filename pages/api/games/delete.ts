@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
 import { Game } from "@prisma/client";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { destroyImages } from "lib/cloudinary";
 
@@ -9,7 +9,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const session = await unstable_getServerSession(req, res, authOptions);
+    const session = await getServerSession(req, res, authOptions);
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }

@@ -13,7 +13,7 @@ type FlashMessageProps = {
     delay: number,
 }
 
-const FlashMessage: React.FC<FlashMessageProps> = (props) => {
+const FlashMessage = (props: FlashMessageProps) => {
     const [isVisible, setIsVisible] = useState(false)
 
     let className = 'text-base text-center '
