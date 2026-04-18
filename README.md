@@ -7,14 +7,19 @@ This is a small app allowing the user to add and track the best price on its gam
 npm i
 ```
 
-2. Copy the .env.example file as .env.local:
+2. Start the local PostgreSQL database:
+```bash
+docker compose up -d
+```
+
+3. Copy `.env.example` as `.env.local` and fill in the blanks:
 
 ```
 BASE_URL=http://localhost:3000
 NEXT_PUBLIC_LOCALE=fr-FR
 NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES=3000 // time in ms between 2 queries to Allkeyshop.com
 
-DATABASE_URL=postgresql://{user}:{password}@localhost:5432/{database}
+DATABASE_URL=postgresql://aks:aks@localhost:5432/aks_watcher
 
 NEXTAUTH_SECRET= // run openssl rand -base64 32 to generate a random hash
 NEXTAUTH_URL=http://localhost:3000
@@ -27,15 +32,20 @@ API_KEY=
 API_SECRET=
 ```
 
-3. Copy the prisma/.env.example file as .env
+4. Copy `prisma/.env.example` as `prisma/.env`:
 ```
-DATABASE_URL=postgresql://{user}:{password}@localhost:5432/{database}
+DATABASE_URL=postgresql://aks:aks@localhost:5432/aks_watcher
+SHADOW_DATABASE_URL=postgresql://aks:aks@localhost:5432/aks_watcher_shadow
 ```
 
-4. Run the development server:
+5. Run Prisma migrations and seed:
+```bash
+npx prisma migrate dev
+npx prisma db seed
+```
+
+6. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
