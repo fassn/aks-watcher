@@ -123,7 +123,7 @@ export default defineConfig({
 })
 
 function getPrismaInstance() {
-    process.env['DATABASE_URL'] = 'postgresql://fassn:fassn@localhost:5432/aks_watcher'
+    process.env['DATABASE_URL'] = 'postgresql://aks:aks@localhost:5433/aks_watcher'
     return new PrismaClient({ log: ['info'] })
 }
 
