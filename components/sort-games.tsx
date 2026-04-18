@@ -8,10 +8,6 @@ export const SortGames = () => {
     const { games, mutate } = useGames()
     const [sortValue, setSortValue] = useState<SortValue>('game_asc')
 
-    useEffectAfterMount(() => { // There is no need to sort on inital render
-        sort(sortValue)
-    }, [games])
-
     const sort = (sortValue: SortValue) => {
         if (games) {
             switch (sortValue) {
@@ -51,6 +47,10 @@ export const SortGames = () => {
             mutate()
         }
     }
+
+    useEffectAfterMount(() => { // There is no need to sort on initial render
+        sort(sortValue)
+    }, [games])
 
     const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const newValue = event.target.value as SortValue

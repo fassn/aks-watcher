@@ -32,7 +32,7 @@ const FlashMessage = (props: FlashMessageProps) => {
     }
 
     useEffect(() => {
-            setIsVisible(true)
+            setIsVisible(true) // eslint-disable-line react-hooks/set-state-in-effect
             setTimeout(() => {
                 setIsVisible(false)
             }, props.delay)
