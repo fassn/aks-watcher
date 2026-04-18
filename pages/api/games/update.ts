@@ -3,6 +3,7 @@ import { Game } from "@prisma/client";
 import moment from "moment";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { updatePrice, timeout } from "../shared";
 
 export default async function handler(
     req: NextApiRequest,
@@ -35,6 +36,18 @@ export default async function handler(
             Have you already updated the games in the last hour?'} )
         }
 
+        const updatedGames: Game[] = []
+        for (const game of gamesToUpdate) {
+            try {
+                const updatedGame = await updatePrice(game)
+                updatedGames.push(updatedGame)
+            } catch (err) {
+                console.error(`Failed to update game ${game.name}: ${err}`)
+            }
+            await timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
+        }
+
+        return res.status(200).json(updatedGames)
     }
 }
 

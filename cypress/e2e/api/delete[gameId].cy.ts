@@ -55,9 +55,8 @@ describe('tests /api/games/delete/[gameId] endpoint', () => {
         cy.login()
         cy.task<Game[]>('getGames').then(games => {
             cy.request({
-                url: `api/games/delete/${games[0].id}`,
+                url: `api/games/delete/${games[0].id}?userId=clcz4aeku0002d6i04xfe5mp8&name=${games[0].name}`,
                 method: 'DELETE',
-                body: { userId: 'clcz4aeku0002d6i04xfe5mp8' }
             }).then(res => {
                 expect(res.status).to.equal(200)
                 expect(res.body).to.deep.equal(games[0])

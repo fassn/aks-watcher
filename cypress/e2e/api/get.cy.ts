@@ -13,7 +13,7 @@ describe('tests /api/games/get endpoint', () => {
             const exampleGames: Game[] = res.body
             expect(exampleGames).to.have.length(3)
             exampleGames.forEach(game => {
-                expect(game).to.have.keys(['id', 'userId', 'url', 'name', 'platform', 'cover', 'bestPrice', 'dateCreated', 'dateUpdated'])
+                expect(game).to.have.keys(['id', 'aksId', 'userId', 'url', 'name', 'platform', 'cover', 'dateCreated', 'dateUpdated', 'prices'])
             })
         })
     })
@@ -28,7 +28,7 @@ describe('tests /api/games/get endpoint', () => {
             const games: Game[] = res.body
             expect(games).to.have.length(2)
             games.forEach(game => {
-                expect(game).to.have.keys(['id', 'userId', 'url', 'name', 'platform', 'cover', 'bestPrice', 'dateCreated', 'dateUpdated'])
+                expect(game).to.have.keys(['id', 'aksId', 'userId', 'url', 'name', 'platform', 'cover', 'dateCreated', 'dateUpdated', 'prices'])
             })
         })
     })

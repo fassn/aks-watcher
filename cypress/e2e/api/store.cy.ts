@@ -82,7 +82,7 @@ describe('tests /api/games/store endpoint', () => {
             expect(res.status).to.equal(200)
             const games: Game[] = res.body
             games.forEach(game => {
-                expect(game).to.have.keys(['id', 'userId', 'url', 'name', 'platform', 'cover', 'bestPrice', 'dateCreated', 'dateUpdated'])
+                expect(game).to.have.keys(['id', 'aksId', 'userId', 'url', 'name', 'platform', 'cover', 'dateCreated', 'dateUpdated'])
                 expect(game).to.have.property('url', 'https://www.allkeyshop.com/blog/buy-cyberpunk-2077-cd-key-compare-prices/')
                 expect(game).to.have.property('name', 'Cyberpunk 2077')
                 expect(game).to.have.property('platform', 'PC')
