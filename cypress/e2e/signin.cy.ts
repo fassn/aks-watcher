@@ -29,29 +29,26 @@ describe('Sign-in', () => {
     })
 
     it('should send an email containing a verification link', () => {
-        cy.visit('http://localhost:3000')
-        cy.get('[data-cy="email"]').type(randomEmail).as('typedEmail')
-        cy.get('@typedEmail').should('have.value', randomEmail)
-        cy.get('[data-cy="submit"]').click()
-        cy.get('h1').should('have.text', 'Check your email')
+        cy.env(['mailcatcher']).its('mailcatcher').then((mailcatcher) => {
+            const mailcatcherApiUrl = mailcatcher?.apiUrl || 'http://localhost:8025'
+            cy.visit('http://localhost:3000')
+            cy.get('[data-cy="email"]').type(randomEmail).as('typedEmail')
+            cy.get('@typedEmail').should('have.value', randomEmail)
+            cy.get('[data-cy="submit"]').click()
+            cy.get('h1').should('have.text', 'Check your email')
 
-        cy.getLastEmail().then($body => {
-            const linkHref = $body.find('a').attr('href')
-            expect(linkHref).to.contain('/api/auth/callback/email')
-            cy.visit(linkHref!);
-            cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
-            cy.reload()
-            cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
+            cy.getLastEmail().then($body => {
+                const linkHref = $body.find('a').attr('href')
+                expect(linkHref).to.contain('/api/auth/callback/email')
+                cy.visit(linkHref!)
+                cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
+                cy.reload()
+                cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
 
-            // clean the Mailtrap inbox
-            cy.env(['mailtrap']).its('mailtrap').then((mailtrap) => {
+                // clean local mail catcher inbox
                 cy.request({
-                    method: 'PATCH',
-                    url: `https://mailtrap.io/api/accounts/${mailtrap.accountId}/inboxes/${mailtrap.inboxId}/clean`,
-                    headers: {
-                        'Api-Token': mailtrap.apiToken,
-                        'Authorization': `Bearer ${mailtrap.apiToken}`,
-                    }
+                    method: 'DELETE',
+                    url: `${mailcatcherApiUrl}/api/v1/messages`,
                 })
             })
         })

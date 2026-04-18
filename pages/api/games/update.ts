@@ -37,14 +37,16 @@ export default async function handler(
         }
 
         const updatedGames: Game[] = []
-        for (const game of gamesToUpdate) {
+        for (const [index, game] of gamesToUpdate.entries()) {
             try {
                 const updatedGame = await updatePrice(game)
                 updatedGames.push(updatedGame)
             } catch (err) {
                 console.error(`Failed to update game ${game.name}: ${err}`)
             }
-            await timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
+            if (index < gamesToUpdate.length - 1) {
+                await timeout(process.env.NEXT_PUBLIC_TIMEOUT_BETWEEN_QUERIES)
+            }
         }
 
         return res.status(200).json(updatedGames)

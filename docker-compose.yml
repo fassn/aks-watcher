@@ -11,6 +11,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker/init-shadow-db.sql:/docker-entrypoint-initdb.d/init-shadow-db.sql:ro
+  mailcatcher:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   pgdata:

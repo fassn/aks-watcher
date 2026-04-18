@@ -51,7 +51,7 @@ export default async function handler(
                         content.coverUrl = coverUrl;
 
                         // Fetch the game's best price from AllKeyShop with the AKS game ID
-                        content.bestPrice = await fetchBestPrice(content.aksId)
+                        content.bestPrice = await fetchBestPrice(content.aksId, content.url)
 
                         // Store the game in the database
                         await storeToDatabase(url, content)

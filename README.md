@@ -7,7 +7,7 @@ This is a small app allowing the user to add and track the best price on its gam
 npm i
 ```
 
-2. Start the local PostgreSQL database:
+2. Start local PostgreSQL + mail catcher:
 ```bash
 docker compose up -d
 ```
@@ -23,8 +23,8 @@ DATABASE_URL=postgresql://aks:aks@localhost:5433/aks_watcher
 
 NEXTAUTH_SECRET= // run openssl rand -base64 32 to generate a random hash
 NEXTAUTH_URL=http://localhost:3000
-EMAIL_SERVER=smtp://username:password@smtp.example.com:587
-EMAIL_FROM=noreply@example.com
+EMAIL_SERVER=smtp://localhost:1025
+EMAIL_FROM=noreply@aks-watcher.local
 
 # Cloudinary credentials used for hosting cover images
 CLOUD_NAME=
@@ -49,3 +49,5 @@ npx prisma db seed
 ```bash
 npm run dev
 ```
+
+Mail catcher web UI/API: `http://localhost:8025`

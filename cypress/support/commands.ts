@@ -1,37 +1,8 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
+
 declare global {
     namespace Cypress {
         interface Chainable {
-            //   login(email: string, password: string): Chainable<void>
-            //   drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-            //   dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-            //   visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
             sendTestEmail(): Chainable<JQuery<HTMLElement>>,
             getLastEmail(): Chainable<JQuery<HTMLElement>>,
             login(): Chainable<void>,
@@ -41,10 +12,29 @@ declare global {
     }
 }
 
-type MailtrapConfig = {
-    accountId: string
-    inboxId: string
-    apiToken: string
+type MailCatcherConfig = {
+    apiUrl?: string
+}
+
+const DEFAULT_MAILCATCHER_API_URL = 'http://localhost:8025'
+
+const getMailCatcherApiUrl = (mailcatcher?: MailCatcherConfig) => {
+    const apiUrl = mailcatcher?.apiUrl?.trim()
+    return apiUrl || DEFAULT_MAILCATCHER_API_URL
+}
+
+const decodeQuotedPrintable = (content: string) => {
+    return content
+        .replace(/=\r?\n/g, '')
+        .replace(/=([A-F0-9]{2})/gi, (_match, hex) => String.fromCharCode(parseInt(hex, 16)))
+}
+
+const extractVerificationLink = (content: string) => {
+    const match = content.match(/https?:\/\/[^\s"<>]*\/api\/auth\/callback\/email[^\s"<>]*/i)
+    if (!match) {
+        return ''
+    }
+    return match[0].replace(/&amp;/g, '&')
 }
 
 Cypress.Commands.add('createGame', (url: string) => {
@@ -63,28 +53,34 @@ Cypress.Commands.add('login', () => {
 })
 
 Cypress.Commands.add('getLastEmail', () => {
-    return cy.env(['mailtrap']).its('mailtrap').then((mailtrap: MailtrapConfig) => {
-        function requestEmail() {
-            cy.request({ // fetch last message id
-                method: 'GET',
-                url: `https://mailtrap.io/api/accounts/${mailtrap.accountId}/inboxes/${mailtrap.inboxId}/messages`,
-                headers: {
-                    'Api-Token': mailtrap.apiToken,
-                    'Authorization': `Bearer ${mailtrap.apiToken}`
-                }
-            }).its('body[0].id').as('msgId')
+    return cy.env(['mailcatcher']).its('mailcatcher').then((mailcatcher: MailCatcherConfig | undefined) => {
+        const apiUrl = getMailCatcherApiUrl(mailcatcher)
 
-            return cy.get('@msgId').then((msgId) => {
-                cy.request<JQuery<HTMLElement>>({
+        function requestEmail(): Cypress.Chainable<JQuery<HTMLElement>> {
+            return cy.request<{ items?: Array<{ ID: string }> }>({
+                method: 'GET',
+                url: `${apiUrl}/api/v2/messages?limit=1`,
+                failOnStatusCode: false,
+            }).then((messagesRes) => {
+                const messageId = messagesRes.body?.items?.[0]?.ID
+                if (!messageId) {
+                    cy.wait(1000)
+                    return requestEmail()
+                }
+
+                return cy.request({
                     method: 'GET',
-                    url: `https://mailtrap.io/api/accounts/${mailtrap.accountId}/inboxes/${mailtrap.inboxId}/messages/${msgId}/body.html`,
-                    headers: {
-                        'Api-Token': mailtrap.apiToken,
-                        'Authorization': `Bearer ${mailtrap.apiToken}`
+                    url: `${apiUrl}/api/v1/messages/${encodeURIComponent(messageId)}`,
+                }).then((messageRes) => {
+                    const encodedBody: string = messageRes.body?.Content?.Body ?? ''
+                    const decodedBody = decodeQuotedPrintable(encodedBody)
+                    const verificationLink = extractVerificationLink(decodedBody)
+
+                    if (verificationLink) {
+                        return Cypress.$(`<div><a href="${verificationLink}">${verificationLink}</a></div>`)
                     }
-                }).then((res) => {
-                    if (res.body) {
-                        return Cypress.$(res.body) // parse as JQuery object
+                    if (decodedBody) {
+                        return Cypress.$(decodedBody)
                     }
 
                     cy.wait(1000)
@@ -98,21 +94,8 @@ Cypress.Commands.add('getLastEmail', () => {
 });
 
 Cypress.Commands.add('sendTestEmail', () => {
-    return cy.env(['mailtrap']).its('mailtrap').then((mailtrap: MailtrapConfig) => {
-        return cy.fixture('testEmail').then((json) => {
-            return cy.request<HTMLElement>({
-                method: 'POST',
-                url: `https://sandbox.api.mailtrap.io/api/send/${mailtrap.inboxId}`,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Api-Token': mailtrap.apiToken,
-                    'Authorization': `Bearer ${mailtrap.apiToken}`,
-                    'Access-Control-Allow-Origin': 'no-cors'
-                },
-                body: json.body
-            }).then((res) => res.body)
-        })
-    })
+    cy.log('sendTestEmail not used with local mail catcher setup')
+    return cy.wrap(Cypress.$('<div />'))
 })
 
 export { }
