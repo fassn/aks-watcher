@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     domains: ['www.allkeyshop.com, res.cloudinary.com'],
   },
-  outputFileTracing: true,
+  output: 'standalone',
 }
 
 module.exports = nextConfig
