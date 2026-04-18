@@ -14,6 +14,7 @@ const nextConfig = {
     ],
   },
   output: 'standalone',
+  transpilePackages: ['next-auth', '@auth/core'],
 }
 
 module.exports = nextConfig

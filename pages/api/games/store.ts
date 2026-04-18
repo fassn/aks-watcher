@@ -1,21 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
 import { Game } from "@prisma/client"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../auth/[...nextauth]"
-import { fetchBestPrice, fetchContent, timeout, uploadCoverImage } from "../shared"
+import { auth } from "auth"
+import { fetchBestPrice, fetchContent, timeout, uploadCoverImage } from "lib/game-scraper"
 import { ScrapedContent } from "types/interfaces"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const session = await getServerSession(req, res, authOptions)
+    const session = await auth(req, res)
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.'})
     }
 
-    const { id: userId, email: userEmail } = session?.user
+    const userId = session.user?.id
+    const userEmail = session.user?.email
+    if (!userId || !userEmail) {
+        return res.status(400).send({ error: 'Your account is missing required profile fields.' })
+    }
     if (session) {
         if (req.method !== 'POST') {
             return res.status(405).send({ error: 'Request needs to be POST.' })

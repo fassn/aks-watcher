@@ -48,7 +48,7 @@ Cypress.Commands.add('seedDatabase', () => {
 Cypress.Commands.add('login', () => {
     cy.session('testUser', () => {
         cy.intercept('/api/auth/session', { fixture: 'session.json' }).as('session')
-        cy.setCookie('next-auth.session-token', '6aae236f-057d-4707-a1df-aef75791c135')
+        cy.setCookie('authjs.session-token', '6aae236f-057d-4707-a1df-aef75791c135')
     })
 })
 

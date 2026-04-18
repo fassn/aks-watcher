@@ -10,7 +10,7 @@ export const DeleteGameButton = (props: { game: GameWithPrices }) => {
     const { mutate } = useGames()
 
     const session = useSession()
-    const { id: userId } = session.data?.user || '' // default when using with unsigned user (exampleGames)
+    const userId = session.data?.user?.id || '' // default when using with unsigned user (exampleGames)
 
     const deleteGame = async () => {
         const res = await fetch(`/api/games/delete/${props.game.id}?userId=${userId}&name=${props.game.name}`, {

@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
 import { Game } from "@prisma/client";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
+import { auth } from "auth";
 import { destroyImages } from "lib/cloudinary";
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const session = await getServerSession(req, res, authOptions);
+    const session = await auth(req, res);
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
@@ -20,7 +19,11 @@ export default async function handler(
 
     if (session) {
         const { userId, games }: { userId: string, games: Game[] } = req.body
-        const { id, email } = session?.user
+        const id = session.user?.id
+        const email = session.user?.email
+        if (!id || !email) {
+            return res.status(403).send({ error: 'You are not allowed to delete the games.' })
+        }
 
         if (id !== userId) {
             return res.status(403).send({ error: 'You are not allowed to delete the games.' })

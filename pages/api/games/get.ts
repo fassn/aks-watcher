@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../auth/[...nextauth]"
+import { auth } from "auth"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const session = await getServerSession(req, res, authOptions);
+    const session = await auth(req, res);
 
     /** Unlogged User */
     if (!session) {
@@ -22,7 +21,10 @@ export default async function handler(
 
     /** Logged User */
     if (session) {
-        const { id: userId } = session?.user
+        const userId = session.user?.id
+        if (!userId) {
+            return res.status(400).json({ error: 'Your account is missing required profile fields.' })
+        }
 
         const games = await prisma.game.findMany({
             where: { userId: userId },

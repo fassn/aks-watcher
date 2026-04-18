@@ -16,7 +16,7 @@ export const RefreshAll = ({ setFlash }: RefreshAllProps) => {
         if (isRefreshing) {
             throw new Error('You have already requested a full refresh. No need to spam the button ;-)')
         }
-        const { id: userId } = session?.user
+        const userId = session?.user?.id
         if (!userId) {
             throw new Error('You are not logged in.')
         }

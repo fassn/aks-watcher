@@ -19,7 +19,7 @@ export const DeleteAll = ({ setFlash }: DeleteAllProps) => {
         if (isDeleting) {
             throw new Error('You have already requested a full deletion of your games. No need to spam.')
         }
-        const { id: userId } = session.data?.user
+        const userId = session.data?.user?.id
         if (!userId) {
             throw new Error('You are not logged in.')
         }

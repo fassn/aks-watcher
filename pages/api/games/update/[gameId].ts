@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth"
-import { authOptions } from "pages/api/auth/[...nextauth]"
+import { auth } from "auth"
 import moment from "moment"
-import { updatePrice } from "pages/api/shared"
+import { updatePrice } from "lib/game-scraper"
 import prisma from "lib/prisma"
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const session = await getServerSession(req, res, authOptions);
+    const session = await auth(req, res);
     if (!session) {
         return res.status(403).send({ error: 'You need to be signed in to use this API route.' })
     }
@@ -18,8 +17,11 @@ export default async function handler(
         return res.status(405).send({ error: 'Request must be POST.' })
     }
 
-    const { id } = session?.user
+    const id = session.user?.id
     const { userId } = req.body
+    if (!id) {
+        return res.status(403).send({ error: 'You are not allowed to update this game.' })
+    }
     const gameId = (req.query['gameId']) as string
     if (id !== userId) {
         return res.status(403).send({ error: 'You are not allowed to update this game.' })

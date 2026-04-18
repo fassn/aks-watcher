@@ -21,7 +21,7 @@ export const GameCard = (props: { game: GameWithPrices }) => {
     const FLASH_MESSAGE_DELAY = 5000
 
     const session = useSession()
-    const { id: userId } = session.data?.user || '' // default when using with unsigned user (exampleGames)
+    const userId = session.data?.user?.id || '' // default when using with unsigned user (exampleGames)
 
     const updateGame = async () => {
         if (isRefreshing) {

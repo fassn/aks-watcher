@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/prisma";
-import { timeout, updatePrice } from "../shared";
+import { timeout, updatePrice } from "lib/game-scraper";
 
 const isValidAuth = (authHeader: string | undefined): boolean => {
     const validUsername = process.env.NEXT_BASIC_AUTH_USERNAME;
