@@ -1,8 +1,6 @@
 import { faker } from '@faker-js/faker'
 
 describe('Sign-in', () => {
-    const randomEmail = faker.internet.email().toLowerCase()
-
     it('is not a valid form when the email field is empty', () => {
         cy.visit('http://localhost:3000')
         cy.get('[data-cy="submit"]').click()
@@ -31,15 +29,23 @@ describe('Sign-in', () => {
     it('should send an email containing a verification link', () => {
         cy.env(['mailcatcher']).its('mailcatcher').then((mailcatcher) => {
             const mailcatcherApiUrl = mailcatcher?.apiUrl || 'http://localhost:8025'
+            const randomEmail = `${faker.string.alphanumeric(12).toLowerCase()}@example.com`
+
+            cy.request({
+                method: 'DELETE',
+                url: `${mailcatcherApiUrl}/api/v1/messages`,
+            })
+
             cy.visit('http://localhost:3000')
             cy.get('[data-cy="email"]').type(randomEmail).as('typedEmail')
             cy.get('@typedEmail').should('have.value', randomEmail)
             cy.get('[data-cy="submit"]').click()
-            cy.get('h1').should('have.text', 'Check your email')
+            cy.location('pathname', { timeout: 10000 }).should('eq', '/auth/verify-request')
+            cy.get('h1', { timeout: 10000 }).should('have.text', 'Check your email')
 
             cy.getLastEmail().then($body => {
                 const linkHref = $body.find('a').attr('href')
-                expect(linkHref).to.contain('/api/auth/callback/email')
+                expect(linkHref).to.match(/\/api\/auth\/callback\/(email|nodemailer)/)
                 cy.visit(linkHref!)
                 cy.get('[data-cy="signedin_email"]').should('have.text', randomEmail)
                 cy.reload()

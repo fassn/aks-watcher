@@ -30,7 +30,7 @@ const decodeQuotedPrintable = (content: string) => {
 }
 
 const extractVerificationLink = (content: string) => {
-    const match = content.match(/https?:\/\/[^\s"<>]*\/api\/auth\/callback\/email[^\s"<>]*/i)
+    const match = content.match(/https?:\/\/[^\s"<>]*\/api\/auth\/callback\/(?:email|nodemailer)[^\s"<>]*/i)
     if (!match) {
         return ''
     }
